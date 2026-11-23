@@ -58,17 +58,17 @@
         VoltEcho AI
       </h1>
 
-      <!-- Amharic Subtitle (ትክክለኛ እኛ የሰራነውን project የሚገልጽ) -->
-      <div class="insa-hero-subtitle-amharic">
-        በአኮስቲክ ሞገድ እና በሪኢንፎርስመንት ለርኒንግ የትራንስፎርመር ፍንዳታን አስቀድሞ መከላከል
+      <!-- Subtitle -->
+      <div class="insa-hero-subtitle">
+        Pre-emptive Power Transformer Protection via Acoustic Perception &amp; Reinforcement Learning
       </div>
 
-      <!-- English Sub-tagline (ትክክለኛ እኛ የሰራነውን project የሚገልጽ) -->
+      <!-- English Sub-tagline -->
       <p class="insa-hero-tagline">
-        Sub-Second Acoustic Partial Discharge Detection &amp; 8D PPO Reinforcement Learning for Industrial Transformer Protection
+        Sub-Second Partial Discharge Detection &amp; 8D PPO Cyber-Physical Control Eliminating Catastrophic Substation Explosions
       </p>
 
-      <!-- Centered Pill Action Buttons (like INSA's CONFIRM CAMP ATTENDANCE & VIEW PROJECTS) -->
+      <!-- Centered Pill Action Buttons -->
       <div class="insa-btn-group">
         <a href="#live-controller" class="insa-btn-primary">
           <span>Launch Live Studio</span>
@@ -90,7 +90,7 @@
       <span class="section-tag">Project Scope & Purpose</span>
       <h2 class="section-title">Core Research Objectives & What VoltEcho Does</h2>
       <p class="section-subtitle">
-        የትራንስፎርመር ቃጠሎንና ፍንዳታን አስቀድሞ ለመከላከል የተሰሩ 4ቱ ዋና ዋና የሳይንሳዊ ግቦች እና አሰራራቸው (Clear, actionable breakdown of project deliverables).
+        Clear, actionable breakdown of the 4 core research deliverables engineered to pre-emptively eliminate power transformer burnouts and explosive ruptures.
       </p>
     </div>
 
@@ -100,7 +100,7 @@
         <div class="objective-num">01</div>
         <h3>Autonomous Acoustic Perception</h3>
         <p>
-          ትራንስፎርመር ውስጥ የሚፈጠሩ ጥቃቅን የ dielectric ብልሽቶችን (Partial Discharge) የሙቀት መጠኑ ገና ሳይጨምር አስቀድሞ በድምጽ ሞገድ (128-band log-Mel CNN) በቅጽበት መለየት።
+          Decode microscopic dielectric insulation breakdowns (Partial Discharge) in oil via high-frequency acoustic log-Mel spectrograms (VoltEchoCNN) long before external temperatures rise.
         </p>
       </div>
 
@@ -109,7 +109,7 @@
         <div class="objective-num">02</div>
         <h3>POMDP Resolution via Derivatives</h3>
         <p>
-          በሙቀት እና በአኮስቲክ ላይ የ 3 የመጀመሪያ-ደረጃ ለውጦችን (&Delta;P, &Delta;T, &Delta;L) በመጨመር ትራንስፎርመሩ በፍጥነት እየጋለ ወይም እየቀዘቀዘ መሆኑን ኤጀንቱ አስቀድሞ እንዲያውቅ ማድረግ።
+          Augment physical state space with first-order derivatives (&Delta;P, &Delta;T, &Delta;L) to resolve POMDP partial observability, predicting thermodynamic trajectories without high-latency recurrent networks.
         </p>
       </div>
 
@@ -118,7 +118,7 @@
         <div class="objective-num">03</div>
         <h3>Safe Dispatch & 0.0% Burnout</h3>
         <p>
-          መደበኛ የኤሌክትሪክ ግሪድ ማስተላለፍን (85% Nominal Load) ጠብቆ በማቆየት፣ ድንገተኛ ከፍተኛ የ arcing አደጋ ሲከሰት በ 1 ስቴፕ Breaker በማቋረጥ ቃጠሎን 100% መከላከል (0.0% Burnout Guarantee)።
+          Sustain continuous 85% nominal grid power throughput while guaranteeing 1-step emergency breaker trip during critical arcing hazards, eliminating 100% of catastrophic thermal burnouts (0.0% failure rate).
         </p>
       </div>
 
@@ -127,7 +127,7 @@
         <div class="objective-num">04</div>
         <h3>Substation Edge Deployment</h3>
         <p>
-          ሙሉውን የኢንፈረንስ ፓይፕላይን ወደ ቀላል TorchScript (1.6 MB) በመቀየር በማከፋፈያ ጣቢያዎች ማይክሮ-ኮንትሮለር ላይ በከፍተኛ ፍጥነት (&lt;20 ms latency) እንዲሰራ ማብቃት።
+          Compile full deep reinforcement learning policy into standalone TorchScript C++ binaries (1.6 MB) capable of running on industrial substation microcontrollers with sub-20ms real-time inference latency.
         </p>
       </div>
     </div>
@@ -333,7 +333,7 @@
       <span class="section-tag">Engineering Retrospective</span>
       <h2 class="section-title">Encountered Challenges & Technical Solutions</h2>
       <p class="section-subtitle">
-        በምርምሩ ወቅት ያጋጠሙን ወሳኝ ችግሮች እና እንዴት እንደፈታናቸው የተዘጋጀ ሳይንሳዊ ትንተና (A rigorous breakdown of key stumbling blocks and our mathematical/architectural fixes).
+        A rigorous scientific breakdown of real-world stumbling blocks encountered during research and our algorithmic, thermodynamic, and sensor-level solutions.
       </p>
     </div>
 
@@ -345,13 +345,13 @@
           <span class="challenge-tag-danger">❌ Challenge 1: POMDP Thermal Inertia Blindness</span>
           <h3>Static States Caused Policy Dithering & Oscillation</h3>
           <p>
-            በመጀመሪያው ዙር static የሙቀት ($T$) እና የአኖማሊ ($P$) እሴቶችን ብቻ ስንጠቀም፣ ኤጀንቱ ትራንስፎርመሩ በፍጥነት እየጋለ መሆኑን ($\dot{T} > 0$) ወይስ እየቀዘቀዘ መሆኑን ($\dot{T} < 0$) ማወቅ አልቻለም ነበር። ይህም የውሳኔ መደናገርን (Policy Dithering) እና ያለ በቂ ምክንያት መብራት ማጥፋትን አስከትሎ ነበር።
+            When utilizing only static temperature (T) and anomaly probability (P), the agent could not determine whether heat was rapidly accelerating (dT/dt &gt; 0) or cooling down (dT/dt &lt; 0). This induced severe POMDP policy dithering and spurious blackout trips under transient fluctuations.
           </p>
         </div>
         <div class="challenge-resolution-box">
           <span class="solution-tag-success">✅ Mathematical Solution: 8D Rate-of-Change</span>
           <p>
-            ከባድና የዘገዩ RNN/LSTM ኔትወርኮችን ከመጠቀም ይልቅ፣ የ 8D State Space በመፍጠር 3 የመጀመሪያ-ደረጃ ጊዜያዊ ለውጦችን (First-order derivatives: &Delta;P, &Delta;L, &Delta;T) ጨመርን። ይህም POMDPን ወደ ሙሉ Markovian ውሳኔ ቀይሮ የዘገየ ሙቀትን አስቀድሞ እንዲያውቅ አደረገው።
+            Rather than deploying compute-heavy, high-latency recurrent networks (LSTM/GRU), we expanded the state space to 8D by injecting 3 first-order derivatives (&Delta;P, &Delta;L, &Delta;T). This Markovian augmentation restored thermal inertia foresight without incurring computational latency.
           </p>
         </div>
       </div>
@@ -362,13 +362,13 @@
           <span class="challenge-tag-danger">❌ Challenge 2: Reward Gaming & Load Churning</span>
           <h3>The Agent Learned to Exploit Instant Transition Bonuses</h3>
           <p>
-            ኤጀንቱ የረጅም ጊዜ የትራንስፎርመር ሙቀትን ችላ በማለት፣ ሎዱን በየሰከንዱ ከ 0% ወደ 100% በመቀያየር (Load Cycling) አጫጭር የሪዋርድ ነጥቦችን ለመሰብሰብ ሞክሮ ነበር (Reward Gaming)። ይህ በእውነተኛ የኤሌክትሪክ ግሪድ ላይ ከባድ የሃይል መዋዠቅ ያስከትላል።
+            The RL agent learned to exploit short-term rewards by rapidly cycling transformer load between 0% and 100% every second (Reward Gaming), ignoring long-term insulation degradation and causing severe frequency instability across the grid.
           </p>
         </div>
         <div class="challenge-resolution-box">
           <span class="solution-tag-success">✅ Physics Solution: Quadratic Joule Heating Penalty</span>
           <p>
-            የጁል ሙቀት ቀመርን ($q_{\text{gen}} = 4.2 L^2 + 10 P$) በቀጥታ በሪዋርዱ ውስጥ አካተን አላስፈላጊ የሎድ መቀያየርን በከፍተኛ ቅጣት (&Delta;L penalty) ቀጣነው። ይህም ኤጀንቱ የተረጋጋ እና ቀጣይነት ያለው የሃይል ማስተላለፍ እንዲመርጥ አደረገው።
+            We integrated thermodynamic Joule heating (q_gen = 4.2 L&sup2; + 10 P) directly into the reward function and introduced a severe delta-load penalty (&Delta;L penalty), enforcing smooth, stable power delivery under real industrial grid constraints.
           </p>
         </div>
       </div>
@@ -379,13 +379,13 @@
           <span class="challenge-tag-danger">❌ Challenge 3: Arcing Flashover vs Ambient Noise</span>
           <h3>Acoustic Noise False Alarms in Substation Environments</h3>
           <p>
-            በማከፋፈያ ጣቢያዎች (Substations) ውስጥ ባሉ ሌሎች ድምጾች ምክንያት፣ የድምጽ ክላሲፋየሩ ቀላል ጫጫታዎችን እንደ ከፍተኛ የአደጋ ብልጭታ (Arcing) በመቁጠር የውሸት መብራት የማጥፋት ስጋት ፈጥሮ ነበር።
+            High-voltage substations suffer intense ambient background noise (corona hum, cooling fans, road traffic). The CNN classifier occasionally misclassified benign acoustic spikes as severe internal arcing, risking costly false blackout trips.
           </p>
         </div>
         <div class="challenge-resolution-box">
           <span class="solution-tag-success">✅ Dual-Perception Solution: Semantic + Physical RMS</span>
           <p>
-            የ CNN Semantic probability ($P_{\text{anom}}$) ብቻ ከመጠቀም ይልቅ፣ እውነተኛ የድምጽ ሃይል ጥንካሬን (Physical Acoustic RMS Energy $E_t$) እንደ ሁለተኛ ቻናል አገናኘን። ይህም ቀላል ድምጾችን ከትክክለኛ ከፍተኛ የ dielectric arcing ፍንዳታዎች በግልጽ ለይቶ አወጣ።
+            Rather than relying solely on classifier semantic probability (P_anom), we incorporated physical Acoustic RMS Energy (E_rms) as an orthogonal state dimension. This cleanly disambiguated benign low-energy noise from high-energy destructive flashovers.
           </p>
         </div>
       </div>
@@ -396,13 +396,13 @@
           <span class="challenge-tag-danger">❌ Challenge 4: Policy Mode Collapse under Incipient PD</span>
           <h3>Developing PD Caused 98.3% Throttle Over-Conservatism</h3>
           <p>
-            የ 100-Episode Monte Carlo ሙከራው እንዳሳየው፣ ገና በማቆጥቆጥ ላይ ባለ የብልሽት ድምጽ ወቅት ኤጀንቱ ከመጠን በላይ በመፍራት 98.3% ጊዜ ሎዱን ወደ 10% ዝቅ አደረገው (Mode Collapse to Action 2)። ይህም ለግሪድ አቅርቦት እጥረት ይዳርጋል።
+            Our 100-episode Monte Carlo benchmark revealed that during incipient partial discharge, the agent developed hyper-conservative mode collapse (throttling to 10% load in 98.3% of steps), inducing unnecessary grid brownouts.
           </p>
         </div>
         <div class="challenge-resolution-box">
           <span class="solution-tag-success">✅ Production Solution: Temperature Scaling & Baseline Incentive</span>
           <p>
-            የ CNN log-odds እሴቶችን በ Temperature Scaling በማስተካከል የጥንቃቄ ድንበሩን አረምን። በተጨማሪም በመደበኛ ሁኔታ ወቅት <code>Maintain Load</code>ን የሚያበረታታ አወንታዊ ሪዋርድ በማስገባት ከመጠን ያለፈ የሎድ ቅነሳን አስቀረን።
+            We recalibrated the CNN confidence logits via Temperature Scaling and injected an explicit baseline throughput incentive for <code>Maintain Load</code> under nominal hum, eliminating hyper-conservative throttling while preserving 100% arcing protection.
           </p>
         </div>
       </div>
