@@ -2,6 +2,7 @@ import os
 import sys
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from typing import Dict, Any, List
 
 from .schemas import (
@@ -151,6 +152,12 @@ def run_comparative_benchmark(req: BenchmarkRequest):
         return CyberPhysicalSimulator.run_benchmark(req)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# Mount Frontend Static Assets
+frontend_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "frontend")
+if os.path.exists(frontend_dir):
+    app.mount("/", StaticFiles(directory=frontend_dir, html=True), name="frontend")
 
 
 if __name__ == "__main__":

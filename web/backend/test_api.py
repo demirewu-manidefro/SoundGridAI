@@ -30,6 +30,11 @@ def send_get(path):
     with urllib.request.urlopen(url) as resp:
         return resp.status, json.loads(resp.read().decode())
 
+def send_get_raw(path):
+    url = f"http://127.0.0.1:8000{path}"
+    with urllib.request.urlopen(url) as resp:
+        return resp.status, resp.read().decode("utf-8", errors="ignore")
+
 def send_post(path, data):
     url = f"http://127.0.0.1:8000{path}"
     req = urllib.request.Request(
@@ -114,8 +119,23 @@ def test_live_api():
         print("-" * 85)
         assert status == 200
 
+        # 7. Frontend Static UI Files
+        print("\n[7] GET / (Frontend Web Application)")
+        status, html = send_get_raw("/")
+        print(f"Status: {status} | HTML Size: {len(html)} bytes | Contains Title: {'SoundGrid AI' in html}")
+        assert status == 200
+        assert "SoundGrid AI" in html
+
+        status_css, css = send_get_raw("/style.css")
+        print(f"GET /style.css -> Status: {status_css} | Size: {len(css)} bytes")
+        assert status_css == 200
+
+        status_js, js = send_get_raw("/app.js")
+        print(f"GET /app.js -> Status: {status_js} | Size: {len(js)} bytes")
+        assert status_js == 200
+
         print("\n" + "=" * 70)
-        print("🎉 ALL FASTAPI REST ENDPOINTS TESTED LIVE AND PASSED 100%!")
+        print("🎉 ALL FASTAPI REST ENDPOINTS & FRONTEND UI TESTED LIVE AND PASSED 100%!")
         print("=" * 70)
 
     finally:
