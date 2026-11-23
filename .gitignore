@@ -22,3 +22,6 @@ __pycache__/
 # IDE configurations
 .vscode/
 .idea/
+
+# Evaluation artifacts
+evaluation_report_data.json

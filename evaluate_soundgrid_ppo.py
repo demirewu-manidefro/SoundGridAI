@@ -117,45 +117,76 @@ class EvaluationSoundGridEnv:
         q_diss = 0.09 * (self.temp - self.ambient_temp)
         self.temp += q_gen - q_diss
         self.temp = float(np.clip(self.temp, 30.0, 130.0))
+        delta_t = self.temp - self.prev_temp
 
-        # Reward computation
-        reward = self.load * 12.0
+        # Unified Anti-Gaming Anti-Blackout Reward Formulation
+        reward = self.load * 16.0  # Base economic power dispatch
         terminated = False
 
-        # Safe dispatch
-        if self.temp <= 80.0 and self.anomaly_prob < 0.35:
-            reward += 12.0
-            if action == 1:
-                reward += 10.0
-            elif action == 0:
-                reward += 4.0
-
-        # Unnecessary throttling penalty
-        if self.temp < 74.0 and self.anomaly_prob < 0.20 and action in [2, 3]:
-            reward -= 8.0
-
-        # Thermal gradient warning penalty
-        if self.temp > 82.0:
-            reward -= 2.5 * (self.temp - 82.0)
-
-        # Proactive cooling incentive
-        if self.temp > 84.0 or self.anomaly_prob > 0.45:
+        # 1. Healthy Nominal Dispatch
+        if self.temp <= 78.0 and self.anomaly_prob < 0.25:
+            if self.load < 0.85:
+                if action == 1:
+                    reward += 14.0   # Reward ramping up to nominal band
+                elif action == 0:
+                    reward += 8.0
+            elif 0.85 <= self.load <= 0.95:
+                if action == 0:
+                    reward += 16.0   # STRICTLY FAVOR MAINTAINING OPTIMAL DISPATCH
+                elif action == 1:
+                    reward += 0.0    # Zero bonus for exceeding optimal band
+            else: # self.load > 0.95
+                if action == 0:
+                    reward += 14.0
+                elif action == 1:
+                    reward -= 10.0   # Penalty for unnecessary saturation
             if action in [2, 3]:
-                reward += 15.0
-            elif action == 1:
-                reward -= 50.0
+                reward -= 18.0       # Capacity starvation penalty under healthy state
 
-        # Emergency trip penalty vs reward
+        # 2. Continuous Thermal Degradation Penalty
+        if self.temp > 80.0:
+            reward -= 2.5 * (self.temp - 80.0)
+
+        # 3. Incipient Discharges & Controlled Derating (0.30 <= Anom < 0.70)
+        if self.anomaly_prob >= 0.30 and self.anomaly_prob < 0.70 and self.temp < 100.0:
+            if action in [2, 3]:
+                if self.load > 0.35:
+                    reward += 28.0  # High incentive to proactively throttle to safe derated load
+            elif action == 0:
+                if self.load <= 0.40:
+                    reward += 16.0  # REWARD STABLE DERATED OPERATION (Eliminates False Trips!)
+                else:
+                    reward -= 25.0  # Inaction penalty when running hot and un-derated
+            elif action == 1:
+                reward -= 60.0      # Strict penalty for ramping up during discharge
+
+        # 4. Thermal Stress Management (Temp > 80°C)
+        if self.temp > 80.0 and self.anomaly_prob < 0.30:
+            if action in [2, 3]:
+                if self.load > 0.25:
+                    reward += 28.0  # Big incentive to throttle down from high load
+            elif action == 0:
+                if self.load <= 0.30:
+                    reward += 16.0  # REWARD MAINTAINING DERATED POWER SAFELY!
+                else:
+                    reward -= 25.0 + 3.0 * (self.temp - 80.0)  # Inaction penalty for un-derated hot operation
+            elif action == 1:
+                reward -= 60.0
+
+        # 5. Emergency Trip vs False Alarm Blackout Protection
         if action == 4:
-            if self.anomaly_prob >= 0.72 or self.temp >= 102.0:
-                reward += 60.0
+            if self.anomaly_prob >= 0.70 or self.temp >= 100.0:
+                # Justified Emergency Preservation (Time-Horizon Salvage Credit)
+                remaining_steps = self.max_steps - self.step_count
+                reward += 140.0 + remaining_steps * 8.0
             else:
-                reward -= 120.0
+                # Unjustified Premature Blackout
+                reward -= 180.0
             terminated = True
 
-        # Catastrophic thermal breakdown
+        # 6. Catastrophic Breakdown Penalty
         if self.temp >= 118.0 and not terminated:
-            reward -= 200.0
+            reward -= 350.0
             terminated = True
 
         if self.step_count >= self.max_steps:
