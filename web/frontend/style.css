@@ -9,37 +9,37 @@
   --bg-tertiary: #f1f5f9;
   --bg-dark: #0f172a;
   --bg-dark-card: rgba(15, 23, 42, 0.82);
-  
+
   --card-bg: #ffffff;
   --card-border: #e2e8f0;
   --card-hover-border: #cbd5e1;
-  
+
   --text-main: #0f172a;
   --text-muted: #64748b;
   --text-subtle: #94a3b8;
   --text-light: #f8fafc;
-  
+
   --primary-blue: #2563eb;
   --primary-blue-hover: #1d4ed8;
   --primary-blue-light: #eff6ff;
   --primary-cyan: #06b6d4;
   --primary-cyan-glow: rgba(6, 182, 212, 0.35);
-  
+
   --success-emerald: #10b981;
   --success-light: #ecfdf5;
-  
+
   --warning-amber: #f59e0b;
   --warning-light: #fffbeb;
-  
+
   --danger-rose: #ef4444;
   --danger-light: #fef2f2;
-  
+
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.12), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   --shadow-glow: 0 0 25px rgba(37, 99, 235, 0.25);
-  
+
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 16px;
@@ -155,7 +155,8 @@ body {
   cursor: pointer;
 }
 
-.nav-link:hover, .nav-link.active {
+.nav-link:hover,
+.nav-link.active {
   color: var(--primary-blue);
 }
 
@@ -170,7 +171,8 @@ body {
   transition: width 0.2s ease;
 }
 
-.nav-link:hover::after, .nav-link.active::after {
+.nav-link:hover::after,
+.nav-link.active::after {
   width: 100%;
 }
 
@@ -208,8 +210,10 @@ body {
   align-items: center;
   justify-content: center;
   text-align: center;
-  background: radial-gradient(circle at 50% 48%, rgba(6, 182, 212, 0.16) 0%, rgba(3, 7, 18, 0.78) 60%, #030712 100%),
-              url('/images/cyber_corridor.jpg') center center / cover no-repeat;
+  background: 
+    radial-gradient(circle at 50% 45%, rgba(6, 182, 212, 0.18) 0%, rgba(15, 23, 42, 0.82) 65%, #030712 100%),
+    linear-gradient(to bottom, rgba(3, 7, 18, 0.55) 0%, rgba(3, 7, 18, 0.9) 100%),
+    url('/images/substation_ai.png') center center / cover no-repeat;
   color: #ffffff;
   overflow: hidden;
   border-bottom: 1px solid rgba(56, 189, 248, 0.25);
@@ -220,7 +224,7 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: 
+  background-image:
     linear-gradient(rgba(6, 182, 212, 0.14) 1px, transparent 1px),
     linear-gradient(90deg, rgba(6, 182, 212, 0.14) 1px, transparent 1px);
   background-size: 64px 64px;
@@ -236,7 +240,7 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  background: 
+  background:
     radial-gradient(ellipse at 50% 50%, rgba(14, 165, 233, 0.25) 0%, transparent 60%),
     linear-gradient(to bottom, rgba(3, 7, 18, 0.35) 0%, rgba(3, 7, 18, 0.88) 100%);
   pointer-events: none;
@@ -272,7 +276,7 @@ body {
   justify-content: center;
   background: radial-gradient(circle, rgba(14, 165, 233, 0.25) 0%, rgba(15, 23, 42, 0.85) 70%);
   border: 1.5px solid rgba(56, 189, 248, 0.65);
-  box-shadow: 
+  box-shadow:
     0 0 35px rgba(6, 182, 212, 0.5),
     inset 0 0 20px rgba(6, 182, 212, 0.3);
   backdrop-filter: blur(8px);
@@ -282,7 +286,7 @@ body {
 
 .insa-shield-halo:hover {
   transform: scale(1.06);
-  box-shadow: 
+  box-shadow:
     0 0 50px rgba(6, 182, 212, 0.75),
     inset 0 0 25px rgba(6, 182, 212, 0.5);
 }
@@ -639,9 +643,17 @@ body {
 }
 
 @keyframes pulse-danger {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
 
 .image-actions-bar {
@@ -1131,8 +1143,15 @@ select.form-select:focus {
 }
 
 @keyframes modalPop {
-  from { opacity: 0; transform: scale(0.96) translateY(10px); }
-  to { opacity: 1; transform: scale(1) translateY(0); }
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 .modal-header {
@@ -1372,24 +1391,31 @@ footer.app-footer {
   .hero-container {
     grid-template-columns: 1fr;
   }
+
   .grid-layout-2col {
     grid-template-columns: 1fr;
   }
+
   .objectives-grid {
     grid-template-columns: 1fr 1fr;
   }
+
   .challenges-grid {
     grid-template-columns: 1fr;
   }
+
   .challenge-image-showcase {
     grid-template-columns: 1fr;
   }
+
   .contact-grid {
     grid-template-columns: 1fr;
   }
+
   .docs-grid-3col {
     grid-template-columns: 1fr;
   }
+
   .nav-links {
     display: none;
   }
@@ -1399,22 +1425,28 @@ footer.app-footer {
   .hero-cyber-insa {
     min-height: 75vh;
   }
+
   .insa-hero-title {
     font-size: 34px;
   }
+
   .insa-hero-subtitle-amharic {
     font-size: 18px;
   }
+
   .insa-hero-tagline {
     font-size: 14px;
     margin-bottom: 24px;
   }
+
   .insa-btn-group {
     flex-direction: column;
     width: 100%;
     gap: 12px;
   }
-  .insa-btn-primary, .insa-btn-secondary {
+
+  .insa-btn-primary,
+  .insa-btn-secondary {
     width: 100%;
     padding: 12px 24px;
   }
