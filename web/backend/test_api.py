@@ -134,6 +134,15 @@ def test_live_api():
         print(f"GET /app.js -> Status: {status_js} | Size: {len(js)} bytes")
         assert status_js == 200
 
+        # Verify image serving
+        with urllib.request.urlopen("http://127.0.0.1:8000/images/substation_ai.png") as r:
+            assert r.status == 200
+            print(f"GET /images/substation_ai.png -> Status: 200 | Size: {len(r.read())} bytes")
+
+        with urllib.request.urlopen("http://127.0.0.1:8000/images/transformer_burnout.png") as r:
+            assert r.status == 200
+            print(f"GET /images/transformer_burnout.png -> Status: 200 | Size: {len(r.read())} bytes")
+
         print("\n" + "=" * 70)
         print("🎉 ALL FASTAPI REST ENDPOINTS & FRONTEND UI TESTED LIVE AND PASSED 100%!")
         print("=" * 70)

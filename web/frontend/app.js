@@ -206,13 +206,17 @@ function setupImageControls() {
   const uploadInput = document.getElementById("imageUploadInput");
   const imgElement = document.getElementById("transformerImage");
   const resetBtn = document.getElementById("resetImageBtn");
+  const viewBtns = document.querySelectorAll(".image-view-btn");
 
-  // Check if a custom transformer image exists on disk
-  fetch("/images/transformer.png", { method: "HEAD" }).then(res => {
-    if (res.ok) {
-      imgElement.src = "/images/transformer.png";
-    }
-  }).catch(() => {});
+  // Wire up View Switcher buttons
+  viewBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+      viewBtns.forEach(b => b.classList.remove("active-view"));
+      btn.classList.add("active-view");
+      const src = btn.getAttribute("data-src");
+      imgElement.src = src;
+    });
+  });
 
   uploadInput.addEventListener("change", e => {
     const file = e.target.files[0];
@@ -220,6 +224,7 @@ function setupImageControls() {
       const reader = new FileReader();
       reader.onload = evt => {
         imgElement.src = evt.target.result;
+        viewBtns.forEach(b => b.classList.remove("active-view"));
         showToast("Transformer image updated!");
       };
       reader.readAsDataURL(file);
@@ -227,9 +232,28 @@ function setupImageControls() {
   });
 
   resetBtn.addEventListener("click", () => {
-    imgElement.src = "/images/default_transformer.svg";
-    showToast("Schematic restored to default.");
+    imgElement.src = "/images/substation_ai.png";
+    viewBtns.forEach(b => b.classList.remove("active-view"));
+    document.getElementById("viewBtnSubstation").classList.add("active-view");
+    showToast("Substation image restored.");
   });
+}
+
+function autoSetImageForState(statusFlag, temp, anom) {
+  const imgElement = document.getElementById("transformerImage");
+  const viewBtns = document.querySelectorAll(".image-view-btn");
+
+  if (statusFlag === "burnout" || temp >= 105.0) {
+    imgElement.src = "/images/transformer_burnout.png";
+    viewBtns.forEach(b => b.classList.remove("active-view"));
+    const btn = document.getElementById("viewBtnBurnout");
+    if (btn) btn.classList.add("active-view");
+  } else if (imgElement.src.includes("transformer_burnout.png") && temp < 90.0 && anom < 0.3) {
+    imgElement.src = "/images/substation_ai.png";
+    viewBtns.forEach(b => b.classList.remove("active-view"));
+    const btn = document.getElementById("viewBtnSubstation");
+    if (btn) btn.classList.add("active-view");
+  }
 }
 
 // =============================================================================
@@ -336,6 +360,9 @@ function renderStepResponse(data) {
   const rewEl = document.getElementById("rewardDisplay");
   rewEl.textContent = `${data.reward >= 0 ? '+' : ''}${data.reward.toFixed(1)}`;
   rewEl.style.color = data.reward >= 0 ? '#10b981' : '#ef4444';
+
+  // Automatically update image state based on thermal/burnout conditions
+  autoSetImageForState(data.status_flag, data.next_temp, data.next_anomaly_prob);
 }
 
 function toggleAutoLoop() {

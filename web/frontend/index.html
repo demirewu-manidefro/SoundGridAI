@@ -161,6 +161,19 @@
           </div>
 
           <!-- Transformer Image Container -->
+          <!-- Image View Switcher -->
+          <div style="display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;">
+            <button id="viewBtnSubstation" class="image-view-btn active-view" data-src="/images/substation_ai.png">
+              ⚡ Substation AI View
+            </button>
+            <button id="viewBtnBurnout" class="image-view-btn" data-src="/images/transformer_burnout.png">
+              💥 Burnout Incident View
+            </button>
+            <button id="viewBtnSchematic" class="image-view-btn" data-src="/images/default_transformer.svg">
+              📐 Instrumentation Schematic
+            </button>
+          </div>
+
           <div class="image-monitor-box">
             <!-- Telemetry Overlay Chips -->
             <div class="image-overlay-bar">
@@ -181,7 +194,7 @@
             <!-- Image Element -->
             <img 
               id="transformerImage" 
-              src="/images/default_transformer.svg" 
+              src="/images/substation_ai.png" 
               alt="Power Transformer Instrumentation Schematic"
               class="transformer-img-element"
             />
