@@ -10,334 +10,507 @@
 </head>
 <body>
 
-  <div class="app-container">
-    
-    <!-- Header -->
-    <header class="app-header">
-      <div class="brand-wrapper">
-        <div class="brand-icon">⚡</div>
-        <div class="brand-title">
-          <h1>SoundGrid AI Platform</h1>
-          <p>Acoustic-Driven Cyber-Physical Reinforcement Learning for Power Transformers</p>
+  <!-- ========================================================================= -->
+  <!-- TOP STICKY NAVBAR                                                         -->
+  <!-- ========================================================================= -->
+  <nav class="top-navbar">
+    <div class="nav-container">
+      <a href="#hero" class="nav-brand">
+        <div class="brand-logo-icon">⚡</div>
+        <div>
+          <div class="nav-brand-title">SoundGrid AI</div>
+          <div class="nav-brand-tag">Cyber-Physical Transformer Protection</div>
         </div>
-      </div>
-      <div class="header-status">
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="#hero" class="nav-link active">Overview</a></li>
+        <li><a href="#control-section" class="nav-link">Live Controller</a></li>
+        <li><a href="#simulation-section" class="nav-link">Trajectory Physics</a></li>
+        <li><a href="#benchmark-section" class="nav-link">IEC Benchmark</a></li>
+        <li><a href="#docs-section" class="nav-link">Architecture & Math</a></li>
+      </ul>
+
+      <div class="nav-actions">
         <div id="connectionStatus" class="status-badge">
           <span class="status-dot"></span>
           <span id="statusText">Connecting API...</span>
         </div>
+        <a href="#control-section" class="btn-nav-cta">Launch Controller</a>
       </div>
-    </header>
+    </div>
+  </nav>
 
-    <!-- Navigation Tabs -->
-    <nav class="nav-tabs">
-      <button class="tab-btn active" data-tab="tab-control">
-        <span>🎮</span> Live Control & Image Monitor
-      </button>
-      <button class="tab-btn" data-tab="tab-simulate">
-        <span>📈</span> Trajectory Simulation
-      </button>
-      <button class="tab-btn" data-tab="tab-benchmark">
-        <span>🏆</span> Head-to-Head Benchmark
-      </button>
-    </nav>
 
-    <!-- ========================================================================= -->
-    <!-- TAB 1: LIVE CONTROL & TRANSFORMER IMAGE MONITOR                           -->
-    <!-- ========================================================================= -->
-    <section id="tab-control" class="tab-content active">
-      <div class="grid-layout-2col">
-        
-        <!-- LEFT COLUMN: CONTROLS & TELEMETRY INPUTS -->
-        <div class="card">
-          <div class="card-header">
-            <div>
-              <div class="card-title">⚙️ Cyber-Physical State Controls</div>
-              <div class="card-subtitle">Tune transformer electrical and acoustic parameters in real-time</div>
-            </div>
-            <select id="activeControllerSelect" class="form-select" style="max-width: 200px;">
-              <option value="soundgrid_ppo">SoundGrid AI (8D PPO)</option>
-              <option value="conventional_relay">Conventional Relay (IEC 60255)</option>
-              <option value="pid_controller">Classical PID Controller</option>
-              <option value="static_4d_rl">Static 4D RL (Ablation)</option>
-            </select>
-          </div>
+  <!-- ========================================================================= -->
+  <!-- FULL-BLEED HERO LANDING SECTION (substation_ai.png)                       -->
+  <!-- ========================================================================= -->
+  <section id="hero" class="hero-landing">
+    <div class="hero-glow-overlay"></div>
+    <div class="hero-container">
+      
+      <!-- HERO LEFT: VALUE PROPOSITION -->
+      <div class="hero-content">
+        <div class="hero-tag">
+          <span>⚡ Acoustic-Driven Cyber-Physical AI</span>
+        </div>
+        <h1 class="hero-title">
+          Next-Generation <span class="gradient-text">Acoustic Perception</span> & Cyber-Physical Protection
+        </h1>
+        <p class="hero-description">
+          SoundGrid AI continuously decodes high-voltage partial discharge acoustic transients via 8D state-space reinforcement learning. It triggers sub-second emergency trips during arcing hazards, eliminating catastrophic transformer explosions where traditional thermal relays remain blind.
+        </p>
 
-          <!-- Quick Scenario Presets -->
-          <div style="margin-bottom: 8px; font-size: 12px; font-weight: 700; color: var(--text-muted);">
-            OPERATIONAL REGIME PRESETS:
-          </div>
-          <div class="presets-grid">
-            <button class="preset-chip active-preset" data-preset="normal">🟢 Normal Hum</button>
-            <button class="preset-chip" data-preset="warning">🟡 Incipient PD</button>
-            <button class="preset-chip" data-preset="critical">🔴 Severe Arcing</button>
-            <button class="preset-chip" data-preset="thermal">🟠 Heatwave Overload</button>
-          </div>
-
-          <!-- Sliders -->
-          <div class="form-group">
-            <div class="form-label">
-              <span>Transformer Load (Dispatch)</span>
-              <span id="loadValDisplay" class="val-display">85% (0.85)</span>
-            </div>
-            <input type="range" id="loadInput" min="0" max="100" value="85" />
-          </div>
-
-          <div class="form-group">
-            <div class="form-label">
-              <span>Core / Oil Temperature</span>
-              <span id="tempValDisplay" class="val-display">65.0°C</span>
-            </div>
-            <input type="range" id="tempInput" min="20" max="130" value="65" />
-          </div>
-
-          <div class="form-group">
-            <div class="form-label">
-              <span>Acoustic Anomaly Probability (P<sub>anom</sub>)</span>
-              <span id="anomValDisplay" class="val-display">0.04</span>
-            </div>
-            <input type="range" id="anomInput" min="0" max="100" value="4" />
-          </div>
-
-          <div class="form-group">
-            <div class="form-label">
-              <span>Spectral / Acoustic Energy</span>
-              <span id="energyValDisplay" class="val-display">0.15</span>
-            </div>
-            <input type="range" id="energyInput" min="0" max="100" value="15" />
-          </div>
-
-          <div class="form-group">
-            <div class="form-label">
-              <span>Ambient Temperature</span>
-              <span id="ambientValDisplay" class="val-display">30.0°C</span>
-            </div>
-            <input type="range" id="ambientInput" min="10" max="50" value="30" />
-          </div>
-
-          <!-- Action Buttons -->
-          <div style="display: flex; gap: 12px; margin-top: 20px;">
-            <button id="stepBtn" class="btn-primary" style="flex: 2;">
-              <span>⚡ Execute Control Step</span>
-            </button>
-            <button id="autoLoopBtn" class="btn-secondary" style="flex: 1;">
-              <span>🔄 Auto-Loop: OFF</span>
-            </button>
-          </div>
-
-          <!-- Decision Output Card -->
-          <div class="decision-card">
-            <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px;">
-              CONTROLLER OUTPUT & ACTION PROBABILITIES:
-            </div>
-            <div id="actionBanner" class="decision-action-banner banner-maintain">
-              <span id="actionNameText">0: Maintain Load</span>
-              <span id="actionConfidenceText">Confidence: 65.0%</span>
-            </div>
-
-            <!-- Softmax Probability Bars -->
-            <div class="prob-list" id="probListContainer">
-              <!-- Rendered via JS -->
-            </div>
-
-            <!-- Next State Transition -->
-            <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid #f1f5f9; display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted);">
-              <div>Next Temp: <strong id="nextTempDisplay" style="color: var(--text-main);">65.3°C</strong></div>
-              <div>Next Load: <strong id="nextLoadDisplay" style="color: var(--text-main);">0.85</strong></div>
-              <div>Step Reward: <strong id="rewardDisplay" style="color: #10b981;">+29.6</strong></div>
-            </div>
-          </div>
-
+        <div class="hero-actions">
+          <a href="#control-section" class="btn-hero-primary">
+            <span>🎮 Open Live Controller</span>
+          </a>
+          <a href="#benchmark-section" class="btn-hero-secondary">
+            <span>🏆 View IEC Benchmark</span>
+          </a>
         </div>
 
-        <!-- RIGHT COLUMN: TRANSFORMER IMAGE MONITOR & SPECTROGRAM -->
-        <div class="card">
-          <div class="card-header">
-            <div>
-              <div class="card-title">🖼️ Transformer Acoustic & Visual Monitor</div>
-              <div class="card-subtitle">Live physical telemetry visualizer and schematic view</div>
-            </div>
-            <span id="breakerBadge" class="breaker-state-badge breaker-closed">Breaker: CLOSED</span>
+        <div class="hero-stats-grid">
+          <div class="stat-item">
+            <h3>0.0%</h3>
+            <p>Burnout Rate</p>
           </div>
-
-          <!-- Transformer Image Container -->
-          <!-- Image View Switcher -->
-          <div style="display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;">
-            <button id="viewBtnSubstation" class="image-view-btn active-view" data-src="/images/substation_ai.png">
-              ⚡ Substation AI View
-            </button>
-            <button id="viewBtnBurnout" class="image-view-btn" data-src="/images/transformer_burnout.png">
-              💥 Burnout Incident View
-            </button>
-            <button id="viewBtnSchematic" class="image-view-btn" data-src="/images/default_transformer.svg">
-              📐 Instrumentation Schematic
-            </button>
+          <div class="stat-item">
+            <h3>1 Step</h3>
+            <p>Emergency Trip</p>
           </div>
-
-          <div class="image-monitor-box">
-            <!-- Telemetry Overlay Chips -->
-            <div class="image-overlay-bar">
-              <div class="overlay-chip">
-                <span>🔥 Core Temp:</span>
-                <strong id="overlayTemp">65.0°C</strong>
-              </div>
-              <div class="overlay-chip">
-                <span>🔊 PD Probability:</span>
-                <strong id="overlayAnom">0.04</strong>
-              </div>
-              <div class="overlay-chip">
-                <span>⚡ Grid Load:</span>
-                <strong id="overlayLoad">85%</strong>
-              </div>
-            </div>
-
-            <!-- Image Element -->
-            <img 
-              id="transformerImage" 
-              src="/images/substation_ai.png" 
-              alt="Power Transformer Instrumentation Schematic"
-              class="transformer-img-element"
-            />
+          <div class="stat-item">
+            <h3>85%</h3>
+            <p>Nominal Grid Load</p>
           </div>
-
-          <!-- Image Controls Bar -->
-          <div class="image-actions-bar">
-            <div>
-              <label for="imageUploadInput" class="upload-btn-label">
-                <span>📁 Upload / Switch Transformer Image</span>
-              </label>
-              <input type="file" id="imageUploadInput" accept="image/*" style="display: none;" />
-            </div>
-            <button id="resetImageBtn" class="btn-secondary" style="font-size: 11px; padding: 6px 12px;">
-              Reset Default Schematic
-            </button>
+          <div class="stat-item">
+            <h3>IEC 60255</h3>
+            <p>Protection Grade</p>
           </div>
+        </div>
+      </div>
 
-          <!-- Live Acoustic Waveform Visualizer simulation -->
-          <div style="margin-top: 20px; background: #ffffff; border: 1px solid var(--card-border); border-radius: var(--radius-md); padding: 14px;">
-            <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; margin-bottom: 8px;">
-              <span style="color: var(--text-muted);">ACOUSTIC SENSOR SPECTRUM (LOG-MEL PD DETECTOR)</span>
-              <span id="spectrumStatusText" style="color: #10b981;">Nominal Magnetostriction (100 Hz)</span>
-            </div>
-            <canvas id="acousticCanvas" width="500" height="70" style="width: 100%; height: 70px; background: #fafbfc; border-radius: 6px;"></canvas>
+      <!-- HERO RIGHT: GLASSMORPHIC LIVE TELEMETRY HUD -->
+      <div class="hero-glass-card">
+        <div class="glass-card-header">
+          <div class="glass-card-title">
+            <span>📡 Substation Live Telemetry</span>
           </div>
-
+          <span id="heroBreakerBadge" class="breaker-state-badge breaker-closed">Breaker: CLOSED</span>
         </div>
 
+        <div class="glass-card-grid">
+          <div class="glass-metric-box">
+            <div class="glass-metric-label">🔥 Core Temperature</div>
+            <div id="heroTempDisplay" class="glass-metric-val">65.0°C</div>
+          </div>
+          <div class="glass-metric-box">
+            <div class="glass-metric-label">🔊 PD Probability</div>
+            <div id="heroAnomDisplay" class="glass-metric-val">0.04</div>
+          </div>
+          <div class="glass-metric-box">
+            <div class="glass-metric-label">⚡ Active Grid Load</div>
+            <div id="heroLoadDisplay" class="glass-metric-val">85%</div>
+          </div>
+          <div class="glass-metric-box">
+            <div class="glass-metric-label">🎯 Policy Decision</div>
+            <div id="heroActionDisplay" class="glass-metric-val" style="font-size: 15px; color: #38bdf8;">Maintain Load</div>
+          </div>
+        </div>
+
+        <!-- Live Acoustic Waveform Preview -->
+        <div style="background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 10px;">
+          <div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; color: #94a3b8; margin-bottom: 6px;">
+            <span>PIEZOELECTRIC HYDROPHONE SPECTRUM</span>
+            <span id="heroSpectrumStatus" style="color: #34d399;">Nominal (100 Hz)</span>
+          </div>
+          <canvas id="heroAcousticCanvas" width="450" height="50" style="width: 100%; height: 50px; border-radius: 4px;"></canvas>
+        </div>
       </div>
-    </section>
+
+    </div>
+  </section>
 
 
-    <!-- ========================================================================= -->
-    <!-- TAB 2: TRAJECTORY SIMULATION                                              -->
-    <!-- ========================================================================= -->
-    <section id="tab-simulate" class="tab-content">
+  <!-- ========================================================================= -->
+  <!-- SECTION 1: LIVE INTERACTIVE CONTROLLER STUDIO                             -->
+  <!-- ========================================================================= -->
+  <section id="control-section" class="section-wrapper">
+    <div class="section-header">
+      <span class="section-tag">Interactive Control Studio</span>
+      <h2 class="section-title">Live Cyber-Physical Reinforcement Learning</h2>
+      <p class="section-subtitle">
+        Inject electrical load fluctuations and acoustic partial discharge anomalies in real time to observe deterministic vs neural policy responses.
+      </p>
+    </div>
+
+    <div class="grid-layout-2col">
+      
+      <!-- LEFT COLUMN: CONTROLS & TELEMETRY INPUTS -->
       <div class="card">
         <div class="card-header">
           <div>
-            <div class="card-title">📈 Multi-Step Cyber-Physical Trajectory Simulation</div>
-            <div class="card-subtitle">Observe dynamic closed-loop response across operational disturbance regimes</div>
+            <div class="card-title">⚙️ Cyber-Physical State Controls</div>
+            <div class="card-subtitle">Tune transformer electrical and acoustic parameters in real-time</div>
           </div>
-          <div style="display: flex; gap: 12px; align-items: center;">
-            <select id="simControllerSelect" class="form-select" style="width: 180px;">
-              <option value="soundgrid_ppo">SoundGrid AI (8D PPO)</option>
-              <option value="conventional_relay">Conventional Relay</option>
-              <option value="pid_controller">Classical PID</option>
-              <option value="static_4d_rl">Static 4D RL</option>
-            </select>
-            <select id="simRegimeSelect" class="form-select" style="width: 180px;">
-              <option value="critical">🔴 Severe Arcing Hazard</option>
-              <option value="warning">🟡 Incipient Partial Discharge</option>
-              <option value="thermal">🟠 Extreme Thermal Overload</option>
-              <option value="normal">🟢 Normal Dispatch</option>
-            </select>
-            <button id="runSimBtn" class="btn-primary">
-              <span>▶ Run Simulation</span>
-            </button>
+          <select id="activeControllerSelect" class="form-select" style="max-width: 200px;">
+            <option value="soundgrid_ppo">SoundGrid AI (8D PPO)</option>
+            <option value="conventional_relay">Conventional Relay (IEC 60255)</option>
+            <option value="pid_controller">Classical PID Controller</option>
+            <option value="static_4d_rl">Static 4D RL (Ablation)</option>
+          </select>
+        </div>
+
+        <!-- Quick Scenario Presets -->
+        <div style="margin-bottom: 8px; font-size: 12px; font-weight: 700; color: var(--text-muted);">
+          OPERATIONAL REGIME PRESETS:
+        </div>
+        <div class="presets-grid">
+          <button class="preset-chip active-preset" data-preset="normal">🟢 Normal Hum</button>
+          <button class="preset-chip" data-preset="warning">🟡 Incipient PD</button>
+          <button class="preset-chip" data-preset="critical">🔴 Severe Arcing</button>
+          <button class="preset-chip" data-preset="thermal">🟠 Heatwave Overload</button>
+        </div>
+
+        <!-- Sliders -->
+        <div class="form-group">
+          <div class="form-label">
+            <span>Transformer Load (Dispatch)</span>
+            <span id="loadValDisplay" class="val-display">85% (0.85)</span>
+          </div>
+          <input type="range" id="loadInput" min="0" max="100" value="85" />
+        </div>
+
+        <div class="form-group">
+          <div class="form-label">
+            <span>Core / Oil Temperature</span>
+            <span id="tempValDisplay" class="val-display">65.0°C</span>
+          </div>
+          <input type="range" id="tempInput" min="20" max="130" value="65" />
+        </div>
+
+        <div class="form-group">
+          <div class="form-label">
+            <span>Acoustic Anomaly Probability (P<sub>anom</sub>)</span>
+            <span id="anomValDisplay" class="val-display">0.04</span>
+          </div>
+          <input type="range" id="anomInput" min="0" max="100" value="4" />
+        </div>
+
+        <div class="form-group">
+          <div class="form-label">
+            <span>Spectral / Acoustic Energy</span>
+            <span id="energyValDisplay" class="val-display">0.15</span>
+          </div>
+          <input type="range" id="energyInput" min="0" max="100" value="15" />
+        </div>
+
+        <div class="form-group">
+          <div class="form-label">
+            <span>Ambient Temperature</span>
+            <span id="ambientValDisplay" class="val-display">30.0°C</span>
+          </div>
+          <input type="range" id="ambientInput" min="10" max="50" value="30" />
+        </div>
+
+        <!-- Action Buttons -->
+        <div style="display: flex; gap: 12px; margin-top: 20px;">
+          <button id="stepBtn" class="btn-primary" style="flex: 2;">
+            <span>⚡ Execute Control Step</span>
+          </button>
+          <button id="autoLoopBtn" class="btn-secondary" style="flex: 1;">
+            <span>🔄 Auto-Loop: OFF</span>
+          </button>
+        </div>
+
+        <!-- Decision Output Card -->
+        <div class="decision-card">
+          <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px;">
+            CONTROLLER OUTPUT & ACTION PROBABILITIES:
+          </div>
+          <div id="actionBanner" class="decision-action-banner banner-maintain">
+            <span id="actionNameText">0: Maintain Load</span>
+            <span id="actionConfidenceText">Confidence: 65.0%</span>
+          </div>
+
+          <!-- Softmax Probability Bars -->
+          <div class="prob-list" id="probListContainer">
+            <!-- Rendered via JS -->
+          </div>
+
+          <!-- Next State Transition -->
+          <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid #f1f5f9; display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted);">
+            <div>Next Temp: <strong id="nextTempDisplay" style="color: var(--text-main);">65.3°C</strong></div>
+            <div>Next Load: <strong id="nextLoadDisplay" style="color: var(--text-main);">0.85</strong></div>
+            <div>Step Reward: <strong id="rewardDisplay" style="color: #10b981;">+29.6</strong></div>
           </div>
         </div>
 
-        <!-- Simulation Summary Banner -->
-        <div id="simSummaryBanner" style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: var(--radius-md); padding: 12px 18px; margin-bottom: 20px;">
-          <div>
-            <span style="font-size: 12px; font-weight: 700; color: var(--text-muted);">OUTCOME: </span>
-            <span id="simOutcomeBadge" style="font-weight: 700; color: #3b82f6;">Safe Emergency Trip (Arcing Prevented)</span>
-          </div>
-          <div style="font-size: 13px; color: var(--text-muted);">
-            Steps Executed: <strong id="simStepsText" style="color: var(--text-main);">1</strong> | 
-            Peak Temp: <strong id="simMaxTempText" style="color: var(--text-main);">75.0°C</strong> | 
-            Cumulative Reward: <strong id="simRewardText" style="color: #10b981;">+532.0</strong>
-          </div>
-        </div>
-
-        <!-- Trajectory Charts Grid -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-          <div class="chart-box">
-            <div style="font-size: 13px; font-weight: 700; margin-bottom: 8px;">Thermal & Load Dynamics</div>
-            <canvas id="thermalChart"></canvas>
-          </div>
-          <div class="chart-box">
-            <div style="font-size: 13px; font-weight: 700; margin-bottom: 8px;">Acoustic Partial Discharge & Energy</div>
-            <canvas id="acousticChart"></canvas>
-          </div>
-        </div>
       </div>
-    </section>
 
-
-    <!-- ========================================================================= -->
-    <!-- TAB 3: COMPARATIVE BENCHMARK                                              -->
-    <!-- ========================================================================= -->
-    <section id="tab-benchmark" class="tab-content">
+      <!-- RIGHT COLUMN: TRANSFORMER IMAGE MONITOR & SPECTROGRAM -->
       <div class="card">
         <div class="card-header">
           <div>
-            <div class="card-title">🏆 Head-to-Head Comparative Benchmark Suite</div>
-            <div class="card-subtitle">Empirical validation against IEC industrial baselines for publication & thesis defense</div>
+            <div class="card-title">🖼️ Transformer Acoustic & Visual Monitor</div>
+            <div class="card-subtitle">Live physical telemetry visualizer and schematic view</div>
           </div>
-          <div style="display: flex; align-items: center; gap: 12px;">
-            <div style="font-size: 12px; font-weight: 600; color: var(--text-muted);">Episodes / Regime:</div>
-            <input type="number" id="benchmarkEpisodesInput" value="5" min="1" max="25" style="width: 60px; padding: 6px; border: 1px solid var(--card-border); border-radius: var(--radius-sm);" />
-            <button id="runBenchmarkBtn" class="btn-primary">
-              <span>🚀 Execute Benchmark Suite</span>
-            </button>
-          </div>
+          <span id="breakerBadge" class="breaker-state-badge breaker-closed">Breaker: CLOSED</span>
         </div>
 
-        <!-- Comparative Table -->
-        <table class="benchmark-table">
-          <thead>
-            <tr>
-              <th>Controller Name</th>
-              <th>Mean Reward</th>
-              <th>Burnout Rate</th>
-              <th>False Blackout</th>
-              <th>Safe Trip Rate</th>
-              <th>Avg Delivered Load</th>
-              <th>Verdict</th>
-            </tr>
-          </thead>
-          <tbody id="benchmarkTableBody">
-            <!-- Populated via JS -->
-          </tbody>
-        </table>
+        <!-- Image View Switcher -->
+        <div class="image-view-switch-bar">
+          <button id="viewBtnSubstation" class="image-view-btn active-view" data-src="/images/substation_ai.png">
+            ⚡ Substation AI View
+          </button>
+          <button id="viewBtnBurnout" class="image-view-btn" data-src="/images/transformer_burnout.png">
+            💥 Burnout Incident View
+          </button>
+          <button id="viewBtnSchematic" class="image-view-btn" data-src="/images/default_transformer.svg">
+            📐 Instrumentation Schematic
+          </button>
+        </div>
 
-        <!-- Benchmark Bar Chart Comparison -->
-        <div style="margin-top: 24px; display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px;">
-          <div class="chart-box" style="height: 300px;">
-            <div style="font-size: 13px; font-weight: 700; margin-bottom: 8px;">Safety Comparison (Burnout vs False Blackout Rate)</div>
-            <canvas id="benchmarkSafetyChart"></canvas>
+        <!-- Transformer Image Container -->
+        <div class="image-monitor-box">
+          <!-- Telemetry Overlay Chips -->
+          <div class="image-overlay-bar">
+            <div class="overlay-chip">
+              <span>🔥 Core Temp:</span>
+              <strong id="overlayTemp">65.0°C</strong>
+            </div>
+            <div class="overlay-chip">
+              <span>🔊 PD Probability:</span>
+              <strong id="overlayAnom">0.04</strong>
+            </div>
+            <div class="overlay-chip">
+              <span>⚡ Grid Load:</span>
+              <strong id="overlayLoad">85%</strong>
+            </div>
           </div>
-          <div class="chart-box" style="height: 300px;">
-            <div style="font-size: 13px; font-weight: 700; margin-bottom: 8px;">Mean Cumulative Reward Comparison</div>
-            <canvas id="benchmarkRewardChart"></canvas>
+
+          <!-- Image Element -->
+          <img 
+            id="transformerImage" 
+            src="/images/substation_ai.png" 
+            alt="Power Transformer Instrumentation Schematic"
+            class="transformer-img-element"
+          />
+        </div>
+
+        <!-- Image Controls Bar -->
+        <div class="image-actions-bar">
+          <div>
+            <label for="imageUploadInput" class="upload-btn-label">
+              <span>📁 Upload / Switch Transformer Image</span>
+            </label>
+            <input type="file" id="imageUploadInput" accept="image/*" style="display: none;" />
           </div>
+          <button id="resetImageBtn" class="btn-secondary" style="font-size: 11px; padding: 6px 12px;">
+            Reset Default Schematic
+          </button>
+        </div>
+
+        <!-- Live Acoustic Waveform Visualizer simulation -->
+        <div style="margin-top: 20px; background: #ffffff; border: 1px solid var(--card-border); border-radius: var(--radius-md); padding: 14px;">
+          <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; margin-bottom: 8px;">
+            <span style="color: var(--text-muted);">ACOUSTIC SENSOR SPECTRUM (LOG-MEL PD DETECTOR)</span>
+            <span id="spectrumStatusText" style="color: #10b981;">Nominal Magnetostriction (100 Hz)</span>
+          </div>
+          <canvas id="acousticCanvas" width="500" height="70" style="width: 100%; height: 70px; background: #fafbfc; border-radius: 6px;"></canvas>
         </div>
 
       </div>
-    </section>
 
-  </div>
+    </div>
+  </section>
+
+
+  <!-- ========================================================================= -->
+  <!-- SECTION 2: TRAJECTORY SIMULATION STUDIO                                   -->
+  <!-- ========================================================================= -->
+  <section id="simulation-section" class="section-wrapper" style="background-color: #ffffff; border-top: 1px solid var(--card-border); border-bottom: 1px solid var(--card-border);">
+    <div class="section-header">
+      <span class="section-tag">Cyber-Physical Dynamics</span>
+      <h2 class="section-title">Multi-Step Trajectory Simulation</h2>
+      <p class="section-subtitle">
+        Observe closed-loop dynamic trajectory curves under severe acoustic arcing and thermal overload disturbances.
+      </p>
+    </div>
+
+    <div class="card" style="box-shadow: none; border-color: #e2e8f0;">
+      <div class="card-header">
+        <div>
+          <div class="card-title">📈 Dynamic Trajectory Simulation</div>
+          <div class="card-subtitle">Run multi-step episodes to observe thermal & acoustic evolution</div>
+        </div>
+        <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+          <select id="simControllerSelect" class="form-select" style="width: 180px;">
+            <option value="soundgrid_ppo">SoundGrid AI (8D PPO)</option>
+            <option value="conventional_relay">Conventional Relay</option>
+            <option value="pid_controller">Classical PID</option>
+            <option value="static_4d_rl">Static 4D RL</option>
+          </select>
+          <select id="simRegimeSelect" class="form-select" style="width: 180px;">
+            <option value="critical">🔴 Severe Arcing Hazard</option>
+            <option value="warning">🟡 Incipient Partial Discharge</option>
+            <option value="thermal">🟠 Extreme Thermal Overload</option>
+            <option value="normal">🟢 Normal Dispatch</option>
+          </select>
+          <button id="runSimBtn" class="btn-primary">
+            <span>▶ Run Simulation</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Simulation Summary Banner -->
+      <div id="simSummaryBanner" style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: var(--radius-md); padding: 12px 18px; margin-bottom: 20px;">
+        <div>
+          <span style="font-size: 12px; font-weight: 700; color: var(--text-muted);">OUTCOME: </span>
+          <span id="simOutcomeBadge" style="font-weight: 700; color: #3b82f6;">Safe Emergency Trip (Arcing Prevented)</span>
+        </div>
+        <div style="font-size: 13px; color: var(--text-muted);">
+          Steps Executed: <strong id="simStepsText" style="color: var(--text-main);">1</strong> | 
+          Peak Temp: <strong id="simMaxTempText" style="color: var(--text-main);">75.0°C</strong> | 
+          Cumulative Reward: <strong id="simRewardText" style="color: #10b981;">+532.0</strong>
+        </div>
+      </div>
+
+      <!-- Trajectory Charts Grid -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+        <div class="chart-box">
+          <div style="font-size: 13px; font-weight: 700; margin-bottom: 8px;">Thermal & Load Dynamics</div>
+          <canvas id="thermalChart"></canvas>
+        </div>
+        <div class="chart-box">
+          <div style="font-size: 13px; font-weight: 700; margin-bottom: 8px;">Acoustic Partial Discharge & Energy</div>
+          <canvas id="acousticChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ========================================================================= -->
+  <!-- SECTION 3: HEAD-TO-HEAD COMPARATIVE BENCHMARK                             -->
+  <!-- ========================================================================= -->
+  <section id="benchmark-section" class="section-wrapper">
+    <div class="section-header">
+      <span class="section-tag">Empirical Validation</span>
+      <h2 class="section-title">Head-to-Head Comparative Benchmark</h2>
+      <p class="section-subtitle">
+        Empirical validation against IEC 60255 industrial relays, classical PID, and static POMDP baselines for dissertation and publication.
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">🏆 Benchmark Suite Execution</div>
+          <div class="card-subtitle">Test all controllers across stochastic Monte-Carlo operational episodes</div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="font-size: 12px; font-weight: 600; color: var(--text-muted);">Episodes / Regime:</div>
+          <input type="number" id="benchmarkEpisodesInput" value="5" min="1" max="25" style="width: 60px; padding: 6px; border: 1px solid var(--card-border); border-radius: var(--radius-sm);" />
+          <button id="runBenchmarkBtn" class="btn-primary">
+            <span>🚀 Execute Benchmark Suite</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Comparative Table -->
+      <table class="benchmark-table">
+        <thead>
+          <tr>
+            <th>Controller Name</th>
+            <th>Mean Reward</th>
+            <th>Burnout Rate</th>
+            <th>False Blackout</th>
+            <th>Safe Trip Rate</th>
+            <th>Avg Delivered Load</th>
+            <th>Verdict</th>
+          </tr>
+        </thead>
+        <tbody id="benchmarkTableBody">
+          <!-- Populated via JS -->
+        </tbody>
+      </table>
+
+      <!-- Benchmark Bar Chart Comparison -->
+      <div style="margin-top: 28px; display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px;">
+        <div class="chart-box" style="height: 310px;">
+          <div style="font-size: 13px; font-weight: 700; margin-bottom: 8px;">Safety Comparison (Burnout vs False Blackout Rate)</div>
+          <canvas id="benchmarkSafetyChart"></canvas>
+        </div>
+        <div class="chart-box" style="height: 310px;">
+          <div style="font-size: 13px; font-weight: 700; margin-bottom: 8px;">Mean Cumulative Reward Comparison</div>
+          <canvas id="benchmarkRewardChart"></canvas>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ========================================================================= -->
+  <!-- SECTION 4: RESEARCH ARCHITECTURE & MATHEMATICAL FORMULATION               -->
+  <!-- ========================================================================= -->
+  <section id="docs-section" class="section-wrapper" style="background-color: #ffffff; border-top: 1px solid var(--card-border);">
+    <div class="section-header">
+      <span class="section-tag">Scientific Blueprint</span>
+      <h2 class="section-title">Cyber-Physical System Architecture</h2>
+      <p class="section-subtitle">
+        Mathematical underpinnings of the acoustic perception pipeline and derivative-augmented Markov decision process.
+      </p>
+    </div>
+
+    <div class="docs-grid-3col">
+      <div class="doc-card">
+        <div class="doc-card-icon">📐</div>
+        <h3>8D Derivative State Space</h3>
+        <p>
+          Extends the state vector with temporal rates of change: 
+          <code>[P, &Delta;P, E, L, &Delta;L, T/100, &Delta;T/10, t/t_max]</code>. 
+          Resolves the Partial Observability Markov Decision Process (POMDP) by exposing thermal inertia and acoustic arcing acceleration.
+        </p>
+      </div>
+
+      <div class="doc-card">
+        <div class="doc-card-icon">⚖️</div>
+        <h3>Anti-Gaming Reward Function</h3>
+        <p>
+          Formulated as <code>R = 40.0 &times; (L - 0.5) - P_thermal - P_penalty</code>. 
+          Penalizes cycling and enforces severe quadratic costs on overheating (>95°C) and arcing damage, making emergency trip the strictly dominant action during dielectric failure.
+        </p>
+      </div>
+
+      <div class="doc-card">
+        <div class="doc-card-icon">🔊</div>
+        <h3>SoundGridCNN Acoustic Perception</h3>
+        <p>
+          Processes 128-band log-Mel spectrograms extracted from piezoelectric hydrophones. Detects transient high-frequency dielectric breakdown shockwaves in oil hundreds of steps before core heat reaches trip thresholds.
+        </p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ========================================================================= -->
+  <!-- FOOTER                                                                    -->
+  <!-- ========================================================================= -->
+  <footer class="app-footer">
+    <div class="footer-container">
+      <div>
+        <div style="font-weight: 800; font-size: 16px; color: var(--text-main);">SoundGrid AI Platform</div>
+        <div style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">
+          Autonomous Cyber-Physical Transformer Protection with Acoustic Perception
+        </div>
+      </div>
+      <div style="font-size: 12px; color: var(--text-subtle);">
+        IEC 60255 & IEEE C37.91 Compliant Benchmark Suite &copy; 2026 SoundGrid AI Research
+      </div>
+    </div>
+  </footer>
 
   <!-- Toast Notification -->
   <div id="toast" class="toast-notice">Action Executed Successfully</div>

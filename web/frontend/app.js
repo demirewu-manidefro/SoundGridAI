@@ -1,10 +1,10 @@
 /**
- * SoundGrid AI - Frontend Application Controller
- * Handles live cyber-physical telemetry, interactive stepping,
- * dynamic Chart.js simulations, head-to-head benchmarking, and image handling.
+ * SoundGrid AI - Modern Landing Page & Cyber-Physical Controller
+ * Manages sticky navbar scroll spy, live telemetry, dual acoustic visualizers,
+ * multi-step Chart.js physics trajectories, and industrial benchmarking.
  */
 
-// State tracking
+// Global State
 let autoLoopTimer = null;
 let thermalChartInstance = null;
 let acousticChartInstance = null;
@@ -12,7 +12,7 @@ let benchSafetyChartInstance = null;
 let benchRewardChartInstance = null;
 let stepCounter = 1;
 
-// Sensor history for deltas
+// Sensor history for POMDP delta computation
 let prevState = {
   load: 0.85,
   temp: 65.0,
@@ -23,24 +23,26 @@ let prevState = {
 // INITIALIZATION
 // =============================================================================
 document.addEventListener("DOMContentLoaded", () => {
-  setupTabs();
+  setupNavScroll();
   setupSliders();
   setupPresets();
   setupImageControls();
   checkApiHealth();
   initAcousticWaveform();
   
-  // Bind action buttons
+  // Bind buttons
   document.getElementById("stepBtn").addEventListener("click", executeStep);
   document.getElementById("autoLoopBtn").addEventListener("click", toggleAutoLoop);
   document.getElementById("runSimBtn").addEventListener("click", runTrajectorySimulation);
   document.getElementById("runBenchmarkBtn").addEventListener("click", runBenchmark);
 
-  // Run an initial step to populate probabilities and gauges
+  // Initial runs to populate all cards, charts, and tables immediately
   executeStep();
+  runTrajectorySimulation();
+  runBenchmark();
 });
 
-// Toast Helper
+// Toast Notification
 function showToast(message) {
   const toast = document.getElementById("toast");
   toast.textContent = message;
@@ -49,26 +51,28 @@ function showToast(message) {
 }
 
 // =============================================================================
-// TAB NAVIGATION
+// STICKY NAVBAR SCROLL SPY
 // =============================================================================
-function setupTabs() {
-  const tabBtns = document.querySelectorAll(".tab-btn");
-  const tabContents = document.querySelectorAll(".tab-content");
+function setupNavScroll() {
+  const sections = document.querySelectorAll("section[id]");
+  const navLinks = document.querySelectorAll(".nav-link");
 
-  tabBtns.forEach(btn => {
-    btn.addEventListener("click", () => {
-      tabBtns.forEach(b => b.classList.remove("active"));
-      tabContents.forEach(c => c.classList.remove("active"));
+  window.addEventListener("scroll", () => {
+    let currentId = "hero";
+    const scrollPos = window.scrollY + 120;
 
-      btn.classList.add("active");
-      const targetId = btn.getAttribute("data-tab");
-      document.getElementById(targetId).classList.add("active");
+    sections.forEach(sec => {
+      const top = sec.offsetTop;
+      const height = sec.offsetHeight;
+      if (scrollPos >= top && scrollPos < top + height) {
+        currentId = sec.getAttribute("id");
+      }
+    });
 
-      // Auto-trigger simulation or benchmark if clicked first time
-      if (targetId === "tab-simulate" && !thermalChartInstance) {
-        runTrajectorySimulation();
-      } else if (targetId === "tab-benchmark" && !benchSafetyChartInstance) {
-        runBenchmark();
+    navLinks.forEach(link => {
+      link.classList.remove("active");
+      if (link.getAttribute("href") === `#${currentId}`) {
+        link.classList.add("active");
       }
     });
   });
@@ -117,17 +121,21 @@ function setupSliders() {
     const val = (e.target.value / 100).toFixed(2);
     document.getElementById("loadValDisplay").textContent = `${e.target.value}% (${val})`;
     document.getElementById("overlayLoad").textContent = `${e.target.value}%`;
+    document.getElementById("heroLoadDisplay").textContent = `${e.target.value}%`;
   });
 
   tempInput.addEventListener("input", e => {
-    document.getElementById("tempValDisplay").textContent = `${Number(e.target.value).toFixed(1)}°C`;
-    document.getElementById("overlayTemp").textContent = `${Number(e.target.value).toFixed(1)}°C`;
+    const formatted = `${Number(e.target.value).toFixed(1)}°C`;
+    document.getElementById("tempValDisplay").textContent = formatted;
+    document.getElementById("overlayTemp").textContent = formatted;
+    document.getElementById("heroTempDisplay").textContent = formatted;
   });
 
   anomInput.addEventListener("input", e => {
     const val = (e.target.value / 100).toFixed(2);
     document.getElementById("anomValDisplay").textContent = val;
     document.getElementById("overlayAnom").textContent = val;
+    document.getElementById("heroAnomDisplay").textContent = val;
     updateSpectrumText(parseFloat(val));
   });
 
@@ -143,15 +151,26 @@ function setupSliders() {
 
 function updateSpectrumText(anom) {
   const text = document.getElementById("spectrumStatusText");
-  if (anom < 0.20) {
-    text.textContent = "Nominal Magnetostriction (100 Hz)";
-    text.style.color = "#10b981";
-  } else if (anom < 0.65) {
-    text.textContent = "Developing Partial Discharge Bursts (10-150 kHz)";
-    text.style.color = "#f59e0b";
-  } else {
-    text.textContent = "⚠️ Critical Arcing Transient Shockwaves!";
-    text.style.color = "#ef4444";
+  const heroText = document.getElementById("heroSpectrumStatus");
+
+  let desc = "Nominal Magnetostriction (100 Hz)";
+  let col = "#10b981";
+
+  if (anom >= 0.65) {
+    desc = "⚠️ Critical Arcing Transient Shockwaves!";
+    col = "#ef4444";
+  } else if (anom >= 0.20) {
+    desc = "Developing Partial Discharge (10-150 kHz)";
+    col = "#f59e0b";
+  }
+
+  if (text) {
+    text.textContent = desc;
+    text.style.color = col;
+  }
+  if (heroText) {
+    heroText.textContent = desc;
+    heroText.style.color = col;
   }
 }
 
@@ -196,11 +215,16 @@ function setValues(load, temp, anom, energy, ambient) {
   document.getElementById("overlayLoad").textContent = `${load}%`;
   document.getElementById("overlayTemp").textContent = `${temp.toFixed(1)}°C`;
   document.getElementById("overlayAnom").textContent = (anom / 100).toFixed(2);
+
+  document.getElementById("heroLoadDisplay").textContent = `${load}%`;
+  document.getElementById("heroTempDisplay").textContent = `${temp.toFixed(1)}°C`;
+  document.getElementById("heroAnomDisplay").textContent = (anom / 100).toFixed(2);
+
   updateSpectrumText(anom / 100);
 }
 
 // =============================================================================
-// IMAGE UPLOAD & CONTROLS
+// IMAGE UPLOAD & VIEW SWITCHING
 // =============================================================================
 function setupImageControls() {
   const uploadInput = document.getElementById("imageUploadInput");
@@ -208,7 +232,6 @@ function setupImageControls() {
   const resetBtn = document.getElementById("resetImageBtn");
   const viewBtns = document.querySelectorAll(".image-view-btn");
 
-  // Wire up View Switcher buttons
   viewBtns.forEach(btn => {
     btn.addEventListener("click", () => {
       viewBtns.forEach(b => b.classList.remove("active-view"));
@@ -292,7 +315,6 @@ async function executeStep() {
     const data = await res.json();
     renderStepResponse(data);
 
-    // Save previous state for next delta
     prevState = { load, temp, anom };
     stepCounter++;
   } catch (err) {
@@ -305,14 +327,24 @@ function renderStepResponse(data) {
   const actionNameText = document.getElementById("actionNameText");
   const actionConfidenceText = document.getElementById("actionConfidenceText");
   const breakerBadge = document.getElementById("breakerBadge");
+  const heroBreakerBadge = document.getElementById("heroBreakerBadge");
+  const heroActionDisplay = document.getElementById("heroActionDisplay");
 
-  // Breaker status
+  // Breaker status update
   if (data.action === 4) {
     breakerBadge.className = "breaker-state-badge breaker-tripped";
     breakerBadge.textContent = "Breaker: TRIPPED (OPEN)";
+    if (heroBreakerBadge) {
+      heroBreakerBadge.className = "breaker-state-badge breaker-tripped";
+      heroBreakerBadge.textContent = "Breaker: TRIPPED (OPEN)";
+    }
   } else {
     breakerBadge.className = "breaker-state-badge breaker-closed";
     breakerBadge.textContent = "Breaker: CLOSED (ONLINE)";
+    if (heroBreakerBadge) {
+      heroBreakerBadge.className = "breaker-state-badge breaker-closed";
+      heroBreakerBadge.textContent = "Breaker: CLOSED (ONLINE)";
+    }
   }
 
   // Action Banner Class
@@ -323,8 +355,12 @@ function renderStepResponse(data) {
   else if (data.action === 4) actionBanner.classList.add("banner-trip");
 
   actionNameText.textContent = data.action_name;
+  if (heroActionDisplay) {
+    heroActionDisplay.textContent = data.action_name.split(":")[1]?.trim() || data.action_name;
+    heroActionDisplay.style.color = data.action === 4 ? "#ef4444" : "#38bdf8";
+  }
 
-  // Confidence & Probabilities
+  // Softmax Probabilities
   if (data.action_probabilities) {
     const highestProb = Math.max(...Object.values(data.action_probabilities));
     actionConfidenceText.textContent = `Confidence: ${(highestProb * 100).toFixed(1)}%`;
@@ -361,7 +397,6 @@ function renderStepResponse(data) {
   rewEl.textContent = `${data.reward >= 0 ? '+' : ''}${data.reward.toFixed(1)}`;
   rewEl.style.color = data.reward >= 0 ? '#10b981' : '#ef4444';
 
-  // Automatically update image state based on thermal/burnout conditions
   autoSetImageForState(data.status_flag, data.next_temp, data.next_anomaly_prob);
 }
 
@@ -409,7 +444,6 @@ async function runTrajectorySimulation() {
 }
 
 function renderSimulationCharts(data) {
-  // Update banner
   const badge = document.getElementById("simOutcomeBadge");
   badge.textContent = data.outcome.replace(/_/g, " ").toUpperCase();
   badge.style.color = data.outcome_color;
@@ -475,7 +509,7 @@ function renderSimulationCharts(data) {
     }
   });
 
-  // Chart 2: Acoustic PD & Spectral Energy
+  // Chart 2: Acoustic PD & Energy
   const ctxAcoustic = document.getElementById("acousticChart").getContext("2d");
   if (acousticChartInstance) acousticChartInstance.destroy();
   acousticChartInstance = new Chart(ctxAcoustic, {
@@ -508,7 +542,7 @@ function renderSimulationCharts(data) {
         y: {
           min: 0,
           max: 1.0,
-          title: { display: true, text: "Probability / Normalized Magnitude" }
+          title: { display: true, text: "Probability / Magnitude" }
         }
       }
     }
@@ -634,34 +668,53 @@ function renderBenchmarkResults(results) {
 }
 
 // =============================================================================
-// REAL-TIME ACOUSTIC WAVEFORM ANIMATION
+// ACOUSTIC WAVEFORM VISUALIZERS (Dual Hero + Monitor)
 // =============================================================================
 function initAcousticWaveform() {
   const canvas = document.getElementById("acousticCanvas");
-  if (!canvas) return;
-  const ctx = canvas.getContext("2d");
+  const heroCanvas = document.getElementById("heroAcousticCanvas");
   let phase = 0;
 
   function renderWave() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
     const anom = parseFloat(document.getElementById("anomInput").value) / 100;
-    
-    ctx.lineWidth = 1.5;
-    ctx.strokeStyle = anom > 0.6 ? "#ef4444" : anom > 0.25 ? "#f59e0b" : "#10b981";
-    ctx.beginPath();
+    const strokeColor = anom > 0.6 ? "#ef4444" : anom > 0.25 ? "#f59e0b" : "#10b981";
+    const heroStrokeColor = anom > 0.6 ? "#f87171" : anom > 0.25 ? "#fbbf24" : "#34d399";
 
-    const mid = canvas.height / 2;
-    for (let x = 0; x < canvas.width; x++) {
-      // 100Hz base magnetostriction hum
-      const baseHum = Math.sin((x * 0.05) + phase) * 8;
-      // High frequency arcing noise burst proportional to anomaly prob
-      const pdBurst = anom > 0.15 ? (Math.random() - 0.5) * anom * 32 : 0;
-      const y = mid + baseHum + pdBurst;
-
-      if (x === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
+    // Draw main monitor canvas
+    if (canvas) {
+      const ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.lineWidth = 1.5;
+      ctx.strokeStyle = strokeColor;
+      ctx.beginPath();
+      const mid = canvas.height / 2;
+      for (let x = 0; x < canvas.width; x++) {
+        const baseHum = Math.sin((x * 0.05) + phase) * 8;
+        const pdBurst = anom > 0.15 ? (Math.random() - 0.5) * anom * 32 : 0;
+        const y = mid + baseHum + pdBurst;
+        if (x === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
     }
-    ctx.stroke();
+
+    // Draw hero HUD canvas
+    if (heroCanvas) {
+      const ctxH = heroCanvas.getContext("2d");
+      ctxH.clearRect(0, 0, heroCanvas.width, heroCanvas.height);
+      ctxH.lineWidth = 1.8;
+      ctxH.strokeStyle = heroStrokeColor;
+      ctxH.beginPath();
+      const midH = heroCanvas.height / 2;
+      for (let x = 0; x < heroCanvas.width; x++) {
+        const baseHum = Math.sin((x * 0.05) + phase) * 6;
+        const pdBurst = anom > 0.15 ? (Math.random() - 0.5) * anom * 22 : 0;
+        const y = midH + baseHum + pdBurst;
+        if (x === 0) ctxH.moveTo(x, y);
+        else ctxH.lineTo(x, y);
+      }
+      ctxH.stroke();
+    }
 
     phase += 0.15;
     requestAnimationFrame(renderWave);
