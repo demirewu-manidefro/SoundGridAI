@@ -1,0 +1,24 @@
+# Virtual Environments
+.venv/
+venv/
+env/
+.env/
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.log
+
+# Jupyter Checkpoints & Working Root Notebook Copies
+.ipynb_checkpoints/
+*_backup.ipynb
+*backup*
+/anomaly (*).ipynb
+/SoundGridRlAI (*).ipynb
+/soundgrid_web_model.pt
+/soundgrid_integrated_ppo.zip
+
+# IDE configurations
+.vscode/
+.idea/
