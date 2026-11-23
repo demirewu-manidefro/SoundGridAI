@@ -178,21 +178,24 @@ function setupSliders() {
     const val = (e.target.value / 100).toFixed(2);
     document.getElementById("loadValDisplay").textContent = `${e.target.value}% (${val})`;
     document.getElementById("overlayLoad").textContent = `${e.target.value}%`;
-    document.getElementById("heroLoadDisplay").textContent = `${e.target.value}%`;
+    const heroLoad = document.getElementById("heroLoadDisplay");
+    if (heroLoad) heroLoad.textContent = `${e.target.value}%`;
   });
 
   tempInput.addEventListener("input", e => {
     const formatted = `${Number(e.target.value).toFixed(1)}°C`;
     document.getElementById("tempValDisplay").textContent = formatted;
     document.getElementById("overlayTemp").textContent = formatted;
-    document.getElementById("heroTempDisplay").textContent = formatted;
+    const heroTemp = document.getElementById("heroTempDisplay");
+    if (heroTemp) heroTemp.textContent = formatted;
   });
 
   anomInput.addEventListener("input", e => {
     const val = (e.target.value / 100).toFixed(2);
     document.getElementById("anomValDisplay").textContent = val;
     document.getElementById("overlayAnom").textContent = val;
-    document.getElementById("heroAnomDisplay").textContent = val;
+    const heroAnom = document.getElementById("heroAnomDisplay");
+    if (heroAnom) heroAnom.textContent = val;
     updateSpectrumText(parseFloat(val));
   });
 
@@ -273,9 +276,12 @@ function setValues(load, temp, anom, energy, ambient) {
   document.getElementById("overlayTemp").textContent = `${temp.toFixed(1)}°C`;
   document.getElementById("overlayAnom").textContent = (anom / 100).toFixed(2);
 
-  document.getElementById("heroLoadDisplay").textContent = `${load}%`;
-  document.getElementById("heroTempDisplay").textContent = `${temp.toFixed(1)}°C`;
-  document.getElementById("heroAnomDisplay").textContent = (anom / 100).toFixed(2);
+  const heroLoad = document.getElementById("heroLoadDisplay");
+  if (heroLoad) heroLoad.textContent = `${load}%`;
+  const heroTemp = document.getElementById("heroTempDisplay");
+  if (heroTemp) heroTemp.textContent = `${temp.toFixed(1)}°C`;
+  const heroAnom = document.getElementById("heroAnomDisplay");
+  if (heroAnom) heroAnom.textContent = (anom / 100).toFixed(2);
 
   updateSpectrumText(anom / 100);
 }

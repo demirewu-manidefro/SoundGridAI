@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="badgeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="50%" stop-color="#1e293b" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+
+    <!-- Electric Voltage Lightning Gradient -->
+    <linearGradient id="voltBoltGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="35%" stop-color="#0284c7" />
+      <stop offset="70%" stop-color="#2563eb" />
+      <stop offset="100%" stop-color="#1d4ed8" />
+    </linearGradient>
+
+    <linearGradient id="coreGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fde047" />
+      <stop offset="50%" stop-color="#eab308" />
+      <stop offset="100%" stop-color="#ca8a04" />
+    </linearGradient>
+
+    <!-- Acoustic Echo Waves Gradient -->
+    <linearGradient id="echoCyanGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.9" />
+      <stop offset="50%" stop-color="#38bdf8" stop-opacity="0.6" />
+      <stop offset="100%" stop-color="#60a5fa" stop-opacity="0.2" />
+    </linearGradient>
+
+    <linearGradient id="echoWaveLeft" x1="100%" y1="0%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.9" />
+      <stop offset="50%" stop-color="#38bdf8" stop-opacity="0.6" />
+      <stop offset="100%" stop-color="#60a5fa" stop-opacity="0.2" />
+    </linearGradient>
+
+    <!-- Neon Glow Filter -->
+    <filter id="neonGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <filter id="softShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.3" />
+    </filter>
+  </defs>
+
+  <!-- Base Rounded Hexagonal Shield -->
+  <polygon 
+    points="256,24 456,128 456,384 256,488 56,384 56,128" 
+    fill="url(#badgeGrad)" 
+    stroke="#334155" 
+    stroke-width="4"
+    filter="url(#softShadow)"
+  />
+
+  <!-- Subtle Inner Border Glow -->
+  <polygon 
+    points="256,36 444,134 444,378 256,476 68,378 68,134" 
+    fill="none" 
+    stroke="url(#echoCyanGrad)" 
+    stroke-width="2" 
+    opacity="0.4"
+  />
+
+  <!-- ========================================================================= -->
+  <!-- ACOUSTIC ECHO WAVES (Sonar / Frequency Ripples radiating left & right)     -->
+  <!-- ========================================================================= -->
+  <!-- Outer Echo Rings Left -->
+  <path d="M 170 170 A 130 130 0 0 0 170 342" fill="none" stroke="url(#echoWaveLeft)" stroke-width="6" stroke-linecap="round" opacity="0.4" />
+  <path d="M 130 140 A 175 175 0 0 0 130 372" fill="none" stroke="url(#echoWaveLeft)" stroke-width="4" stroke-linecap="round" opacity="0.25" stroke-dasharray="12 8" />
+
+  <!-- Outer Echo Rings Right -->
+  <path d="M 342 170 A 130 130 0 0 1 342 342" fill="none" stroke="url(#echoCyanGrad)" stroke-width="6" stroke-linecap="round" opacity="0.4" />
+  <path d="M 382 140 A 175 175 0 0 1 382 372" fill="none" stroke="url(#echoCyanGrad)" stroke-width="4" stroke-linecap="round" opacity="0.25" stroke-dasharray="12 8" />
+
+  <!-- Inner High-Frequency Sound Waveforms -->
+  <path d="M 200 205 A 75 75 0 0 0 200 307" fill="none" stroke="#38bdf8" stroke-width="7" stroke-linecap="round" opacity="0.85" filter="url(#neonGlow)" />
+  <path d="M 312 205 A 75 75 0 0 1 312 307" fill="none" stroke="#38bdf8" stroke-width="7" stroke-linecap="round" opacity="0.85" filter="url(#neonGlow)" />
+
+  <!-- ========================================================================= -->
+  <!-- HIGH-VOLTAGE "VOLT" DYNAMIC LIGHTNING BOLT (Centerpiece)                 -->
+  <!-- ========================================================================= -->
+  <!-- Lightning Bolt Shadow/Aura -->
+  <polygon 
+    points="285,68 185,245 255,245 225,444 335,235 265,235" 
+    fill="#0284c7" 
+    opacity="0.3"
+    filter="url(#neonGlow)"
+  />
+
+  <!-- Main Lightning Bolt -->
+  <polygon 
+    points="280,75 188,248 254,248 228,437 324,238 258,238" 
+    fill="url(#voltBoltGrad)" 
+    stroke="#7dd3fc"
+    stroke-width="3"
+    filter="url(#softShadow)"
+  />
+
+  <!-- Inner Electric Energy Spine -->
+  <polygon 
+    points="272,95 210,244 252,244 236,395 302,242 260,242" 
+    fill="#ffffff" 
+    opacity="0.9"
+  />
+
+  <!-- Golden Core Energy Spark at Center -->
+  <circle cx="256" cy="242" r="14" fill="url(#coreGoldGrad)" filter="url(#neonGlow)" />
+  <circle cx="256" cy="242" r="7" fill="#ffffff" />
+
+  <!-- Radiating Sensor Pulses from Center Core -->
+  <circle cx="256" cy="242" r="48" fill="none" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.5" />
+</svg>

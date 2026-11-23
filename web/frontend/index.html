@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SoundGrid AI: Cyber-Physical RL for Power Transformer Protection</title>
+  <title>VoltEcho: Cyber-Physical RL for Power Transformer Protection</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="stylesheet" href="/style.css" />
   <!-- Chart.js for scientific trajectory and benchmark plots -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -17,10 +18,10 @@
     <div class="nav-container">
       <!-- Brand Logo acts as Home / Top scroll -->
       <a href="#overview" class="nav-brand" title="Scroll to top / Home">
-        <div class="brand-logo-icon">⚡</div>
+        <img src="/images/voltecho_logo.svg" alt="VoltEcho Logo" class="brand-logo-img" />
         <div>
-          <div class="nav-brand-title">SoundGrid AI</div>
-          <div class="nav-brand-tag">Cyber-Physical Transformer Protection</div>
+          <div class="nav-brand-title">Volt<span style="background: linear-gradient(135deg, #0284c7 0%, #06b6d4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Echo</span></div>
+          <div class="nav-brand-tag">Acoustic Cyber-Physical Protection</div>
         </div>
       </a>
 
@@ -40,90 +41,41 @@
 
 
   <!-- ========================================================================= -->
-  <!-- FULL-BLEED HERO LANDING (substation_ai.png)                               -->
+  <!-- FUTURISTIC INSA-STYLE HERO (VoltEcho Cyber Center)                       -->
   <!-- ========================================================================= -->
-  <section id="overview" class="hero-landing">
-    <div class="hero-glow-overlay"></div>
-    <div class="hero-container">
+  <section id="overview" class="hero-cyber-insa">
+    <div class="hero-insa-container">
       
-      <!-- HERO LEFT: RESEARCH THESIS & AUTHENTIC SPECS -->
-      <div class="hero-content">
-        <div class="hero-tag">
-          <span>⚡ IEEE PES / SMART GRID RESEARCH INITIATIVE</span>
-        </div>
-        <h1 class="hero-title">
-          Autonomous <span class="gradient-text">Acoustic Perception</span> & Cyber-Physical RL Control
-        </h1>
-        <p class="hero-description">
-          An end-to-end framework integrating deep acoustic sensing with a derivative-augmented 8D state-space PPO controller. Detects partial discharge and arcing transients in oil, resolving POMDP partial observability to prevent catastrophic transformer explosions before thermal runaway occurs.
-        </p>
-
-        <div class="hero-actions">
-          <a href="#live-controller" class="btn-hero-primary">
-            <span>🎮 Live PPO Inference Studio</span>
-          </a>
-          <a href="#objectives" class="btn-hero-secondary">
-            <span>🎯 Project Objectives</span>
-          </a>
-        </div>
-
-        <!-- AUTHENTIC METRICS FROM TRAINED MODELS & MONTE CARLO EVALUATION -->
-        <div class="hero-stats-grid">
-          <div class="stat-item">
-            <h3>0.0%</h3>
-            <p>Overheat Failures (≥118°C)</p>
-          </div>
-          <div class="stat-item">
-            <h3>85.08%</h3>
-            <p>Acoustic CNN Accuracy</p>
-          </div>
-          <div class="stat-item">
-            <h3>9,862</h3>
-            <p>Trained PPO Parameters</p>
-          </div>
-          <div class="stat-item">
-            <h3>&lt; 20 ms</h3>
-            <p>TorchScript Latency</p>
-          </div>
+      <!-- Glowing Cyber Shield / Logo (like INSA top shield) -->
+      <div class="insa-emblem-wrap">
+        <div class="insa-shield-halo">
+          <img src="/images/voltecho_logo.svg" alt="VoltEcho Cyber Shield" class="insa-shield-img" />
         </div>
       </div>
 
-      <!-- HERO RIGHT: LIVE HARDWARE-IN-THE-LOOP TELEMETRY HUD -->
-      <div class="hero-glass-card">
-        <div class="glass-card-header">
-          <div class="glass-card-title">
-            <span>📡 Live Substation Cyber-Physical State</span>
-          </div>
-          <span id="heroBreakerBadge" class="breaker-state-badge breaker-closed">Breaker: CLOSED</span>
-        </div>
+      <!-- Crisp Clean Main Title -->
+      <h1 class="insa-hero-title">
+        VoltEcho Cyber Center (AI)
+      </h1>
 
-        <div class="glass-card-grid">
-          <div class="glass-metric-box">
-            <div class="glass-metric-label">🔥 Core Temp (T)</div>
-            <div id="heroTempDisplay" class="glass-metric-val">65.0°C</div>
-          </div>
-          <div class="glass-metric-box">
-            <div class="glass-metric-label">🔊 Anomaly Prob (P)</div>
-            <div id="heroAnomDisplay" class="glass-metric-val">0.04</div>
-          </div>
-          <div class="glass-metric-box">
-            <div class="glass-metric-label">⚡ Active Load (L)</div>
-            <div id="heroLoadDisplay" class="glass-metric-val">85%</div>
-          </div>
-          <div class="glass-metric-box">
-            <div class="glass-metric-label">🎯 PPO Action Output</div>
-            <div id="heroActionDisplay" class="glass-metric-val" style="font-size: 14px; color: #38bdf8;">Maintain Load</div>
-          </div>
-        </div>
+      <!-- Amharic Subtitle (exact INSA typography styling) -->
+      <div class="insa-hero-subtitle-amharic">
+        የሳይበር-ፊዚካል ትራንስፎርመር አኮስቲክ ጥበቃ ማዕከል
+      </div>
 
-        <!-- Live Waveform Sensor Simulation -->
-        <div style="background: rgba(0, 0, 0, 0.45); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 8px; padding: 12px;">
-          <div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; color: #94a3b8; margin-bottom: 6px;">
-            <span>PIEZOELECTRIC TRANSDUCER EMISSION</span>
-            <span id="heroSpectrumStatus" style="color: #34d399;">Nominal Magnetostriction (100 Hz)</span>
-          </div>
-          <canvas id="heroAcousticCanvas" width="450" height="45" style="width: 100%; height: 45px; border-radius: 4px;"></canvas>
-        </div>
+      <!-- English Sub-tagline -->
+      <p class="insa-hero-tagline">
+        Building the Future of Resilient & Acoustic-Protected Power Grids
+      </p>
+
+      <!-- Centered Pill Action Buttons (like INSA's CONFIRM CAMP ATTENDANCE & VIEW PROJECTS) -->
+      <div class="insa-btn-group">
+        <a href="#live-controller" class="insa-btn-primary">
+          <span>Launch Live Studio</span>
+        </a>
+        <a href="#objectives" class="insa-btn-secondary">
+          <span>Project Objectives</span>
+        </a>
       </div>
 
     </div>
@@ -136,7 +88,7 @@
   <section id="objectives" class="section-wrapper" style="background-color: #ffffff; border-bottom: 1px solid var(--card-border);">
     <div class="section-header">
       <span class="section-tag">Project Scope & Purpose</span>
-      <h2 class="section-title">Core Research Objectives & What SoundGrid Does</h2>
+      <h2 class="section-title">Core Research Objectives & What VoltEcho Does</h2>
       <p class="section-subtitle">
         የትራንስፎርመር ቃጠሎንና ፍንዳታን አስቀድሞ ለመከላከል የተሰሩ 4ቱ ዋና ዋና የሳይንሳዊ ግቦች እና አሰራራቸው (Clear, actionable breakdown of project deliverables).
       </p>
@@ -204,7 +156,7 @@
             <div class="card-subtitle">Inject real-time thermal & acoustic state variables</div>
           </div>
           <select id="activeControllerSelect" class="form-select" style="max-width: 210px;">
-            <option value="soundgrid_ppo">SoundGrid AI (8D PPO)</option>
+            <option value="soundgrid_ppo">VoltEcho (8D PPO Agent)</option>
             <option value="conventional_relay">Conventional Relay (IEC 60255)</option>
             <option value="pid_controller">Classical PID Controller</option>
             <option value="static_4d_rl">Static 4D RL (Ablation)</option>
@@ -461,10 +413,10 @@
     <div class="challenge-image-showcase">
       <div class="showcase-half">
         <img src="/images/substation_ai.png" alt="Safe Cyber-Physical Monitored Substation" class="showcase-img" />
-        <span class="solution-tag-success" style="align-self: flex-start;">Safe SoundGrid Cyber-Physical Monitoring</span>
+        <span class="solution-tag-success" style="align-self: flex-start;">Safe VoltEcho Cyber-Physical Monitoring</span>
         <h4 style="font-size: 16px; font-weight: 700; margin-bottom: 6px;">Acoustic PD Detection within 1 Step</h4>
         <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5;">
-          SoundGrid AI continuously decodes oil hydrophone vibrations. The moment partial discharge exceeds threshold (P &ge; 0.70), it safely opens the circuit breaker in a single step (100% trip rate in severe arcing), preserving transformer integrity.
+          VoltEcho continuously decodes oil hydrophone vibrations. The moment partial discharge exceeds threshold (P &ge; 0.70), it safely opens the circuit breaker in a single step (100% trip rate in severe arcing), preserving transformer integrity.
         </p>
       </div>
 
@@ -506,7 +458,7 @@
         </p>
 
         <div style="border-top: 1px solid var(--card-border); padding-top: 16px; font-size: 13px; color: var(--text-muted);">
-          <div><strong>Thesis / Manuscript:</strong> "SoundGrid: Cyber-Physical RL with Acoustic Perception"</div>
+          <div><strong>Thesis / Manuscript:</strong> "VoltEcho: Cyber-Physical RL with Acoustic Perception"</div>
           <div style="margin-top: 4px;"><strong>Target Venue:</strong> IEEE Transactions on Smart Grid</div>
         </div>
       </div>
@@ -522,7 +474,7 @@
           </p>
 
           <div class="inquiry-methods-list">
-            <a href="mailto:demirewu.research@gmail.com?subject=SoundGrid%20AI%20Research%20Inquiry" class="inquiry-item">
+            <a href="mailto:demirewu.research@gmail.com?subject=VoltEcho%20Research%20Inquiry" class="inquiry-item">
               <div class="inquiry-icon">✉️</div>
               <div>
                 <div style="font-weight: 700; font-size: 14px;">Direct Researcher Email</div>
@@ -557,7 +509,7 @@
       
       <div class="modal-header">
         <div class="modal-title">
-          <h2>SoundGrid Scientific Methodology & Benchmarks</h2>
+          <h2>VoltEcho Scientific Methodology & Benchmarks</h2>
           <p>Detailed architecture, mathematical formulations, and Monte Carlo empirical comparisons</p>
         </div>
         <button id="closeModalBtn" class="modal-close-btn" title="Close Dialog">&times;</button>
@@ -583,7 +535,7 @@
           </div>
           <div class="doc-card">
             <div class="doc-card-icon">🧠</div>
-            <h3>SoundGridCNN Classifier</h3>
+            <h3>VoltEchoCNN Classifier</h3>
             <p>
               4-stage Conv2D backbone with Batch Normalization. Validated accuracy: <strong>85.08%</strong>, ROC-AUC: <strong>0.9258</strong>, and F1-score: 0.85 on authentic PD data.
             </p>
@@ -692,13 +644,13 @@
   <footer class="app-footer">
     <div class="footer-container">
       <div>
-        <div style="font-weight: 800; font-size: 16px; color: var(--text-main);">SoundGrid AI Research Platform</div>
+        <div style="font-weight: 800; font-size: 16px; color: var(--text-main);">VoltEcho Research Platform</div>
         <div style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">
           Cyber-Physical Reinforcement Learning for Smart Power Transformers with Acoustic Perception
         </div>
       </div>
       <div style="font-size: 12px; color: var(--text-subtle);">
-        IEEE Transactions on Smart Grid Blueprint &copy; 2026 SoundGrid AI Team
+        IEEE Transactions on Smart Grid Blueprint &copy; 2026 VoltEcho Research Team
       </div>
     </div>
   </footer>
