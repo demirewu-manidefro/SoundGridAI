@@ -97,7 +97,7 @@
     <div class="about-overview-grid">
       
       <!-- Card 1: The Critical Grid Problem -->
-      <div class="about-narrative-card">
+      <div class="about-narrative-card challenge-narrative">
         <div class="narrative-badge badge-problem">⚠️ The Industrial Challenge</div>
         <h3>The 45-Minute Thermal Relay Blindspot</h3>
         <p>
@@ -106,13 +106,13 @@
         <p>
           When internal dielectric oil insulation deteriorates, micro-sparks escalate into violent <strong>Partial Discharge (PD)</strong> and internal electrical arcing in fractions of a second. However, because heat takes <strong>10 to 45 minutes</strong> to conduct through hundreds of gallons of dielectric oil to reach external sensors, standard thermal relays remain completely blind to destructive arcing transients.
         </p>
-        <div class="narrative-stat-callout">
+        <div class="narrative-stat-callout callout-danger">
           <strong>Catastrophic Consequence:</strong> The core vaporizes oil into flammable gases, causing explosive transformer tank ruptures, substation fires, and multi-million-dollar regional blackouts.
         </div>
       </div>
 
       <!-- Card 2: The VoltEcho Innovation -->
-      <div class="about-narrative-card">
+      <div class="about-narrative-card solution-narrative">
         <div class="narrative-badge badge-solution">⚡ The VoltEcho Solution</div>
         <h3>Sub-Second Acoustic Perception &amp; 8D PPO RL</h3>
         <p>
@@ -121,21 +121,63 @@
         <p>
           Raw acoustic transients (10 kHz–150 kHz) are transformed into 128-band log-Mel spectrograms and classified in real time (&lt;20 ms) by <strong>VoltEchoCNN</strong> (85.08% accuracy, 0.9258 ROC-AUC). This perception stream feeds directly into an <strong>8D derivative-augmented Proximal Policy Optimization (PPO)</strong> agent.
         </p>
-        <div class="narrative-stat-callout" style="border-left-color: #0284c7; background: #f0f9ff; color: #0369a1;">
+        <div class="narrative-stat-callout callout-success">
           <strong>Proven Reliability:</strong> In 100-episode Monte Carlo evaluations across heatwaves and arcing regimes, VoltEcho achieved a <strong>0.0% burnout rate</strong> while sustaining 85% continuous grid power throughput.
         </div>
       </div>
 
     </div>
 
-    <!-- Quick Technical Specifications Bar -->
-    <div class="tech-spec-bar">
-      <div class="spec-pill"><strong>Sensors:</strong> Piezoelectric Hydrophones (10–150 kHz)</div>
-      <div class="spec-pill"><strong>Perception Model:</strong> VoltEchoCNN (4-Stage Conv2D + BN)</div>
-      <div class="spec-pill"><strong>RL State Space:</strong> 8D Markovian Augmented Vector</div>
-      <div class="spec-pill"><strong>Policy Architecture:</strong> 8D PPO Actor-Critic (9,862 params)</div>
-      <div class="spec-pill"><strong>Edge Binary:</strong> TorchScript C++ (1.6 MB, &lt;20 ms latency)</div>
-      <div class="spec-pill"><strong>Safety Benchmark:</strong> 0.0% Overheat / 1-Step Trip Assurance</div>
+    <!-- Handcrafted 6-Card Executive Spec Matrix -->
+    <div class="tech-specs-matrix">
+      <div class="spec-card">
+        <div class="spec-icon">📡</div>
+        <div class="spec-info">
+          <div class="spec-label">Acoustic Sensors</div>
+          <div class="spec-val">Piezoelectric Hydrophones</div>
+          <div class="spec-meta">10 kHz – 150 kHz Bandwidth</div>
+        </div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-icon">🧠</div>
+        <div class="spec-info">
+          <div class="spec-label">Perception Model</div>
+          <div class="spec-val">VoltEchoCNN (Conv2D)</div>
+          <div class="spec-meta">85.08% Accuracy (0.9258 AUC)</div>
+        </div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-icon">📐</div>
+        <div class="spec-info">
+          <div class="spec-label">State Space</div>
+          <div class="spec-val">8D Markovian Vector</div>
+          <div class="spec-meta">&Delta;P, &Delta;T, &Delta;L Augmented</div>
+        </div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-icon">⚡</div>
+        <div class="spec-info">
+          <div class="spec-label">Policy Architecture</div>
+          <div class="spec-val">8D PPO Actor-Critic</div>
+          <div class="spec-meta">9,862 Tuned Weights</div>
+        </div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-icon">🚀</div>
+        <div class="spec-info">
+          <div class="spec-label">Edge Substation Runtime</div>
+          <div class="spec-val">TorchScript C++ (1.6 MB)</div>
+          <div class="spec-meta">&lt; 20 ms Inference Latency</div>
+        </div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-icon">🛡️</div>
+        <div class="spec-info">
+          <div class="spec-label">Safety Benchmark</div>
+          <div class="spec-val">0.0% Burnout Rate</div>
+          <div class="spec-meta">1-Step Emergency Arcing Trip</div>
+        </div>
+      </div>
     </div>
 
     <!-- The 4 Core Objectives Heading -->
@@ -155,61 +197,67 @@
       <div class="objective-box">
         <div class="objective-header-row">
           <div class="objective-num">01</div>
-          <span class="objective-category">Acoustic Perception</span>
+          <span class="objective-category cat-cyan">Acoustic Perception</span>
         </div>
         <h3>High-Frequency Acoustic Log-Mel Spectrogram Pipeline</h3>
         <p>
           Capture ultrasonic hydrophone signals inside transformer oil over continuous 3.0s sliding windows. Generate 128-band log-Mel filterbanks (<code>n_mels=128</code>, window=2048, hop=512) to isolate high-energy cavitation and dielectric spark transients from nominal 100 Hz magnetostriction hum.
         </p>
         <ul class="objective-bullet-list">
-          <li>Detects incipient partial discharge within milliseconds</li>
-          <li>Integrates physical Root Mean Square (RMS) acoustic energy as an orthogonal verification channel</li>
-          <li>Validated 85.08% classification accuracy on real-world transformer PD datasets</li>
+          <li><span class="bullet-icon">✓</span> Detects incipient partial discharge within milliseconds</li>
+          <li><span class="bullet-icon">✓</span> Integrates physical Root Mean Square (RMS) energy as an orthogonal channel</li>
+          <li><span class="bullet-icon">✓</span> Validated 85.08% classification accuracy on real-world transformer PD datasets</li>
         </ul>
       </div>
 
       <!-- Objective 02 -->
       <div class="objective-box">
-        <div class="objective-num">02</div>
-        <div class="objective-category">State Space Augmentation</div>
+        <div class="objective-header-row">
+          <div class="objective-num">02</div>
+          <span class="objective-category cat-blue">State Augmentation</span>
+        </div>
         <h3>Resolving POMDP via First-Order Thermodynamic Derivatives</h3>
         <p>
-          Overcome thermal sensor latency by extending the state representation from static 4D measurements to an augmented 8D state vector: $S = [P, \Delta P, E, L, \Delta L, T/100, \Delta T/10, t/t_{\text{max}}] \in \mathbb{R}^8$.
+          Overcome thermal sensor latency by extending the state representation from static 4D measurements to an augmented 8D state vector:
+          <span class="formula-pill">S = [P, &Delta;P, E, L, &Delta;L, T/100, &Delta;T/10, t/t<sub>max</sub>] &isin; &real;⁸</span>
         </p>
         <ul class="objective-bullet-list">
-          <li>Restores Markovian state observability without deploying compute-heavy RNN/LSTM models</li>
-          <li>Enables the RL agent to discern whether temperature is rapidly climbing ($\dot{T} &gt; 0$) or cooling ($\dot{T} &lt; 0$)</li>
-          <li>Completely eliminates policy dithering and spurious blackout trips</li>
+          <li><span class="bullet-icon">✓</span> Restores Markovian state observability without deploying compute-heavy RNN/LSTM models</li>
+          <li><span class="bullet-icon">✓</span> Enables the RL agent to discern whether temperature is rapidly climbing (dT/dt &gt; 0) or cooling (dT/dt &lt; 0)</li>
+          <li><span class="bullet-icon">✓</span> Completely eliminates policy dithering and spurious blackout trips</li>
         </ul>
       </div>
 
       <!-- Objective 03 -->
       <div class="objective-box">
-        <div class="objective-num">03</div>
-        <div class="objective-category">Resilience &amp; Safety</div>
+        <div class="objective-header-row">
+          <div class="objective-num">03</div>
+          <span class="objective-category cat-green">Zero-Burnout Safety</span>
+        </div>
         <h3>Multi-Objective Safe Dispatch &amp; Zero-Burnout Guarantee</h3>
         <p>
-          Formulate a quadratic thermodynamic reward balancing maximum electrical load dispatch against Joule heating degradation: $q_{\text{gen}} = 4.2 L^2 + 10 P - 0.09(T - T_{\text{amb}})$.
+          Formulate a quadratic thermodynamic reward balancing maximum electrical load dispatch against Joule heating degradation:
+          <span class="formula-pill">dT/dt = (4.2 L&sup2; + 10 P) &minus; 0.09 (T &minus; T<sub>amb</sub>)</span>
         </p>
         <ul class="objective-bullet-list">
-          <li>Penalizes erratic load churning via a stringent $\Delta L$ stability penalty</li>
-          <li>Sustains 85% continuous electrical power throughput under nominal operational regimes</li>
-          <li>Guarantees immediate 1-step emergency circuit breaker trip on severe arcing (0.0% failure rate)</li>
+          <li><span class="bullet-icon">✓</span> Penalizes erratic load churning via a stringent &Delta;L delta-load rate penalty</li>
+          <li><span class="bullet-icon">✓</span> Sustains 85% continuous electrical power throughput under nominal operational regimes</li>
+          <li><span class="bullet-icon">✓</span> Guarantees immediate 1-step emergency circuit breaker trip on severe arcing (0.0% failure rate)</li>
         </ul>
       </div>
 
       <!-- Objective 04 -->
       <div class="objective-box">
         <div class="objective-num">04</div>
-        <div class="objective-category">Edge Embedded</div>
+        <span class="objective-category cat-purple">Embedded Runtime</span>
         <h3>Substation Edge Deployment on Embedded Hardware</h3>
         <p>
           Package the trained PyTorch PPO policy and convolutional feature extractor into an optimized, standalone TorchScript C++ model (1.6 MB binary footprint).
         </p>
         <ul class="objective-bullet-list">
-          <li>Sub-20 millisecond end-to-end inference latency on ARM Cortex and NVIDIA Jetson hardware</li>
-          <li>Hardware-in-the-loop (HIL) compatibility with IEC 61850 substation automation protocols</li>
-          <li>Zero external cloud dependency, ensuring military-grade cyber-physical air-gapped security</li>
+          <li><span class="bullet-icon">✓</span> Sub-20 millisecond end-to-end inference latency on ARM Cortex and NVIDIA Jetson hardware</li>
+          <li><span class="bullet-icon">✓</span> Hardware-in-the-loop (HIL) compatibility with IEC 61850 substation automation protocols</li>
+          <li><span class="bullet-icon">✓</span> Zero external cloud dependency, ensuring military-grade cyber-physical air-gapped security</li>
         </ul>
       </div>
 
