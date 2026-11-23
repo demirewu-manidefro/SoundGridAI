@@ -108,11 +108,24 @@ class PurePyTorchAudioProcessor:
 
 class SoundGridAcousticDetector:
     """Performs real-time deep inference on Mel-Spectrogram tensors."""
-    def __init__(self, model_path="soundgrid_web_model.pt", device=None):
+    def __init__(self, model_path="models/soundgrid_web_model.pt", device=None):
         if device is None:
             self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         else:
             self.device = device
+
+        # Check candidate locations
+        if not os.path.exists(model_path):
+            fallback_candidates = [
+                "models/soundgrid_web_model.pt",
+                "soundgrid_web_model.pt",
+                "/kaggle/working/soundgrid_web_model.pt",
+                "/content/drive/MyDrive/soundgrid_web_model.pt"
+            ]
+            for c in fallback_candidates:
+                if os.path.exists(c):
+                    model_path = c
+                    break
 
         if not os.path.exists(model_path):
             raise FileNotFoundError(f"Model checkpoint '{model_path}' not found!")
@@ -301,12 +314,12 @@ def run_pipeline():
     print("=" * 80)
 
     processor = PurePyTorchAudioProcessor()
-    detector = SoundGridAcousticDetector("soundgrid_web_model.pt")
+    detector = SoundGridAcousticDetector("models/soundgrid_web_model.pt")
     env = IntegratedSoundGridTransformerEnv(detector, processor)
     agent = AutonomousPPOAgent()
 
     print("✅ PyTorch Mel-Spectrogram Engine Active (128 Mel Bins x 94 Time Frames)")
-    print("✅ Deep CNN Acoustic Perception Model Loaded ('soundgrid_web_model.pt')")
+    print("✅ Deep CNN Acoustic Perception Model Loaded ('models/soundgrid_web_model.pt')")
     print("✅ Reinforcement Learning Policy Loaded & Coupled with Cyber-Physical Transformer")
     print("-" * 80)
 
