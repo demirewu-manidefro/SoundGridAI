@@ -21,21 +21,18 @@
         <img src="/images/voltecho_logo.svg" alt="VoltEcho Logo" class="brand-logo-img" />
         <div>
           <div class="nav-brand-title">Volt<span style="background: linear-gradient(135deg, #0284c7 0%, #06b6d4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Echo</span></div>
-          <div class="nav-brand-tag">Acoustic Cyber-Physical Protection</div>
+          <div class="nav-brand-tag">Acoustic Transformer Protection</div>
         </div>
       </a>
 
-      <!-- Clean Centered Navigation Links -->
+      <!-- Clean Navigation Links Aligned to Right -->
       <ul class="nav-links">
-        <li><a href="#objectives" class="nav-link">Project Objectives</a></li>
+        <li><a href="#about-project" class="nav-link">About Project</a></li>
         <li><a href="#live-controller" class="nav-link">Live Studio</a></li>
         <li><a href="#challenges" class="nav-link">Challenges & Solutions</a></li>
         <li><button id="openModalBtn" class="nav-link nav-link-modal-btn">Methodology & Paper ↗</button></li>
         <li><a href="#contact" class="nav-link">About & Contact</a></li>
       </ul>
-
-      <!-- Clean right side (removed right badges as requested) -->
-      <div></div>
     </div>
   </nav>
 
@@ -73,8 +70,8 @@
         <a href="#live-controller" class="insa-btn-primary">
           <span>Launch Live Studio</span>
         </a>
-        <a href="#objectives" class="insa-btn-secondary">
-          <span>Project Objectives</span>
+        <a href="#about-project" class="insa-btn-secondary">
+          <span>About Project &amp; Objectives</span>
         </a>
       </div>
 
@@ -83,53 +80,139 @@
 
 
   <!-- ========================================================================= -->
-  <!-- SECTION 1: PROJECT OBJECTIVES & FUNCTIONAL SCOPE                          -->
+  <!-- SECTION 1: ABOUT VOLTECHO & CORE RESEARCH OBJECTIVES                      -->
   <!-- ========================================================================= -->
-  <section id="objectives" class="section-wrapper" style="background-color: #ffffff; border-bottom: 1px solid var(--card-border);">
+  <section id="about-project" class="section-wrapper" style="background-color: #ffffff; border-bottom: 1px solid var(--card-border);">
+    
+    <!-- Section Header -->
     <div class="section-header">
-      <span class="section-tag">Project Scope & Purpose</span>
-      <h2 class="section-title">Core Research Objectives & What VoltEcho Does</h2>
+      <span class="section-tag">Project Overview &amp; Mission Scope</span>
+      <h2 class="section-title">About VoltEcho: Cyber-Physical Transformer Protection</h2>
       <p class="section-subtitle">
-        Clear, actionable breakdown of the 4 core research deliverables engineered to pre-emptively eliminate power transformer burnouts and explosive ruptures.
+        Bridging high-frequency acoustic hydrophone sensing with 8D reinforcement learning to eliminate catastrophic transformer explosions before thermal runaway occurs.
       </p>
     </div>
 
-    <div class="objectives-grid">
-      <!-- Objective 1 -->
-      <div class="objective-box">
-        <div class="objective-num">01</div>
-        <h3>Autonomous Acoustic Perception</h3>
+    <!-- Executive Overview 2-Column Grid -->
+    <div class="about-overview-grid">
+      
+      <!-- Card 1: The Critical Grid Problem -->
+      <div class="about-narrative-card">
+        <div class="narrative-badge badge-problem">⚠️ The Industrial Challenge</div>
+        <h3>The 45-Minute Thermal Relay Blindspot</h3>
         <p>
-          Decode microscopic dielectric insulation breakdowns (Partial Discharge) in oil via high-frequency acoustic log-Mel spectrograms (VoltEchoCNN) long before external temperatures rise.
+          High-voltage step-up and distribution transformers are the most capital-intensive physical assets in electrical grids. Standard industrial protection systems (IEC 60255 standard) rely strictly on external oil temperature sensors and overcurrent coils.
         </p>
+        <p>
+          When internal dielectric oil insulation deteriorates, micro-sparks escalate into violent <strong>Partial Discharge (PD)</strong> and internal electrical arcing in fractions of a second. However, because heat takes <strong>10 to 45 minutes</strong> to conduct through hundreds of gallons of dielectric oil to reach external sensors, standard thermal relays remain completely blind to destructive arcing transients.
+        </p>
+        <div class="narrative-stat-callout">
+          <strong>Catastrophic Consequence:</strong> The core vaporizes oil into flammable gases, causing explosive transformer tank ruptures, substation fires, and multi-million-dollar regional blackouts.
+        </div>
       </div>
 
-      <!-- Objective 2 -->
+      <!-- Card 2: The VoltEcho Innovation -->
+      <div class="about-narrative-card">
+        <div class="narrative-badge badge-solution">⚡ The VoltEcho Solution</div>
+        <h3>Sub-Second Acoustic Perception &amp; 8D PPO RL</h3>
+        <p>
+          <strong>VoltEcho</strong> fundamentally revolutionizes transformer protection by listening to the internal physical acoustics of the transformer tank using immersion piezoelectric hydrophones.
+        </p>
+        <p>
+          Raw acoustic transients (10 kHz–150 kHz) are transformed into 128-band log-Mel spectrograms and classified in real time (&lt;20 ms) by <strong>VoltEchoCNN</strong> (85.08% accuracy, 0.9258 ROC-AUC). This perception stream feeds directly into an <strong>8D derivative-augmented Proximal Policy Optimization (PPO)</strong> agent.
+        </p>
+        <div class="narrative-stat-callout" style="border-left-color: #0284c7; background: #f0f9ff; color: #0369a1;">
+          <strong>Proven Reliability:</strong> In 100-episode Monte Carlo evaluations across heatwaves and arcing regimes, VoltEcho achieved a <strong>0.0% burnout rate</strong> while sustaining 85% continuous grid power throughput.
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Quick Technical Specifications Bar -->
+    <div class="tech-spec-bar">
+      <div class="spec-pill"><strong>Sensors:</strong> Piezoelectric Hydrophones (10–150 kHz)</div>
+      <div class="spec-pill"><strong>Perception Model:</strong> VoltEchoCNN (4-Stage Conv2D + BN)</div>
+      <div class="spec-pill"><strong>RL State Space:</strong> 8D Markovian Augmented Vector</div>
+      <div class="spec-pill"><strong>Policy Architecture:</strong> 8D PPO Actor-Critic (9,862 params)</div>
+      <div class="spec-pill"><strong>Edge Binary:</strong> TorchScript C++ (1.6 MB, &lt;20 ms latency)</div>
+      <div class="spec-pill"><strong>Safety Benchmark:</strong> 0.0% Overheat / 1-Step Trip Assurance</div>
+    </div>
+
+    <!-- The 4 Core Objectives Heading -->
+    <div style="margin-top: 50px; margin-bottom: 24px;">
+      <h3 style="font-size: 22px; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 10px;">
+        <span>🎯</span> Core Scientific &amp; Engineering Objectives
+      </h3>
+      <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-top: 4px;">
+        Detailed breakdown of the 4 operational pillars delivering robust transformer life-extension, grid resilience, and instant fault mitigation:
+      </p>
+    </div>
+
+    <!-- Detailed 4 Objectives Grid -->
+    <div class="objectives-grid">
+      
+      <!-- Objective 01 -->
+      <div class="objective-box">
+        <div class="objective-header-row">
+          <div class="objective-num">01</div>
+          <span class="objective-category">Acoustic Perception</span>
+        </div>
+        <h3>High-Frequency Acoustic Log-Mel Spectrogram Pipeline</h3>
+        <p>
+          Capture ultrasonic hydrophone signals inside transformer oil over continuous 3.0s sliding windows. Generate 128-band log-Mel filterbanks (<code>n_mels=128</code>, window=2048, hop=512) to isolate high-energy cavitation and dielectric spark transients from nominal 100 Hz magnetostriction hum.
+        </p>
+        <ul class="objective-bullet-list">
+          <li>Detects incipient partial discharge within milliseconds</li>
+          <li>Integrates physical Root Mean Square (RMS) acoustic energy as an orthogonal verification channel</li>
+          <li>Validated 85.08% classification accuracy on real-world transformer PD datasets</li>
+        </ul>
+      </div>
+
+      <!-- Objective 02 -->
       <div class="objective-box">
         <div class="objective-num">02</div>
-        <h3>POMDP Resolution via Derivatives</h3>
+        <div class="objective-category">State Space Augmentation</div>
+        <h3>Resolving POMDP via First-Order Thermodynamic Derivatives</h3>
         <p>
-          Augment physical state space with first-order derivatives (&Delta;P, &Delta;T, &Delta;L) to resolve POMDP partial observability, predicting thermodynamic trajectories without high-latency recurrent networks.
+          Overcome thermal sensor latency by extending the state representation from static 4D measurements to an augmented 8D state vector: $S = [P, \Delta P, E, L, \Delta L, T/100, \Delta T/10, t/t_{\text{max}}] \in \mathbb{R}^8$.
         </p>
+        <ul class="objective-bullet-list">
+          <li>Restores Markovian state observability without deploying compute-heavy RNN/LSTM models</li>
+          <li>Enables the RL agent to discern whether temperature is rapidly climbing ($\dot{T} &gt; 0$) or cooling ($\dot{T} &lt; 0$)</li>
+          <li>Completely eliminates policy dithering and spurious blackout trips</li>
+        </ul>
       </div>
 
-      <!-- Objective 3 -->
+      <!-- Objective 03 -->
       <div class="objective-box">
         <div class="objective-num">03</div>
-        <h3>Safe Dispatch & 0.0% Burnout</h3>
+        <div class="objective-category">Resilience &amp; Safety</div>
+        <h3>Multi-Objective Safe Dispatch &amp; Zero-Burnout Guarantee</h3>
         <p>
-          Sustain continuous 85% nominal grid power throughput while guaranteeing 1-step emergency breaker trip during critical arcing hazards, eliminating 100% of catastrophic thermal burnouts (0.0% failure rate).
+          Formulate a quadratic thermodynamic reward balancing maximum electrical load dispatch against Joule heating degradation: $q_{\text{gen}} = 4.2 L^2 + 10 P - 0.09(T - T_{\text{amb}})$.
         </p>
+        <ul class="objective-bullet-list">
+          <li>Penalizes erratic load churning via a stringent $\Delta L$ stability penalty</li>
+          <li>Sustains 85% continuous electrical power throughput under nominal operational regimes</li>
+          <li>Guarantees immediate 1-step emergency circuit breaker trip on severe arcing (0.0% failure rate)</li>
+        </ul>
       </div>
 
-      <!-- Objective 4 -->
+      <!-- Objective 04 -->
       <div class="objective-box">
         <div class="objective-num">04</div>
-        <h3>Substation Edge Deployment</h3>
+        <div class="objective-category">Edge Embedded</div>
+        <h3>Substation Edge Deployment on Embedded Hardware</h3>
         <p>
-          Compile full deep reinforcement learning policy into standalone TorchScript C++ binaries (1.6 MB) capable of running on industrial substation microcontrollers with sub-20ms real-time inference latency.
+          Package the trained PyTorch PPO policy and convolutional feature extractor into an optimized, standalone TorchScript C++ model (1.6 MB binary footprint).
         </p>
+        <ul class="objective-bullet-list">
+          <li>Sub-20 millisecond end-to-end inference latency on ARM Cortex and NVIDIA Jetson hardware</li>
+          <li>Hardware-in-the-loop (HIL) compatibility with IEC 61850 substation automation protocols</li>
+          <li>Zero external cloud dependency, ensuring military-grade cyber-physical air-gapped security</li>
+        </ul>
       </div>
+
     </div>
   </section>
 
