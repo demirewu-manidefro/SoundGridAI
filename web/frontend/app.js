@@ -24,6 +24,7 @@ let prevState = {
 // =============================================================================
 document.addEventListener("DOMContentLoaded", () => {
   setupNavScroll();
+  setupModal();
   setupSliders();
   setupPresets();
   setupImageControls();
@@ -36,9 +37,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const loopBtn = document.getElementById("autoLoopBtn");
   if (loopBtn) loopBtn.addEventListener("click", toggleAutoLoop);
-
-  const benchBtn = document.getElementById("runBenchmarkBtn");
-  if (benchBtn) benchBtn.addEventListener("click", runBenchmark);
 
   // Initial runs to populate all cards, charts, and tables immediately
   executeStep();
@@ -58,7 +56,7 @@ function showToast(message) {
 // =============================================================================
 function setupNavScroll() {
   const sections = document.querySelectorAll("section[id]");
-  const navLinks = document.querySelectorAll(".nav-link");
+  const navLinks = document.querySelectorAll(".nav-link:not(.nav-link-modal-btn)");
 
   window.addEventListener("scroll", () => {
     let currentId = "overview";
@@ -77,6 +75,62 @@ function setupNavScroll() {
       if (link.getAttribute("href") === `#${currentId}`) {
         link.classList.add("active");
       }
+    });
+  });
+}
+
+// =============================================================================
+// MODAL DIALOG CONTROLLER (METHODOLOGY & BENCHMARK POPUP)
+// =============================================================================
+function setupModal() {
+  const modal = document.getElementById("methodologyModal");
+  const openBtn = document.getElementById("openModalBtn");
+  const closeBtn = document.getElementById("closeModalBtn");
+  const modalRunBenchBtn = document.getElementById("modalRunBenchmarkBtn");
+
+  if (openBtn && modal) {
+    openBtn.addEventListener("click", () => {
+      modal.classList.add("show");
+      document.body.style.overflow = "hidden";
+      if (!benchSafetyChartInstance) {
+        runBenchmark();
+      }
+    });
+  }
+
+  if (closeBtn && modal) {
+    closeBtn.addEventListener("click", () => {
+      modal.classList.remove("show");
+      document.body.style.overflow = "";
+    });
+  }
+
+  if (modal) {
+    modal.addEventListener("click", e => {
+      if (e.target === modal) {
+        modal.classList.remove("show");
+        document.body.style.overflow = "";
+      }
+    });
+  }
+
+  if (modalRunBenchBtn) {
+    modalRunBenchBtn.addEventListener("click", runBenchmark);
+  }
+
+  // Modal internal tabs
+  const tabBtns = document.querySelectorAll(".modal-tab-btn");
+  const tabContents = document.querySelectorAll(".modal-tab-content");
+
+  tabBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+      tabBtns.forEach(b => b.classList.remove("active"));
+      tabContents.forEach(c => c.classList.remove("active"));
+
+      btn.classList.add("active");
+      const targetId = btn.getAttribute("data-modaltab");
+      const targetContent = document.getElementById(targetId);
+      if (targetContent) targetContent.classList.add("active");
     });
   });
 }
