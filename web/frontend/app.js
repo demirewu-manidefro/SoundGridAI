@@ -31,14 +31,17 @@ document.addEventListener("DOMContentLoaded", () => {
   initAcousticWaveform();
   
   // Bind buttons
-  document.getElementById("stepBtn").addEventListener("click", executeStep);
-  document.getElementById("autoLoopBtn").addEventListener("click", toggleAutoLoop);
-  document.getElementById("runSimBtn").addEventListener("click", runTrajectorySimulation);
-  document.getElementById("runBenchmarkBtn").addEventListener("click", runBenchmark);
+  const stepBtn = document.getElementById("stepBtn");
+  if (stepBtn) stepBtn.addEventListener("click", executeStep);
+
+  const loopBtn = document.getElementById("autoLoopBtn");
+  if (loopBtn) loopBtn.addEventListener("click", toggleAutoLoop);
+
+  const benchBtn = document.getElementById("runBenchmarkBtn");
+  if (benchBtn) benchBtn.addEventListener("click", runBenchmark);
 
   // Initial runs to populate all cards, charts, and tables immediately
   executeStep();
-  runTrajectorySimulation();
   runBenchmark();
 });
 
@@ -58,7 +61,7 @@ function setupNavScroll() {
   const navLinks = document.querySelectorAll(".nav-link");
 
   window.addEventListener("scroll", () => {
-    let currentId = "hero";
+    let currentId = "overview";
     const scrollPos = window.scrollY + 120;
 
     sections.forEach(sec => {
