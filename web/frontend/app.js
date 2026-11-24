@@ -6,6 +6,7 @@
 
 // Global State
 let autoLoopTimer = null;
+let liveStepDebounce = null;
 let thermalChartInstance = null;
 let acousticChartInstance = null;
 let benchSafetyChartInstance = null;
@@ -37,6 +38,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const loopBtn = document.getElementById("autoLoopBtn");
   if (loopBtn) loopBtn.addEventListener("click", toggleAutoLoop);
+
+  const resetBtn = document.getElementById("resetNominalBtn");
+  if (resetBtn) {
+    resetBtn.addEventListener("click", () => {
+      if (autoLoopTimer) toggleAutoLoop();
+      setValues(85, 65.0, 4, 15, 30.0);
+      document.querySelectorAll(".preset-chip").forEach(c => c.classList.remove("active-preset"));
+      const normChip = document.querySelector('.preset-chip[data-preset="normal"]');
+      if (normChip) normChip.classList.add("active-preset");
+      executeStep();
+      showToast("Reset to nominal baseline (85% load, 65°C)");
+    });
+  }
+
+  const ctrlSelect = document.getElementById("activeControllerSelect");
+  if (ctrlSelect) {
+    ctrlSelect.addEventListener("change", executeStep);
+  }
 
   // Initial runs to populate all cards, charts, and tables immediately
   executeStep();
@@ -167,6 +186,11 @@ async function checkApiHealth() {
 // =============================================================================
 // SLIDERS & LIVE TELEMETRY
 // =============================================================================
+function triggerLiveStep() {
+  if (liveStepDebounce) clearTimeout(liveStepDebounce);
+  liveStepDebounce = setTimeout(executeStep, 35);
+}
+
 function setupSliders() {
   const loadInput = document.getElementById("loadInput");
   const tempInput = document.getElementById("tempInput");
@@ -180,6 +204,7 @@ function setupSliders() {
     document.getElementById("overlayLoad").textContent = `${e.target.value}%`;
     const heroLoad = document.getElementById("heroLoadDisplay");
     if (heroLoad) heroLoad.textContent = `${e.target.value}%`;
+    triggerLiveStep();
   });
 
   tempInput.addEventListener("input", e => {
@@ -188,6 +213,7 @@ function setupSliders() {
     document.getElementById("overlayTemp").textContent = formatted;
     const heroTemp = document.getElementById("heroTempDisplay");
     if (heroTemp) heroTemp.textContent = formatted;
+    triggerLiveStep();
   });
 
   anomInput.addEventListener("input", e => {
@@ -197,15 +223,18 @@ function setupSliders() {
     const heroAnom = document.getElementById("heroAnomDisplay");
     if (heroAnom) heroAnom.textContent = val;
     updateSpectrumText(parseFloat(val));
+    triggerLiveStep();
   });
 
   energyInput.addEventListener("input", e => {
     const val = (e.target.value / 100).toFixed(2);
     document.getElementById("energyValDisplay").textContent = val;
+    triggerLiveStep();
   });
 
   ambientInput.addEventListener("input", e => {
     document.getElementById("ambientValDisplay").textContent = `${Number(e.target.value).toFixed(1)}°C`;
+    triggerLiveStep();
   });
 }
 
@@ -267,19 +296,19 @@ function setValues(load, temp, anom, energy, ambient) {
   document.getElementById("ambientInput").value = ambient;
 
   document.getElementById("loadValDisplay").textContent = `${load}% (${(load / 100).toFixed(2)})`;
-  document.getElementById("tempValDisplay").textContent = `${temp.toFixed(1)}°C`;
+  document.getElementById("tempValDisplay").textContent = `${Number(temp).toFixed(1)}°C`;
   document.getElementById("anomValDisplay").textContent = (anom / 100).toFixed(2);
   document.getElementById("energyValDisplay").textContent = (energy / 100).toFixed(2);
-  document.getElementById("ambientValDisplay").textContent = `${ambient.toFixed(1)}°C`;
+  document.getElementById("ambientValDisplay").textContent = `${Number(ambient).toFixed(1)}°C`;
 
   document.getElementById("overlayLoad").textContent = `${load}%`;
-  document.getElementById("overlayTemp").textContent = `${temp.toFixed(1)}°C`;
+  document.getElementById("overlayTemp").textContent = `${Number(temp).toFixed(1)}°C`;
   document.getElementById("overlayAnom").textContent = (anom / 100).toFixed(2);
 
   const heroLoad = document.getElementById("heroLoadDisplay");
   if (heroLoad) heroLoad.textContent = `${load}%`;
   const heroTemp = document.getElementById("heroTempDisplay");
-  if (heroTemp) heroTemp.textContent = `${temp.toFixed(1)}°C`;
+  if (heroTemp) heroTemp.textContent = `${Number(temp).toFixed(1)}°C`;
   const heroAnom = document.getElementById("heroAnomDisplay");
   if (heroAnom) heroAnom.textContent = (anom / 100).toFixed(2);
 
@@ -287,12 +316,10 @@ function setValues(load, temp, anom, energy, ambient) {
 }
 
 // =============================================================================
-// IMAGE UPLOAD & VIEW SWITCHING
+// IMAGE VIEW SWITCHING
 // =============================================================================
 function setupImageControls() {
-  const uploadInput = document.getElementById("imageUploadInput");
   const imgElement = document.getElementById("transformerImage");
-  const resetBtn = document.getElementById("resetImageBtn");
   const viewBtns = document.querySelectorAll(".image-view-btn");
 
   viewBtns.forEach(btn => {
@@ -302,26 +329,6 @@ function setupImageControls() {
       const src = btn.getAttribute("data-src");
       imgElement.src = src;
     });
-  });
-
-  uploadInput.addEventListener("change", e => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = evt => {
-        imgElement.src = evt.target.result;
-        viewBtns.forEach(b => b.classList.remove("active-view"));
-        showToast("Transformer image updated!");
-      };
-      reader.readAsDataURL(file);
-    }
-  });
-
-  resetBtn.addEventListener("click", () => {
-    imgElement.src = "/images/substation_ai.png";
-    viewBtns.forEach(b => b.classList.remove("active-view"));
-    document.getElementById("viewBtnSubstation").classList.add("active-view");
-    showToast("Substation image restored.");
   });
 }
 
@@ -460,7 +467,51 @@ function renderStepResponse(data) {
   rewEl.textContent = `${data.reward >= 0 ? '+' : ''}${data.reward.toFixed(1)}`;
   rewEl.style.color = data.reward >= 0 ? '#10b981' : '#ef4444';
 
+  const fluxEl = document.getElementById("heatFluxDisplay");
+  if (fluxEl && data.details) {
+    const dt = data.details.delta_t;
+    fluxEl.textContent = `ΔT: ${dt >= 0 ? '+' : ''}${dt.toFixed(2)}°C`;
+    fluxEl.style.color = dt > 0.4 ? '#ef4444' : dt < -0.1 ? '#10b981' : '#0284c7';
+  }
+
   autoSetImageForState(data.status_flag, data.next_temp, data.next_anomaly_prob);
+
+  // If auto-loop is active, advance the physical state into the sliders
+  if (autoLoopTimer) {
+    if (data.terminated) {
+      toggleAutoLoop();
+      const msg = data.status_flag === "emergency_trip" 
+        ? "Emergency Trip Triggered! Breaker Open (Safety Protection)." 
+        : "Episode Terminated (" + data.status_flag + ")";
+      showToast(msg);
+    } else {
+      const ambient = parseFloat(document.getElementById("ambientInput").value);
+      setValues(
+        Math.round(data.next_load * 100),
+        data.next_temp,
+        Math.round(data.next_anomaly_prob * 100),
+        Math.round(data.next_acoustic_energy * 100),
+        ambient
+      );
+    }
+  }
+}
+
+function toggleAutoLoop() {
+  const btn = document.getElementById("autoLoopBtn");
+  if (autoLoopTimer) {
+    clearInterval(autoLoopTimer);
+    autoLoopTimer = null;
+    btn.innerHTML = "<span>🔄 Auto-Loop: OFF</span>";
+    btn.classList.remove("btn-primary");
+    btn.classList.add("btn-secondary");
+  } else {
+    autoLoopTimer = setInterval(executeStep, 1000);
+    btn.innerHTML = "<span>⏹ Auto-Loop: ON</span>";
+    btn.classList.remove("btn-secondary");
+    btn.classList.add("btn-primary");
+    showToast("Continuous closed-loop control enabled");
+  }
 }
 
 function toggleAutoLoop() {

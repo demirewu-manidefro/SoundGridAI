@@ -248,7 +248,6 @@
   <!-- ========================================================================= -->
   <section id="live-controller" class="section-wrapper">
     <div class="section-header">
-      <span class="section-tag">Interactive Control Studio</span>
       <h2 class="section-title">Hardware-in-the-Loop PPO Policy Execution</h2>
       <p class="section-subtitle">
         Interact directly with the trained PyTorch PPO checkpoint (<code>soundgrid_integrated_ppo.zip</code>). Evaluate deterministic actions and true Softmax probability distributions.
@@ -262,7 +261,7 @@
         <div class="card-header">
           <div>
             <div class="card-title">⚙️ Cyber-Physical State Controls</div>
-            <div class="card-subtitle">Inject real-time thermal & acoustic state variables</div>
+            <div class="card-subtitle">Real-time physical telemetry &amp; 8D PPO policy inference</div>
           </div>
           <select id="activeControllerSelect" class="form-select" style="max-width: 210px;">
             <option value="soundgrid_ppo">VoltEcho (8D PPO Agent)</option>
@@ -273,14 +272,14 @@
         </div>
 
         <!-- Presets -->
-        <div style="margin-bottom: 8px; font-size: 12px; font-weight: 700; color: var(--text-muted);">
-          OPERATIONAL REGIME PRESETS:
+        <div style="margin-bottom: 8px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted);">
+          Operational Regime Presets:
         </div>
         <div class="presets-grid">
-          <button class="preset-chip active-preset" data-preset="normal">🟢 Normal Dispatch</button>
-          <button class="preset-chip" data-preset="warning">🟡 Incipient PD</button>
-          <button class="preset-chip" data-preset="critical">🔴 Severe Arcing</button>
-          <button class="preset-chip" data-preset="thermal">🟠 Heatwave Overload</button>
+          <button class="preset-chip active-preset" data-preset="normal">Normal Dispatch</button>
+          <button class="preset-chip" data-preset="warning">Incipient PD</button>
+          <button class="preset-chip" data-preset="critical">Severe Arcing</button>
+          <button class="preset-chip" data-preset="thermal">Heatwave Overload</button>
         </div>
 
         <!-- Sliders -->
@@ -325,23 +324,26 @@
         </div>
 
         <!-- Action Buttons -->
-        <div style="display: flex; gap: 12px; margin-top: 20px;">
+        <div style="display: flex; gap: 10px; margin-top: 18px;">
           <button id="stepBtn" class="btn-primary" style="flex: 2;">
             <span>⚡ Query Policy Action</span>
           </button>
-          <button id="autoLoopBtn" class="btn-secondary" style="flex: 1;">
+          <button id="autoLoopBtn" class="btn-secondary" style="flex: 1.2;">
             <span>🔄 Auto-Loop: OFF</span>
+          </button>
+          <button id="resetNominalBtn" class="btn-secondary" style="flex: 0.8;" title="Reset to nominal 85% load, 65°C baseline">
+            <span>↺ Reset</span>
           </button>
         </div>
 
         <!-- Real Softmax Policy Output Card -->
         <div class="decision-card">
-          <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px;">
-            TRUE POLICY HEAD PROBABILITY DISTRIBUTION (Softmax z_a):
+          <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-muted); margin-bottom: 8px;">
+            True Policy Head Distribution (Softmax z_a):
           </div>
           <div id="actionBanner" class="decision-action-banner banner-maintain">
             <span id="actionNameText">0: Maintain Load</span>
-            <span id="actionConfidenceText">Confidence: 65.0%</span>
+            <span id="actionConfidenceText">Confidence: 64.8%</span>
           </div>
 
           <!-- Real Softmax Probability Bars -->
@@ -350,10 +352,11 @@
           </div>
 
           <!-- Next State Transition -->
-          <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid #f1f5f9; display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted);">
+          <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid #f1f5f9; display: flex; justify-content: space-between; font-size: 11.5px; color: var(--text-muted); flex-wrap: wrap; gap: 8px;">
             <div>Next Temp: <strong id="nextTempDisplay" style="color: var(--text-main);">65.3°C</strong></div>
-            <div>Next Load: <strong id="nextLoadDisplay" style="color: var(--text-main);">0.85</strong></div>
-            <div>Anti-Gaming Reward: <strong id="rewardDisplay" style="color: #10b981;">+29.6</strong></div>
+            <div>Next Load: <strong id="nextLoadDisplay" style="color: var(--text-main);">85%</strong></div>
+            <div>RL Reward: <strong id="rewardDisplay" style="color: #10b981;">+29.6</strong></div>
+            <div>Flux: <strong id="heatFluxDisplay" style="color: #0284c7;">&Delta;T: +0.28°C</strong></div>
           </div>
         </div>
 
@@ -407,22 +410,10 @@
           />
         </div>
 
-        <div class="image-actions-bar">
-          <div>
-            <label for="imageUploadInput" class="upload-btn-label">
-              <span>📁 Upload Custom Field Image</span>
-            </label>
-            <input type="file" id="imageUploadInput" accept="image/*" style="display: none;" />
-          </div>
-          <button id="resetImageBtn" class="btn-secondary" style="font-size: 11px; padding: 6px 12px;">
-            Reset Substation View
-          </button>
-        </div>
-
         <!-- Acoustic Sensor Waveform Canvas -->
         <div style="margin-top: 18px; background: #ffffff; border: 1px solid var(--card-border); border-radius: var(--radius-md); padding: 14px;">
           <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; margin-bottom: 8px;">
-            <span style="color: var(--text-muted);">HYDROPHONE ACOUSTIC EMISSION SPECTRUM</span>
+            <span style="color: var(--text-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">Hydrophone Acoustic Emission Spectrum</span>
             <span id="spectrumStatusText" style="color: #10b981;">Nominal Magnetostriction (100 Hz)</span>
           </div>
           <canvas id="acousticCanvas" width="500" height="65" style="width: 100%; height: 65px; background: #fafbfc; border-radius: 6px;"></canvas>
