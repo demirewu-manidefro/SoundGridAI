@@ -1,5 +1,5 @@
 /**
- * SoundGrid AI - Modern Landing Page & Cyber-Physical Controller
+ * SoundGrid AI - Modern Landing Page & Autonomous Controller
  * Manages sticky navbar scroll spy, live telemetry, dual acoustic visualizers,
  * multi-step Chart.js physics trajectories, and industrial benchmarking.
  */
@@ -676,7 +676,7 @@ function renderSimulationCharts(data) {
 async function runBenchmark() {
   const epCount = parseInt(document.getElementById("benchmarkEpisodesInput").value) || 5;
   const tbody = document.getElementById("benchmarkTableBody");
-  tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 24px; color: var(--text-muted);">Running Cyber-Physical Benchmark across 4 operational regimes...</td></tr>`;
+  tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 24px; color: var(--text-muted);">Running Empirical Benchmark across 4 operational regimes...</td></tr>`;
 
   try {
     const res = await fetch("/api/benchmark", {
