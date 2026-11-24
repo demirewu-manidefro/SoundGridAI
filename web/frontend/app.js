@@ -1126,12 +1126,38 @@ function finishMissionPlayback(data, duelData, isDuel) {
 }
 
 // =============================================================================
-// ACADEMIC INQUIRY FORM CONTROLLER
+// CONTACT & DIRECT MESSAGING CONTROLLER
 // =============================================================================
 function setupContactForm() {
   const form = document.getElementById("academicInquiryForm");
   const alertEl = document.getElementById("inquiryStatusAlert");
   const submitBtn = document.getElementById("inquirySubmitBtn");
+  const copyBtn = document.getElementById("copyEmailBtn");
+
+  // Copy email to clipboard
+  if (copyBtn) {
+    copyBtn.addEventListener("click", () => {
+      const email = "demirewu.research@gmail.com";
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(email).then(() => {
+          copyBtn.textContent = "Copied!";
+          copyBtn.style.background = "#10b981";
+          copyBtn.style.color = "#ffffff";
+          copyBtn.style.borderColor = "#10b981";
+          setTimeout(() => {
+            copyBtn.textContent = "Copy";
+            copyBtn.style.background = "";
+            copyBtn.style.color = "";
+            copyBtn.style.borderColor = "";
+          }, 2500);
+        }).catch(() => {
+          prompt("Copy researcher email:", email);
+        });
+      } else {
+        prompt("Copy researcher email:", email);
+      }
+    });
+  }
 
   if (!form) return;
 
@@ -1140,8 +1166,7 @@ function setupContactForm() {
 
     const name = document.getElementById("inquiryName").value.trim();
     const email = document.getElementById("inquiryEmail").value.trim();
-    const affiliation = document.getElementById("inquiryAffiliation").value.trim();
-    const inquiryType = document.getElementById("inquiryType").value;
+    const inquiryType = document.getElementById("inquiryType") ? document.getElementById("inquiryType").value : "General Inquiry";
     const message = document.getElementById("inquiryMessage").value.trim();
 
     if (!name || !email || !message) {
@@ -1151,7 +1176,7 @@ function setupContactForm() {
 
     if (submitBtn) {
       submitBtn.disabled = true;
-      submitBtn.innerHTML = "<span>⏳ Dispatching...</span>";
+      submitBtn.innerHTML = `<span>Sending Message...</span>`;
     }
 
     try {
@@ -1161,7 +1186,7 @@ function setupContactForm() {
         body: JSON.stringify({
           name: name,
           email: email,
-          affiliation: affiliation,
+          affiliation: "Direct Contact",
           inquiry_type: inquiryType,
           message: message
         })
@@ -1175,26 +1200,32 @@ function setupContactForm() {
         alertEl.style.background = "#ecfdf5";
         alertEl.style.border = "1px solid #a7f3d0";
         alertEl.style.color = "#065f46";
-        alertEl.innerHTML = `✓ <strong>Inquiry Dispatched Successfully!</strong> Thank you ${name}. Your message has been sent to <strong>demirewu.research@gmail.com</strong>. We will reply promptly.`;
+        alertEl.innerHTML = `✓ <strong>Message Sent Successfully!</strong> Thank you <strong>${name}</strong>. Your message has been delivered directly to <strong>demirewu.research@gmail.com</strong>. I will get back to you promptly.`;
       }
 
       form.reset();
-      showToast("Inquiry delivered to researcher!");
+      showToast("Message delivered to Demirew!");
     } catch (err) {
       console.error("Contact submit error:", err);
-      // Fallback
+      // Fallback to mailto
       window.location.href = `mailto:demirewu.research@gmail.com?subject=${encodeURIComponent(inquiryType + " - " + name)}&body=${encodeURIComponent(message)}`;
       if (alertEl) {
         alertEl.style.display = "block";
         alertEl.style.background = "#eff6ff";
         alertEl.style.border = "1px solid #bfdbfe";
         alertEl.style.color = "#1e40af";
-        alertEl.innerHTML = "Opening email client to send inquiry directly to <strong>demirewu.research@gmail.com</strong>.";
+        alertEl.innerHTML = "Opening your email app to send message directly to <strong>demirewu.research@gmail.com</strong>.";
       }
     } finally {
       if (submitBtn) {
         submitBtn.disabled = false;
-        submitBtn.innerHTML = "<span>✉️ Dispatch Inquiry</span>";
+        submitBtn.innerHTML = `
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+          <span>Send Message</span>
+        `;
       }
     }
   });
