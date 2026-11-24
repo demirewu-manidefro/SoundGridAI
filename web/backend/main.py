@@ -15,7 +15,7 @@ from .controllers import get_controller, ACTION_NAMES
 from .simulator import CyberPhysicalSimulator
 
 app = FastAPI(
-    title="SoundGrid AI - Cyber-Physical Control API",
+    title="SoundGrid AI - Autonomous Protection Control API",
     description="FastAPI Backend for Acoustic-Driven Power Transformer Reinforcement Learning Control & Comparative Benchmarking",
     version="1.0.0"
 )

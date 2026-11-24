@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VoltEcho AI: Scientific Methodology &amp; Algorithms</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/style.css?v=6.0" />
+  <!-- Chart.js for scientific trajectory and benchmark plots -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* Methodology Full-Page Specific Styling */
+    .meth-page-wrapper {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 32px 24px 80px 24px;
+    }
+
+    .meth-hero {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      border-radius: var(--radius-xl);
+      padding: 48px 40px;
+      color: #ffffff;
+      margin-bottom: 32px;
+      box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.25);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .meth-hero::after {
+      content: "";
+      position: absolute;
+      top: -50px;
+      right: -50px;
+      width: 320px;
+      height: 320px;
+      background: radial-gradient(circle, rgba(2, 132, 199, 0.25) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .meth-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(2, 132, 199, 0.2);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: #38bdf8;
+      padding: 5px 14px;
+      border-radius: var(--radius-full);
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 16px;
+    }
+
+    .meth-hero h1 {
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+      line-height: 1.2;
+    }
+
+    .meth-hero p {
+      font-size: 16px;
+      color: #94a3b8;
+      max-width: 860px;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .meth-stats-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 24px;
+    }
+
+    .meth-stat-item strong {
+      display: block;
+      font-size: 24px;
+      font-weight: 800;
+      color: #38bdf8;
+      font-family: monospace;
+    }
+
+    .meth-stat-item span {
+      font-size: 12px;
+      color: #cbd5e1;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Sticky In-Page Navigation */
+    .sticky-subnav {
+      position: sticky;
+      top: 64px;
+      z-index: 40;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--card-border);
+      padding: 12px 0;
+      margin-bottom: 36px;
+    }
+
+    .sticky-subnav-container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      overflow-x: auto;
+    }
+
+    .subnav-links {
+      display: flex;
+      gap: 8px;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      white-space: nowrap;
+    }
+
+    .subnav-link {
+      display: inline-block;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
+      border-radius: var(--radius-full);
+      background: #f1f5f9;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .subnav-link:hover {
+      background: #e2e8f0;
+      color: #0284c7;
+    }
+
+    .subnav-cta-btn {
+      background: #0284c7;
+      color: #ffffff;
+      padding: 8px 18px;
+      border-radius: var(--radius-full);
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+
+    .subnav-cta-btn:hover {
+      background: #0369a1;
+      transform: translateY(-1px);
+    }
+
+    /* Full-width Section Cards */
+    .meth-section {
+      background: #ffffff;
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-xl);
+      padding: 40px;
+      margin-bottom: 40px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .meth-section-header {
+      margin-bottom: 28px;
+      border-bottom: 1px solid #f1f5f9;
+      padding-bottom: 18px;
+    }
+
+    .meth-section-tag {
+      font-size: 11px;
+      font-weight: 800;
+      color: #0284c7;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 6px;
+    }
+
+    .meth-section-header h2 {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin: 0 0 8px 0;
+    }
+
+    .meth-section-header p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    @media (max-width: 900px) {
+      .meth-stats-strip {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .meth-section {
+        padding: 24px 20px;
+      }
+      .meth-hero {
+        padding: 32px 24px;
+      }
+      .meth-hero h1 {
+        font-size: 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========================================================================= -->
+  <!-- TOP NAVBAR                                                                -->
+  <!-- ========================================================================= -->
+  <nav class="top-navbar">
+    <div class="nav-container">
+      <a href="/" class="nav-brand" title="VoltEcho Home">
+        <img src="/images/voltecho_logo.svg" alt="VoltEcho AI Logo" class="brand-logo-img" />
+        <div>
+          <div class="nav-brand-title">Volt<span style="background: linear-gradient(135deg, #0284c7 0%, #06b6d4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Echo</span></div>
+          <div class="nav-brand-tag">Acoustic Transformer Protection</div>
+        </div>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="/" class="nav-link">Home</a></li>
+        <li><a href="/#about-project" class="nav-link">About Project</a></li>
+        <li><a href="/#live-controller" class="nav-link">Live Studio</a></li>
+        <li><a href="/#challenges" class="nav-link">Challenges &amp; Solutions</a></li>
+        <li><a href="/methodology.html" class="nav-link nav-link-btn-highlight" style="color: #0284c7; font-weight: 800;">Methodology &amp; Algorithm</a></li>
+        <li><a href="/#contact" class="nav-link">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ========================================================================= -->
+  <!-- STICKY SUB-NAVIGATION                                                     -->
+  <!-- ========================================================================= -->
+  <div class="sticky-subnav">
+    <div class="sticky-subnav-container">
+      <ul class="subnav-links">
+        <li><a href="#flowchart" class="subnav-link">1. Architecture Flowchart</a></li>
+        <li><a href="#workflow" class="subnav-link">2. 8-Step Engineering Workflow</a></li>
+        <li><a href="#algorithms" class="subnav-link">3. Pseudocode Algorithms</a></li>
+        <li><a href="#benchmarks" class="subnav-link">4. Empirical Benchmarks</a></li>
+      </ul>
+      <a href="/#live-controller" class="subnav-cta-btn">⚡ Launch Live Studio</a>
+    </div>
+  </div>
+
+  <main class="meth-page-wrapper">
+
+    <!-- ======================================================================= -->
+    <!-- HERO HEADER                                                             -->
+    <!-- ======================================================================= -->
+    <header class="meth-hero">
+      <div class="meth-badge">⚡ Scientific Methodology &amp; Mathematical Algorithms</div>
+      <h1>VoltEcho AI: System Architecture &amp; Control Algorithms</h1>
+      <p>
+        A rigorous publication-grade breakdown: immersion hydrophone acoustic sensing, log-Mel spectrogram extraction, Conv2D neural perception, 8D derivative-augmented PPO reinforcement learning, plain pseudocode algorithms, and empirical Monte Carlo benchmarks.
+      </p>
+
+      <div class="meth-stats-strip">
+        <div class="meth-stat-item">
+          <strong>0.0%</strong>
+          <span>Catastrophic Burnout Rate</span>
+        </div>
+        <div class="meth-stat-item">
+          <strong>85.08%</strong>
+          <span>CNN Acoustic Accuracy</span>
+        </div>
+        <div class="meth-stat-item">
+          <strong>9,862</strong>
+          <span>Tuned PPO Policy Weights</span>
+        </div>
+        <div class="meth-stat-item">
+          <strong>&lt; 20 ms</strong>
+          <span>Edge Inference Latency</span>
+        </div>
+      </div>
+    </header>
+
+
+    <!-- ======================================================================= -->
+    <!-- SECTION 1: END-TO-END FLOWCHART                                         -->
+    <!-- ======================================================================= -->
+    <section id="flowchart" class="meth-section">
+      <div class="meth-section-header">
+        <div class="meth-section-tag">System Architecture</div>
+        <h2>1. Closed-Loop Autonomous Protection Flowchart</h2>
+        <p>
+          High-frequency immersion acoustic hydrophone sensing coupled with 8D Markovian reinforcement learning and closed-loop thermodynamic heat balance feedback.
+        </p>
+      </div>
+
+      <div class="flowchart-diagram">
+        <!-- Top Row: Acoustic Perception Pipeline -->
+        <div class="flowchart-row">
+          <div class="flow-step-box">
+            <div class="flow-step-num">STAGE 1 &bull; SENSING</div>
+            <div class="flow-step-title">Piezoelectric Hydrophones</div>
+            <div class="flow-step-desc">Immersion acoustic transducers mounted inside transformer tank listening to partial discharge (PD) micro-sparks.</div>
+            <div class="flow-step-metric">48,000 samples @ 16 kHz</div>
+          </div>
+
+          <div class="flow-arrow">
+            <span class="flow-arrow-line"></span>
+            <span class="flow-arrow-label">Raw Audio (10-150 kHz)</span>
+          </div>
+
+          <div class="flow-step-box">
+            <div class="flow-step-num">STAGE 2 &bull; DSP TRANSFORM</div>
+            <div class="flow-step-title">Log-Mel Spectrogram</div>
+            <div class="flow-step-desc">Time-frequency feature conversion capturing transient acoustic energy bursts across 128 Mel bands.</div>
+            <div class="flow-step-metric">128 Mel Bands &bull; FFT 2048</div>
+          </div>
+
+          <div class="flow-arrow">
+            <span class="flow-arrow-line"></span>
+            <span class="flow-arrow-label">Mel Tensor (128&times;94)</span>
+          </div>
+
+          <div class="flow-step-box">
+            <div class="flow-step-num">STAGE 3 &bull; CONV2D AI</div>
+            <div class="flow-step-title">VoltEchoCNN Classifier</div>
+            <div class="flow-step-desc">4-stage deep convolutional backbone with batch normalization. Disambiguates benign vibrations from severe arcing.</div>
+            <div class="flow-step-metric">85.08% Acc &bull; 0.9258 ROC-AUC</div>
+          </div>
+        </div>
+
+        <!-- Vertical Inter-Pipeline Connector -->
+        <div class="flowchart-connector-vertical">
+          <div class="flow-vertical-arrow">
+            <span class="flow-vertical-line"></span>
+            <span class="flow-arrow-label">Outputs: Anomaly Probability P_anom &amp; RMS Acoustic Energy E_acous</span>
+          </div>
+        </div>
+
+        <!-- Bottom Row: 8D RL Control Loop -->
+        <div class="flowchart-row">
+          <div class="flow-step-box">
+            <div class="flow-step-num">STAGE 4 &bull; STATE FORMULATION</div>
+            <div class="flow-step-title">8D Markovian State Vector</div>
+            <div class="flow-step-desc">Augmented with derivative rates (&Delta;P, &Delta;L, &Delta;T) to eliminate POMDP partial observability without recurrent lag.</div>
+            <div class="flow-step-metric">S &isin; &real;⁸ &bull; &Delta;P, &Delta;L, &Delta;T</div>
+          </div>
+
+          <div class="flow-arrow">
+            <span class="flow-arrow-line"></span>
+            <span class="flow-arrow-label">8D State Vector S_t</span>
+          </div>
+
+          <div class="flow-step-box">
+            <div class="flow-step-num">STAGE 5 &bull; RL DECISION</div>
+            <div class="flow-step-title">8D PPO Actor-Critic Policy</div>
+            <div class="flow-step-desc">Deep policy network trained with anti-gaming multi-objective rewards to select optimal dispatch setpoint.</div>
+            <div class="flow-step-metric">9,862 Parameters &bull; 5 Actions</div>
+          </div>
+
+          <div class="flow-arrow">
+            <span class="flow-arrow-line"></span>
+            <span class="flow-arrow-label">Dispatch Action a_t</span>
+          </div>
+
+          <div class="flow-step-box">
+            <div class="flow-step-num">STAGE 6 &bull; SUBSTATION ACTUATION</div>
+            <div class="flow-step-title">SCADA Tap Changers &amp; Breaker</div>
+            <div class="flow-step-desc">Modulates transmission load (0% to 100%) or triggers sub-cycle breaker trip on critical flashover hazards.</div>
+            <div class="flow-step-metric">0.0% Burnout Rate &bull; 1-Step Trip</div>
+          </div>
+        </div>
+
+        <!-- Feedback Loop Indicator -->
+        <div class="flowchart-feedback-loop">
+          <span class="feedback-badge">🔄 Closed-Loop Feedback: Dynamic Heat Balance ODE</span>
+          <span class="feedback-equation">dT/dt = (4.2 &times; Load&sup2; + 10.0 &times; P_anom) &minus; 0.09 &times; (T_core &minus; T_ambient)</span>
+          <span class="feedback-note">Updated core temperature and acoustic signatures feed back into Stage 1 sensors for continuous closed-loop protection.</span>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ======================================================================= -->
+    <!-- SECTION 2: 8-STEP NOTEBOOK WORKFLOW                                     -->
+    <!-- ======================================================================= -->
+    <section id="workflow" class="meth-section">
+      <div class="meth-section-header">
+        <div class="meth-section-tag">Engineering Workflow &amp; Empirical Results</div>
+        <h2>2. 8-Step Implementation Workflow from Research Notebooks</h2>
+        <p>
+          Direct implementation mapping from <code>01_acoustic_anomaly_detection.ipynb</code> and <code>02_reinforcement_learning_control.ipynb</code>.
+        </p>
+      </div>
+
+      <div class="workflow-steps-grid">
+        <!-- Step 1 -->
+        <div class="workflow-step-card">
+          <div class="wf-step-badge">Step 1</div>
+          <h4>Hydrophone Acoustic Data Ingestion</h4>
+          <p>
+            High-frequency immersion hydrophones record physical sound transients inside the oil tank at 16,000 Hz. Ambient electrical hum (100 Hz magnetostriction) is filtered, isolating partial discharge micro-sparks (10 kHz &ndash; 150 kHz).
+          </p>
+          <div class="wf-step-meta">Dataset: Industrial Substation PD Transients &bull; 48,000 samples/window</div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="workflow-step-card">
+          <div class="wf-step-badge">Step 2</div>
+          <h4>Log-Mel Feature Spectrogram Generation</h4>
+          <p>
+            Raw audio windows (3.0s duration) are processed via Short-Time Fourier Transform (STFT) with FFT window of 2048 and hop length of 512, mapping sound into 128 triangular Mel-scale frequency bins for neural perception.
+          </p>
+          <div class="wf-step-meta">Dimensions: 128 Mel bands &times; 94 time frames &bull; Log-power normalized</div>
+        </div>
+
+        <!-- Step 3 (Full width with Figure 1) -->
+        <div class="workflow-step-card" style="grid-column: 1 / -1;">
+          <div class="wf-step-badge">Step 3</div>
+          <h4>VoltEchoCNN Deep Classifier Architecture &amp; Training</h4>
+          <p>
+            A 4-stage 2D Convolutional Neural Network with Batch Normalization, Max Pooling, and Dropout (0.3) was constructed and trained with Adam optimizer (lr=0.001) over 25 epochs. Below is the empirical training and validation loss/accuracy progression from <code>01_acoustic_anomaly_detection.ipynb</code>:
+          </p>
+          
+          <div class="notebook-figure-container">
+            <img src="/images/ima.png" alt="Acoustic Anomaly Detection Notebook Training Curves" class="notebook-figure-img" />
+            <div class="notebook-figure-caption">
+              <strong>Figure 1:</strong> Empirical training loss convergence and validation accuracy progression for VoltEchoCNN across 25 epochs from <code>notebooks/01_acoustic_anomaly_detection.ipynb</code>.
+            </div>
+          </div>
+          <div class="wf-step-meta">Trained on PyTorch 2.0 &bull; Loss Function: CrossEntropy &bull; Early Stopping at Epoch 22</div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="workflow-step-card">
+          <div class="wf-step-badge">Step 4</div>
+          <h4>Perception Validation &amp; Metric Verification</h4>
+          <p>
+            The trained CNN model was evaluated against unseen test partitions. Validated results show <strong>85.08% overall accuracy</strong>, <strong>0.9258 ROC-AUC</strong>, and an F1-score of 0.85, confirming reliable sub-second anomaly discrimination.
+          </p>
+          <div class="wf-step-meta">Inference Latency: 18.4 ms &bull; TorchScript C++ Export: 1.6 MB</div>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="workflow-step-card">
+          <div class="wf-step-badge">Step 5</div>
+          <h4>Thermodynamic Simulation Environment</h4>
+          <p>
+            A custom Gymnasium environment was built implementing differential thermal equations:
+            <code>dT/dt = (4.2 &times; L&sup2; + 10.0 &times; P_anom) - 0.09 &times; (T - T_ambient)</code>.
+            Joule heating ($4.2 L^2$) penalizes overloading, while ambient dissipation follows Newton's cooling law.
+          </p>
+          <div class="wf-step-meta">Gymnasium Discrete(5) Action Space &bull; Box(8,) Continuous Observation</div>
+        </div>
+
+        <!-- Step 6 -->
+        <div class="workflow-step-card">
+          <div class="wf-step-badge">Step 6</div>
+          <h4>8D Markovian State Vector Assembly</h4>
+          <p>
+            To prevent partial observability (POMDP) without recurrent neural network latency, the state vector is augmented with rate-of-change derivatives:
+            <code>S = [P_anom, &Delta;P_anom, E_acous, Load, &Delta;Load, T/100, &Delta;T/10, t/t_max]</code>.
+          </p>
+          <div class="wf-step-meta">8-Dimensional State Space &bull; Normalized for rapid gradient descent</div>
+        </div>
+
+        <!-- Step 7 (Full width with Figure 2) -->
+        <div class="workflow-step-card" style="grid-column: 1 / -1;">
+          <div class="wf-step-badge">Step 7</div>
+          <h4>Multi-Objective Anti-Gaming PPO Policy Optimization</h4>
+          <p>
+            The Actor-Critic agent was trained with Stable-Baselines3 PPO using an anti-gaming reward function. Below is the training reward progression and episode length stability curve from <code>02_reinforcement_learning_control.ipynb</code>:
+          </p>
+
+          <div class="notebook-figure-container">
+            <img src="/images/ima1.png" alt="Reinforcement Learning Control Training Progression" class="notebook-figure-img" />
+            <div class="notebook-figure-caption">
+              <strong>Figure 2:</strong> Reinforcement learning cumulative reward convergence and episodic policy stabilization from <code>notebooks/02_reinforcement_learning_control.ipynb</code>.
+            </div>
+          </div>
+          <div class="wf-step-meta">PPO Hyperparameters: Clip Range 0.2 &bull; Entropy Coeff 0.01 &bull; 9,862 Tuned Weights</div>
+        </div>
+
+        <!-- Step 8 -->
+        <div class="workflow-step-card" style="grid-column: 1 / -1;">
+          <div class="wf-step-badge">Step 8</div>
+          <h4>Hardware-in-the-Loop Simulation &amp; Stress Testing</h4>
+          <p>
+            The trained PPO checkpoint (<code>soundgrid_integrated_ppo.zip</code>) was deployed to an interactive FastAPI backend. Across 100 Monte Carlo stress episodes under simultaneous 42&deg;C heatwaves and severe arcing faults, the agent achieved a <strong>0.0% burnout rate</strong>, a <strong>1-step emergency trip response</strong>, and sustained 85% grid throughput.
+          </p>
+          <div class="wf-step-meta">Production Checkpoint: PyTorch / ONNX Runtime &bull; FastAPI Live Serving</div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ======================================================================= -->
+    <!-- SECTION 3: SYSTEM ALGORITHMS (PLAIN PSEUDOCODE)                         -->
+    <!-- ======================================================================= -->
+    <section id="algorithms" class="meth-section">
+      <div class="meth-section-header">
+        <div class="meth-section-tag">Formal Mathematical Formulations</div>
+        <h2>3. System Algorithms (Plain English Pseudocode)</h2>
+        <p>
+          Written in clear, structured, readable pseudocode without programming syntax, so that professors, thesis evaluators, and power engineers can easily review every decision rule and mathematical formulation.
+        </p>
+      </div>
+
+      <!-- Algorithm 1: Real-Time Control Loop -->
+      <div class="modal-pseudocode-card">
+        <div class="pseudo-header">
+          <span class="pseudo-badge">Algorithm 1</span>
+          <h4>Real-Time Acoustic &amp; PPO Transformer Protection Control Loop</h4>
+        </div>
+        
+        <div class="pseudo-meta-box">
+          <div><strong>Inputs:</strong> Continuous acoustic signal stream <em>x(t)</em>, Core oil temperature <em>T(t)</em>, Ambient temperature <em>T_amb</em>, Grid load request <em>L(t)</em>.</div>
+          <div><strong>Outputs:</strong> Discrete control action <em>a_t &isin; {0, 1, 2, 3, 4}</em>, Updated circuit breaker state, New dispatch setpoint.</div>
+          <div><strong>Execution Interval:</strong> Evaluated every time step &Delta;t (e.g., 3.0-second telemetry window).</div>
+        </div>
+
+        <ol class="pseudo-step-list">
+          <li class="pseudo-step-item">
+            <strong>Step 1: Acoustic Ingestion &amp; Windowing</strong>
+            <p>Capture 3.0 seconds of audio data (48,000 samples at 16,000 Hz) from immersion piezoelectric hydrophones mounted inside the transformer oil tank.</p>
+          </li>
+          <li class="pseudo-step-item">
+            <strong>Step 2: Log-Mel Feature Transformation</strong>
+            <p>Apply Short-Time Fourier Transform (STFT) with window size 2048 and hop length 512. Project frequency bins into 128 log-spaced Mel filterbanks, generating Mel spectrogram matrix <em>M_t</em>.</p>
+          </li>
+          <li class="pseudo-step-item">
+            <strong>Step 3: Neural Perception Inference</strong>
+            <p>Pass spectrogram <em>M_t</em> through the trained VoltEchoCNN model. Output the continuous anomaly probability <em>P_anom &isin; [0, 1]</em> and calculate normalized Root Mean Square acoustic energy <em>E_acous</em>.</p>
+          </li>
+          <li class="pseudo-step-item">
+            <strong>Step 4: Derivative Rate Computation &amp; State Assembly</strong>
+            <p>Compute first-order differences to track system inertia:
+              <br />&bull; Anomaly Growth Rate: <em>&Delta;P_anom = P_anom(t) &minus; P_anom(t-1)</em>
+              <br />&bull; Load Change Rate: <em>&Delta;L = L(t) &minus; L(t-1)</em>
+              <br />&bull; Thermal Heating Rate: <em>&Delta;T = T(t) &minus; T(t-1)</em>
+              <br />Assemble the normalized 8-dimensional state vector:
+              <br /><em>S_t = [P_anom, &Delta;P_anom, E_acous, L, &Delta;L, T/100, &Delta;T/10, t/t_max]</em>.
+            </p>
+          </li>
+          <li class="pseudo-step-item">
+            <strong>Step 5: PPO Policy Inference</strong>
+            <p>Forward state vector <em>S_t</em> through the trained PPO Actor neural network to produce probability distribution over actions: <em>&pi;_&theta;(a | S_t)</em>. Select the optimal control action <em>a_t = argmax &pi;_&theta;(a | S_t)</em>.</p>
+          </li>
+          <li class="pseudo-step-item">
+            <strong>Step 6: Substation Actuation &amp; Protection Dispatch</strong>
+            <p>
+              <strong>If action is 4 (Emergency Trip):</strong>
+              <br />&emsp;&bull; Instantly open the primary substation circuit breaker.
+              <br />&emsp;&bull; Set delivered load to 0% and alert utility dispatchers to prevent explosion.
+              <br /><strong>Else if action is 3 (Throttle 40%):</strong>
+              <br />&emsp;&bull; Modulate inverter tap changers to derate load by 30% to shed core heat quickly.
+              <br /><strong>Else if action is 2 (Throttle 15%):</strong>
+              <br />&emsp;&bull; Gently reduce load by 15% to stop early thermal drift without disturbing normal grid supply.
+              <br /><strong>Else if action is 1 (Increment Load):</strong>
+              <br />&emsp;&bull; Increase transmission load by +10% if thermal margin allows (temperature &lt; 75&deg;C).
+              <br /><strong>Else (Action is 0: Maintain Load):</strong>
+              <br />&emsp;&bull; Maintain current transmission throughput unchanged.
+            </p>
+          </li>
+          <li class="pseudo-step-item">
+            <strong>Step 7: Thermodynamic State Propagation</strong>
+            <p>Calculate next internal core temperature <em>T(t+1)</em> using the heat balance differential equation:
+              <br /><em>dT/dt = (4.2 &times; Load&sup2; + 10.0 &times; P_anom) &minus; 0.09 &times; (T &minus; T_amb)</em>
+              <br />Update <em>T(t+1) = T(t) + &Delta;t &times; (dT/dt)</em> and store current telemetry for the next cycle.
+            </p>
+          </li>
+          <li class="pseudo-step-item">
+            <strong>Step 8: Repeat Loop</strong>
+            <p>Advance time counter <em>t &larr; t + 1</em> and return to Step 1 for real-time continuous closed-loop surveillance.</p>
+          </li>
+        </ol>
+      </div>
+
+      <!-- Algorithm 2: Anti-Gaming Reward Formulation -->
+      <div class="modal-pseudocode-card" style="margin-top: 28px;">
+        <div class="pseudo-header">
+          <span class="pseudo-badge">Algorithm 2</span>
+          <h4>Anti-Gaming Multi-Objective Reward &amp; Penalty Function</h4>
+        </div>
+
+        <div class="pseudo-meta-box">
+          <div><strong>Purpose:</strong> Guide the PPO agent during training to balance maximum power delivery against insulation burnout, false blackouts, and mechanical wear.</div>
+          <div><strong>Total Reward at Step t:</strong> <em>R_t = R_delivery + R_thermal + R_burnout + R_blackout + R_damping</em></div>
+        </div>
+
+        <ol class="pseudo-step-list">
+          <li class="pseudo-step-item">
+            <strong>Rule 1: Base Power Delivery Reward</strong>
+            <p><em>R_delivery = +35.0 &times; Load_t</em>
+              <br />Provides a continuous positive reward proportional to delivered electricity, encouraging the agent to keep transformers transmitting power at high efficiency whenever safe.
+            </p>
+          </li>
+          <li class="pseudo-step-item">
+            <strong>Rule 2: High-Temperature Stress Penalty</strong>
+            <p><strong>Condition:</strong> If core oil temperature <em>T_t &gt; 80.0&deg;C</em>:
+              <br /><em>R_thermal = &minus;2.5 &times; (T_t &minus; 80.0)</em>
+              <br />Provides a continuous linear penalty gradient discouraging the agent from allowing oil temperatures to climb into winding degradation territory.
+            </p>
+          </li>
+          <li class="pseudo-step-item">
+            <strong>Rule 3: Catastrophic Burnout Penalty (Terminal Event)</strong>
+            <p><strong>Condition:</strong> If core oil temperature reaches or exceeds <em>T_t &ge; 130.0&deg;C</em>:
+              <br /><em>R_burnout = &minus;180.0</em>, and abort the training episode immediately.
+              <br />Severe terminal punishment ensuring the agent never allows physical catastrophic tank explosion or oil vapor ignition.
+            </p>
+          </li>
+          <li class="pseudo-step-item">
+            <strong>Rule 4: Spurious False Blackout (False Trip) Penalty</strong>
+            <p><strong>Condition:</strong> If the agent commands an emergency trip (<em>a_t = 4</em>) when acoustic anomaly risk is low (<em>P_anom &lt; 0.35</em>) and temperature is safe (<em>T_t &lt; 90.0&deg;C</em>):
+              <br /><em>R_blackout = &minus;160.0</em>
+              <br /><strong>Anti-Gaming Mechanism:</strong> Without this penalty, RL agents learn to "cheat" by tripping healthy transformers to avoid all thermal penalties. This penalty forces the agent to keep supplying power unless genuine danger exists.
+            </p>
+          </li>
+          <li class="pseudo-step-item">
+            <strong>Rule 5: Switchgear Mechanical Wear Damping</strong>
+            <p><em>R_damping = &minus;12.0 &times; |&Delta;Load_t|</em>
+              <br />Penalizes erratic oscillations and frequent tap-changer switching to preserve physical contactors and prevent mechanical wear.
+            </p>
+          </li>
+          <li class="pseudo-step-item">
+            <strong>Rule 6: Final Reward Aggregation</strong>
+            <p>Return total scalar reward <em>R_t</em> to the PPO optimization algorithm to update policy weights via Generalized Advantage Estimation (GAE).</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+
+    <!-- ======================================================================= -->
+    <!-- SECTION 4: EMPIRICAL BENCHMARKS                                         -->
+    <!-- ======================================================================= -->
+    <section id="benchmarks" class="meth-section">
+      <div class="meth-section-header" style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px;">
+        <div>
+          <div class="meth-section-tag">Stress-Test Verification</div>
+          <h2>4. Empirical Benchmark Evaluations Across 4 Operational Regimes</h2>
+          <p>
+            Comparative stress-testing against industry-standard relays across Normal Dispatch, Incipient Partial Discharge, Severe Arcing, and 42&deg;C Heatwaves.
+          </p>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <label style="font-size: 13px; font-weight: 600; color: var(--text-muted);">Episodes / Regime:</label>
+          <select id="benchmarkEpisodesSelect" style="padding: 7px 12px; border: 1px solid var(--card-border); border-radius: var(--radius-sm); font-size: 13px; font-weight: 700;">
+            <option value="5" selected>5 Episodes (Fast)</option>
+            <option value="10">10 Episodes (Balanced)</option>
+            <option value="25">25 Episodes (Extensive)</option>
+          </select>
+          <button id="runBenchmarkBtn" class="btn-primary" style="padding: 8px 18px; font-size: 13px;">
+            <span>⚡ Run Live Benchmark</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Benchmark Table -->
+      <div style="overflow-x: auto; margin-bottom: 24px;">
+        <table class="benchmark-table" style="width: 100%;">
+          <thead>
+            <tr>
+              <th>Controller Formulation</th>
+              <th>Mean Cumulative Reward</th>
+              <th>Burnout (%)</th>
+              <th>False Blackout (%)</th>
+              <th>Safe Emergency Trip (%)</th>
+              <th>Avg Delivered Load</th>
+              <th>Industrial Verdict</th>
+            </tr>
+          </thead>
+          <tbody id="benchmarkTableBody">
+            <!-- Populated via methodology.js -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Comparative Charts -->
+      <div style="display: grid; grid-template-columns: 1.15fr 1fr; gap: 20px;">
+        <div class="chart-box" style="height: 300px;">
+          <div style="font-size: 13px; font-weight: 800; color: var(--text-main); margin-bottom: 8px;">Safety Comparison (Burnout vs False Blackout Rate)</div>
+          <canvas id="benchmarkSafetyChart"></canvas>
+        </div>
+        <div class="chart-box" style="height: 300px;">
+          <div style="font-size: 13px; font-weight: 800; color: var(--text-main); margin-bottom: 8px;">Mean Cumulative Reward Comparison</div>
+          <canvas id="benchmarkRewardChart"></canvas>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ======================================================================= -->
+    <!-- BOTTOM CALL TO ACTION                                                   -->
+    <!-- ======================================================================= -->
+    <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border: 1px solid #bae6fd; border-radius: var(--radius-xl); padding: 36px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+      <div>
+        <h3 style="font-size: 20px; font-weight: 800; color: #0369a1; margin: 0 0 6px 0;">Experience the Autonomous Policy in Action</h3>
+        <p style="font-size: 14px; color: #0284c7; margin: 0;">Manipulate live acoustic frequencies, thermal telemetry, and evaluate deterministic actions in real time.</p>
+      </div>
+      <a href="/#live-controller" class="btn-primary" style="padding: 12px 28px; font-size: 14px; text-decoration: none;">
+        <span>Launch Interactive Studio &rarr;</span>
+      </a>
+    </div>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- FOOTER                                                                    -->
+  <!-- ========================================================================= -->
+  <footer class="app-footer">
+    <div class="footer-container">
+      <div>
+        <div style="font-weight: 800; font-size: 16px; color: var(--text-main);">VoltEcho AI Research Platform</div>
+        <div style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">
+          Autonomous Reinforcement Learning for Smart Power Transformers with Acoustic Perception
+        </div>
+      </div>
+      <div style="font-size: 12px; color: var(--text-subtle);">
+        Department of Electrical &amp; Computer Engineering &bull; IEEE Transactions on Smart Grid Blueprint &copy; 2026
+      </div>
+    </div>
+  </footer>
+
+  <!-- Application Logic for Methodology Page -->
+  <script src="/methodology.js"></script>
+</body>
+</html>

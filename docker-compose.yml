@@ -1,0 +1,28 @@
+# ==============================================================================
+# VoltEcho AI - Docker Compose Orchestration
+# Single-command local or cloud deployment with persistent volume and healthcheck
+# ==============================================================================
+version: "3.8"
+
+services:
+  voltecho-ai:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: voltecho-ai-platform
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - ENVIRONMENT=production
+      - PORT=8000
+    restart: unless-stopped
+    volumes:
+      # Persist academic contact inquiries submitted via the web platform
+      - ./contacts_inquiries.json:/app/contacts_inquiries.json
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
