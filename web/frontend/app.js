@@ -28,7 +28,6 @@ let prevState = {
 document.addEventListener("DOMContentLoaded", () => {
   setupNavScroll();
   setupModal();
-  setupStudioModes();
   setupAutonomousMission();
   setupSliders();
   setupPresets();
@@ -271,6 +270,8 @@ function updateSpectrumText(anom) {
 // =============================================================================
 // OPERATIONAL PRESETS
 // =============================================================================
+let currentActiveScenario = "normal";
+
 function setupPresets() {
   const chips = document.querySelectorAll(".preset-chip");
   chips.forEach(chip => {
@@ -278,6 +279,7 @@ function setupPresets() {
       chips.forEach(c => c.classList.remove("active-preset"));
       chip.classList.add("active-preset");
       const preset = chip.getAttribute("data-preset");
+      currentActiveScenario = preset || "normal";
 
       if (preset === "normal") {
         setValues(85, 62.0, 4, 15, 30.0);
@@ -787,54 +789,30 @@ function renderBenchmarkResults(results) {
 }
 
 // =============================================================================
-// STUDIO MODES (Autonomous Mission vs Interactive Telemetry)
-// =============================================================================
-function setupStudioModes() {
-  const autoBtn = document.getElementById("modeBtnAutonomous");
-  const interBtn = document.getElementById("modeBtnInteractive");
-  const autoView = document.getElementById("autonomousView");
-  const interView = document.getElementById("interactiveView");
-
-  if (autoBtn && interBtn) {
-    autoBtn.addEventListener("click", () => {
-      autoBtn.classList.add("active-mode");
-      interBtn.classList.remove("active-mode");
-      if (autoView) autoView.style.display = "block";
-      if (interView) interView.style.display = "none";
-    });
-
-    interBtn.addEventListener("click", () => {
-      interBtn.classList.add("active-mode");
-      autoBtn.classList.remove("active-mode");
-      if (autoView) autoView.style.display = "none";
-      if (interView) interView.style.display = "block";
-    });
-  }
-}
-
 // =============================================================================
 // AUTONOMOUS MISSION RUNNER & ACADEMIC DEFENSE
 // =============================================================================
 function setupAutonomousMission() {
-  const scenarioCards = document.querySelectorAll(".scenario-card");
-  let selectedScenario = "critical";
-
-  scenarioCards.forEach(card => {
-    card.addEventListener("click", () => {
-      scenarioCards.forEach(c => c.classList.remove("active-scenario"));
-      card.classList.add("active-scenario");
-      selectedScenario = card.getAttribute("data-scenario");
-    });
-  });
-
   const runBtn = document.getElementById("runMissionBtn");
   if (runBtn) {
-    runBtn.addEventListener("click", () => runLiveMission(selectedScenario, false));
+    runBtn.addEventListener("click", () => {
+      const panel = document.getElementById("missionTrajectoryPanel");
+      if (panel) {
+        panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+      runLiveMission(currentActiveScenario, false);
+    });
   }
 
   const duelBtn = document.getElementById("duelBtn");
   if (duelBtn) {
-    duelBtn.addEventListener("click", () => runLiveMission(selectedScenario, true));
+    duelBtn.addEventListener("click", () => {
+      const panel = document.getElementById("missionTrajectoryPanel");
+      if (panel) {
+        panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+      runLiveMission(currentActiveScenario, true);
+    });
   }
 
   // Initialize empty chart
@@ -911,8 +889,9 @@ function initMissionLiveChart() {
 }
 
 async function runLiveMission(scenario, isDuel = false) {
-  const controller = document.getElementById("missionControllerSelect").value;
-  const speed = document.getElementById("missionSpeedSelect").value;
+  const controllerSelect = document.getElementById("activeControllerSelect");
+  const controller = controllerSelect ? controllerSelect.value : "soundgrid_ppo";
+  const speed = "normal";
   const statusBadge = document.getElementById("missionStatusBadge");
   const verdictCard = document.getElementById("missionVerdictCard");
   const runBtn = document.getElementById("runMissionBtn");
@@ -920,8 +899,10 @@ async function runLiveMission(scenario, isDuel = false) {
 
   if (missionPlaybackTimer) clearInterval(missionPlaybackTimer);
 
-  statusBadge.className = "mission-badge mission-running";
-  statusBadge.textContent = "STATUS: RUNNING MISSION...";
+  if (statusBadge) {
+    statusBadge.className = "mission-badge mission-running";
+    statusBadge.textContent = "STATUS: RUNNING MISSION...";
+  }
   if (runBtn) runBtn.disabled = true;
   if (duelBtn) duelBtn.disabled = true;
   if (verdictCard) verdictCard.style.display = "none";
@@ -958,8 +939,10 @@ async function runLiveMission(scenario, isDuel = false) {
 
   } catch (err) {
     console.error("Mission execution error:", err);
-    statusBadge.className = "mission-badge mission-ready";
-    statusBadge.textContent = "STATUS: ERROR";
+    if (statusBadge) {
+      statusBadge.className = "mission-badge mission-ready";
+      statusBadge.textContent = "STATUS: ERROR";
+    }
     if (runBtn) runBtn.disabled = false;
     if (duelBtn) duelBtn.disabled = false;
   }
@@ -970,7 +953,7 @@ function animateMissionTrajectory(data, duelData, speed, isDuel) {
   const total = traj.length;
   let idx = 0;
 
-  const intervalMs = speed === "fast" ? 40 : speed === "instant" ? 5 : 100;
+  const intervalMs = speed === "fast" ? 40 : speed === "instant" ? 5 : 80;
 
   // Re-init chart datasets
   initMissionLiveChart();
@@ -1012,38 +995,80 @@ function animateMissionTrajectory(data, duelData, speed, isDuel) {
     }
 
     const pt = traj[idx];
-    document.getElementById("missionStepCounter").textContent = `Step: ${pt.step} / ${total}`;
+    const stepCounterEl = document.getElementById("missionStepCounter");
+    if (stepCounterEl) stepCounterEl.textContent = `Step: ${pt.step} / ${total}`;
 
     // Update Telemetry Overlay
-    document.getElementById("overlayTemp").textContent = `${pt.temp.toFixed(1)}°C`;
-    document.getElementById("overlayLoad").textContent = `${Math.round(pt.load * 100)}%`;
-    document.getElementById("overlayAnom").textContent = pt.anomaly_prob.toFixed(2);
+    const overlayTemp = document.getElementById("overlayTemp");
+    const overlayLoad = document.getElementById("overlayLoad");
+    const overlayAnom = document.getElementById("overlayAnom");
+    if (overlayTemp) overlayTemp.textContent = `${pt.temp.toFixed(1)}°C`;
+    if (overlayLoad) overlayLoad.textContent = `${Math.round(pt.load * 100)}%`;
+    if (overlayAnom) overlayAnom.textContent = pt.anomaly_prob.toFixed(2);
     updateSpectrumText(pt.anomaly_prob);
+
+    // Update Sliders and Displays
+    const loadInput = document.getElementById("loadInput");
+    const tempInput = document.getElementById("tempInput");
+    const anomInput = document.getElementById("anomInput");
+    if (loadInput) loadInput.value = Math.round(pt.load * 100);
+    if (tempInput) tempInput.value = Math.round(pt.temp);
+    if (anomInput) anomInput.value = Math.round(pt.anomaly_prob * 100);
+
+    const loadValDisplay = document.getElementById("loadValDisplay");
+    const tempValDisplay = document.getElementById("tempValDisplay");
+    const anomValDisplay = document.getElementById("anomValDisplay");
+    if (loadValDisplay) loadValDisplay.textContent = `${Math.round(pt.load * 100)}% (${pt.load.toFixed(2)})`;
+    if (tempValDisplay) tempValDisplay.textContent = `${pt.temp.toFixed(1)}°C`;
+    if (anomValDisplay) anomValDisplay.textContent = pt.anomaly_prob.toFixed(2);
+
+    // Update Action Banner
+    const banner = document.getElementById("actionBanner");
+    const nameText = document.getElementById("actionNameText");
+    const confText = document.getElementById("actionConfidenceText");
+    const actionNames = ["0: Maintain Load", "1: Increase Load (+10%)", "2: Throttle 15% (-15%)", "3: Throttle 40% (-30%)", "4: Emergency Trip (Shutdown)"];
+    if (nameText) nameText.textContent = actionNames[pt.action] || `Action ${pt.action}`;
+    if (confText) confText.textContent = "Autonomous Mission";
+    if (banner) {
+      banner.className = "decision-action-banner " + (pt.action === 0 ? "banner-maintain" : pt.action === 1 ? "banner-increase" : (pt.action === 2 || pt.action === 3) ? "banner-throttle" : "banner-trip");
+    }
+
+    // Update Next State Transition displays
+    const nextTempDisplay = document.getElementById("nextTempDisplay");
+    const nextLoadDisplay = document.getElementById("nextLoadDisplay");
+    const rewardDisplay = document.getElementById("rewardDisplay");
+    if (nextTempDisplay) nextTempDisplay.textContent = `${pt.temp.toFixed(1)}°C`;
+    if (nextLoadDisplay) nextLoadDisplay.textContent = `${Math.round(pt.load * 100)}%`;
+    if (rewardDisplay) rewardDisplay.textContent = `${pt.reward >= 0 ? '+' : ''}${pt.reward.toFixed(1)}`;
 
     // Update Breaker Badge
     const breakerBadge = document.getElementById("breakerBadge");
-    if (pt.action === 4) {
-      breakerBadge.className = "breaker-state-badge breaker-tripped";
-      breakerBadge.textContent = "Breaker: TRIPPED (OPEN)";
-    } else {
-      breakerBadge.className = "breaker-state-badge breaker-closed";
-      breakerBadge.textContent = "Breaker: CLOSED (ONLINE)";
+    if (breakerBadge) {
+      if (pt.action === 4) {
+        breakerBadge.className = "breaker-state-badge breaker-tripped";
+        breakerBadge.textContent = "BREAKER: TRIPPED (SAFE)";
+      } else {
+        breakerBadge.className = "breaker-state-badge breaker-closed";
+        breakerBadge.textContent = "BREAKER: CLOSED (ONLINE)";
+      }
     }
 
     autoSetImageForState(pt.status, pt.temp, pt.anomaly_prob);
 
     // Chart update
-    missionLiveChartInstance.data.labels.push(`S${pt.step}`);
-    if (isDuel && duelData && duelData.trajectory[idx]) {
-      const dPt = duelData.trajectory[idx];
-      missionLiveChartInstance.data.datasets[0].data.push(Number(pt.temp.toFixed(1)));
-      missionLiveChartInstance.data.datasets[1].data.push(Number(dPt.temp.toFixed(1)));
-      missionLiveChartInstance.data.datasets[2].data.push(Math.round(pt.load * 100));
-    } else {
-      missionLiveChartInstance.data.datasets[0].data.push(Number(pt.temp.toFixed(1)));
-      missionLiveChartInstance.data.datasets[1].data.push(Math.round(pt.load * 100));
+    if (missionLiveChartInstance) {
+      missionLiveChartInstance.data.labels.push(`S${pt.step}`);
+      if (isDuel && duelData && duelData.trajectory[idx]) {
+        const dPt = duelData.trajectory[idx];
+        missionLiveChartInstance.data.datasets[0].data.push(Number(pt.temp.toFixed(1)));
+        missionLiveChartInstance.data.datasets[1].data.push(Number(dPt.temp.toFixed(1)));
+        missionLiveChartInstance.data.datasets[2].data.push(Math.round(pt.load * 100));
+      } else {
+        missionLiveChartInstance.data.datasets[0].data.push(Number(pt.temp.toFixed(1)));
+        missionLiveChartInstance.data.datasets[1].data.push(Math.round(pt.load * 100));
+      }
+      missionLiveChartInstance.update();
     }
-    missionLiveChartInstance.update();
 
     idx++;
   }, intervalMs);

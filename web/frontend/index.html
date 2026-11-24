@@ -250,235 +250,119 @@
     <div class="section-header">
       <h2 class="section-title">Cyber-Physical AI Control &amp; Autonomous Defense Studio</h2>
       <p class="section-subtitle">
-        Evaluate the trained 8D PPO Reinforcement Learning policy in autonomous mission execution, or perform interactive hardware-in-the-loop stress testing against standard utility relays.
+        Evaluate the trained 8D PPO Reinforcement Learning policy in real-time physical telemetry control or run autonomous mission episodes against standard utility relays.
       </p>
     </div>
 
-    <!-- Studio Mode Switcher Bar -->
-    <div class="studio-mode-bar">
-      <button id="modeBtnAutonomous" class="studio-mode-tab active-mode" data-mode="autonomous">
-        <span class="mode-icon">🤖</span>
-        <span class="mode-text">Autonomous AI Mission (Defense Demo)</span>
-      </button>
-      <button id="modeBtnInteractive" class="studio-mode-tab" data-mode="interactive">
-        <span class="mode-icon">🎛️</span>
-        <span class="mode-text">Interactive Stress-Testing (Manual Telemetry)</span>
-      </button>
-    </div>
-
+    <!-- MAIN 2-COLUMN BALANCED STUDIO -->
     <div class="grid-layout-2col">
       
-      <!-- LEFT: MISSION & CONTROLS -->
+      <!-- LEFT: CYBER-PHYSICAL CONTROLLER & POLICY DECISIONS -->
       <div class="card">
-        
-        <!-- =================== VIEW 1: AUTONOMOUS MISSION MODE =================== -->
-        <div id="autonomousView">
-          <div class="card-header">
-            <div>
-              <div class="card-title">🚀 Autonomous Episode Execution</div>
-              <div class="card-subtitle">Perceives acoustic transients &amp; governs physical load dynamically</div>
-            </div>
-            <span id="missionStatusBadge" class="mission-badge mission-ready">STATUS: READY</span>
+        <div class="card-header">
+          <div>
+            <div class="card-title">⚙️ Cyber-Physical State Controls</div>
+            <div class="card-subtitle">Real-time physical telemetry &amp; 8D PPO policy inference</div>
           </div>
-
-          <!-- Scenario Selection -->
-          <div style="margin-bottom: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted);">
-            Operational Mission Scenario:
-          </div>
-          <div class="mission-scenario-grid">
-            <button class="scenario-card active-scenario" data-scenario="critical">
-              <div class="scenario-head">
-                <span class="scenario-icon">💥</span>
-                <strong>Severe Arcing Hazard</strong>
-              </div>
-              <p>Violent acoustic discharges in oil. Rapid trip needed.</p>
-            </button>
-            <button class="scenario-card" data-scenario="warning">
-              <div class="scenario-head">
-                <span class="scenario-icon">⚠️</span>
-                <strong>Incipient Partial Discharge</strong>
-              </div>
-              <p>Developing dielectric sparks (10–150 kHz). Controlled derate.</p>
-            </button>
-            <button class="scenario-card" data-scenario="thermal">
-              <div class="scenario-head">
-                <span class="scenario-icon">☀️</span>
-                <strong>Heatwave Overload</strong>
-              </div>
-              <p>42°C heatwave coupled with 95% peak grid power.</p>
-            </button>
-            <button class="scenario-card" data-scenario="normal">
-              <div class="scenario-head">
-                <span class="scenario-icon">🟢</span>
-                <strong>Nominal Operation</strong>
-              </div>
-              <p>Baseline 100 Hz hum, cool transformer core, 85% load.</p>
-            </button>
-          </div>
-
-          <!-- Controller Selection Row -->
-          <div style="display: flex; gap: 12px; margin-top: 14px; align-items: center; justify-content: space-between; flex-wrap: wrap;">
-            <div style="flex: 1; min-width: 220px;">
-              <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px;">
-                Active Controller:
-              </div>
-              <select id="missionControllerSelect" class="form-select">
-                <option value="soundgrid_ppo">VoltEcho AI (8D PPO Agent - Proposed)</option>
-                <option value="conventional_relay">Conventional Relay (IEC 60255 - Standard)</option>
-                <option value="pid_controller">Classical PID Controller</option>
-                <option value="static_4d_rl">Static 4D RL (Ablation Baseline)</option>
-              </select>
-            </div>
-            <div style="width: 130px;">
-              <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px;">
-                Playback Speed:
-              </div>
-              <select id="missionSpeedSelect" class="form-select">
-                <option value="normal">Normal (1x)</option>
-                <option value="fast">Fast (2x)</option>
-                <option value="instant">Instant</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- Mission Action Controls -->
-          <div style="display: flex; gap: 10px; margin-top: 16px;">
-            <button id="runMissionBtn" class="btn-primary" style="flex: 2;">
-              <span>▶ Launch Autonomous Mission</span>
-            </button>
-            <button id="duelBtn" class="btn-secondary" style="flex: 1.4;" title="Compare VoltEcho PPO directly against Conventional Relay">
-              <span>⚔️ PPO vs Relay Duel</span>
-            </button>
-          </div>
-
-          <!-- Live Telemetry Trajectory Chart -->
-          <div class="mission-chart-box">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-              <span style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Real-Time Trajectory (Temperature &amp; Active Load)</span>
-              <span id="missionStepCounter" style="font-size: 11.5px; font-weight: 800; color: #0284c7;">Step: 0 / 50</span>
-            </div>
-            <canvas id="missionLiveChart" height="150" style="width: 100%; height: 150px;"></canvas>
-          </div>
-
-          <!-- Executive Academic Verdict Banner -->
-          <div id="missionVerdictCard" class="mission-verdict-box" style="display: none;">
-            <div class="verdict-header">
-              <span id="verdictIcon">🛡️</span>
-              <strong id="verdictTitle">Mission Completed</strong>
-            </div>
-            <p id="verdictDescription">Verdict details will appear here.</p>
-            <div class="verdict-metrics-row">
-              <div>Peak Temp: <strong id="verdictPeakTemp">65.0°C</strong></div>
-              <div>Throughput: <strong id="verdictThroughput">85%</strong></div>
-              <div>Reward: <strong id="verdictReward">+0.0</strong></div>
-              <div>Burnout: <strong id="verdictBurnout" style="color: #10b981;">0.0%</strong></div>
-            </div>
-          </div>
-
+          <select id="activeControllerSelect" class="form-select" style="max-width: 220px;">
+            <option value="soundgrid_ppo">VoltEcho (8D PPO Agent - Proposed)</option>
+            <option value="conventional_relay">Conventional Relay (IEC 60255 - Standard)</option>
+            <option value="pid_controller">Classical PID Controller</option>
+            <option value="static_4d_rl">Static 4D RL (Ablation Baseline)</option>
+          </select>
         </div>
 
-        <!-- =================== VIEW 2: INTERACTIVE STRESS TESTING MODE =================== -->
-        <div id="interactiveView" style="display: none;">
-          <div class="card-header">
-            <div>
-              <div class="card-title">🎛️ Interactive State Controls</div>
-              <div class="card-subtitle">Stress-test individual thermal &amp; acoustic variables</div>
-            </div>
-            <select id="activeControllerSelect" class="form-select" style="max-width: 210px;">
-              <option value="soundgrid_ppo">VoltEcho (8D PPO Agent)</option>
-              <option value="conventional_relay">Conventional Relay (IEC 60255)</option>
-              <option value="pid_controller">Classical PID Controller</option>
-              <option value="static_4d_rl">Static 4D RL (Ablation)</option>
-            </select>
+        <!-- Operational Presets -->
+        <div style="margin-bottom: 8px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted);">
+          Operational Regime Presets:
+        </div>
+        <div class="presets-grid">
+          <button class="preset-chip active-preset" data-preset="normal">🟢 Normal Dispatch</button>
+          <button class="preset-chip" data-preset="warning">🟡 Incipient PD</button>
+          <button class="preset-chip" data-preset="critical">🔴 Severe Arcing</button>
+          <button class="preset-chip" data-preset="thermal">☀️ Heatwave Overload</button>
+        </div>
+
+        <!-- Telemetry Sliders -->
+        <div class="form-group">
+          <div class="form-label">
+            <span>Transformer Load (Dispatch Ratio)</span>
+            <span id="loadValDisplay" class="val-display">85% (0.85)</span>
+          </div>
+          <input type="range" id="loadInput" min="0" max="100" value="85" />
+        </div>
+
+        <div class="form-group">
+          <div class="form-label">
+            <span>Core / Oil Temperature</span>
+            <span id="tempValDisplay" class="val-display">65.0°C</span>
+          </div>
+          <input type="range" id="tempInput" min="20" max="130" value="65" />
+        </div>
+
+        <div class="form-group">
+          <div class="form-label">
+            <span>Acoustic Anomaly Probability (P<sub>anom</sub>)</span>
+            <span id="anomValDisplay" class="val-display">0.04</span>
+          </div>
+          <input type="range" id="anomInput" min="0" max="100" value="4" />
+        </div>
+
+        <div class="form-group">
+          <div class="form-label">
+            <span>Physical Acoustic RMS Energy (E<sub>acous</sub>)</span>
+            <span id="energyValDisplay" class="val-display">0.15</span>
+          </div>
+          <input type="range" id="energyInput" min="0" max="100" value="15" />
+        </div>
+
+        <div class="form-group">
+          <div class="form-label">
+            <span>Ambient Heatwave Temperature</span>
+            <span id="ambientValDisplay" class="val-display">30.0°C</span>
+          </div>
+          <input type="range" id="ambientInput" min="10" max="50" value="30" />
+        </div>
+
+        <!-- Action Control Buttons -->
+        <div style="display: flex; gap: 8px; margin-top: 18px; flex-wrap: wrap;">
+          <button id="stepBtn" class="btn-primary" style="flex: 1.4; padding: 10px 14px;">
+            <span>⚡ Query Action</span>
+          </button>
+          <button id="runMissionBtn" class="btn-action-mission" style="flex: 1.8; padding: 10px 14px;" title="Execute 50-step autonomous physical trajectory">
+            <span>▶ Run 50-Step Mission</span>
+          </button>
+          <button id="duelBtn" class="btn-secondary" style="flex: 1.4; padding: 10px 12px;" title="Compare VoltEcho directly against IEC 60255 Conventional Relay">
+            <span>⚔️ PPO vs Relay Duel</span>
+          </button>
+          <button id="autoLoopBtn" class="btn-secondary" style="flex: 1; padding: 10px 10px;">
+            <span>🔄 Auto: OFF</span>
+          </button>
+          <button id="resetNominalBtn" class="btn-secondary" style="flex: 0.6; padding: 10px 8px;" title="Reset to nominal 85% load, 65°C baseline">
+            <span>↺ Reset</span>
+          </button>
+        </div>
+
+        <!-- True Softmax Policy Head Distribution Card -->
+        <div class="decision-card">
+          <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-muted); margin-bottom: 8px;">
+            True Policy Head Distribution (Softmax z_a):
+          </div>
+          <div id="actionBanner" class="decision-action-banner banner-maintain">
+            <span id="actionNameText">0: Maintain Load</span>
+            <span id="actionConfidenceText">Confidence: 64.8%</span>
           </div>
 
-          <!-- Presets -->
-          <div style="margin-bottom: 8px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted);">
-            Quick Operational Presets:
+          <!-- Real Softmax Probability Bars -->
+          <div class="prob-list" id="probListContainer"></div>
+
+          <!-- Next State Transition -->
+          <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid #f1f5f9; display: flex; justify-content: space-between; font-size: 11.5px; color: var(--text-muted); flex-wrap: wrap; gap: 8px;">
+            <div>Next Temp: <strong id="nextTempDisplay" style="color: var(--text-main);">65.3°C</strong></div>
+            <div>Next Load: <strong id="nextLoadDisplay" style="color: var(--text-main);">85%</strong></div>
+            <div>RL Reward: <strong id="rewardDisplay" style="color: #10b981;">+29.6</strong></div>
+            <div>Flux: <strong id="heatFluxDisplay" style="color: #0284c7;">&Delta;T: +0.28°C</strong></div>
           </div>
-          <div class="presets-grid">
-            <button class="preset-chip active-preset" data-preset="normal">Normal Dispatch</button>
-            <button class="preset-chip" data-preset="warning">Incipient PD</button>
-            <button class="preset-chip" data-preset="critical">Severe Arcing</button>
-            <button class="preset-chip" data-preset="thermal">Heatwave Overload</button>
-          </div>
-
-          <!-- Sliders -->
-          <div class="form-group">
-            <div class="form-label">
-              <span>Transformer Load (Dispatch Ratio)</span>
-              <span id="loadValDisplay" class="val-display">85% (0.85)</span>
-            </div>
-            <input type="range" id="loadInput" min="0" max="100" value="85" />
-          </div>
-
-          <div class="form-group">
-            <div class="form-label">
-              <span>Core / Oil Temperature</span>
-              <span id="tempValDisplay" class="val-display">65.0°C</span>
-            </div>
-            <input type="range" id="tempInput" min="20" max="130" value="65" />
-          </div>
-
-          <div class="form-group">
-            <div class="form-label">
-              <span>Acoustic Anomaly Probability (P<sub>anom</sub>)</span>
-              <span id="anomValDisplay" class="val-display">0.04</span>
-            </div>
-            <input type="range" id="anomInput" min="0" max="100" value="4" />
-          </div>
-
-          <div class="form-group">
-            <div class="form-label">
-              <span>Physical Acoustic RMS Energy (E<sub>acous</sub>)</span>
-              <span id="energyValDisplay" class="val-display">0.15</span>
-            </div>
-            <input type="range" id="energyInput" min="0" max="100" value="15" />
-          </div>
-
-          <div class="form-group">
-            <div class="form-label">
-              <span>Ambient Heatwave Temperature</span>
-              <span id="ambientValDisplay" class="val-display">30.0°C</span>
-            </div>
-            <input type="range" id="ambientInput" min="10" max="50" value="30" />
-          </div>
-
-          <!-- Action Buttons -->
-          <div style="display: flex; gap: 10px; margin-top: 18px;">
-            <button id="stepBtn" class="btn-primary" style="flex: 2;">
-              <span>⚡ Query Policy Action</span>
-            </button>
-            <button id="autoLoopBtn" class="btn-secondary" style="flex: 1.2;">
-              <span>🔄 Auto-Loop: OFF</span>
-            </button>
-            <button id="resetNominalBtn" class="btn-secondary" style="flex: 0.8;" title="Reset to nominal 85% load, 65°C baseline">
-              <span>↺ Reset</span>
-            </button>
-          </div>
-
-          <!-- Real Softmax Policy Output Card -->
-          <div class="decision-card">
-            <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-muted); margin-bottom: 8px;">
-              True Policy Head Distribution (Softmax z_a):
-            </div>
-            <div id="actionBanner" class="decision-action-banner banner-maintain">
-              <span id="actionNameText">0: Maintain Load</span>
-              <span id="actionConfidenceText">Confidence: 64.8%</span>
-            </div>
-
-            <!-- Real Softmax Probability Bars -->
-            <div class="prob-list" id="probListContainer"></div>
-
-            <!-- Next State Transition -->
-            <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid #f1f5f9; display: flex; justify-content: space-between; font-size: 11.5px; color: var(--text-muted); flex-wrap: wrap; gap: 8px;">
-              <div>Next Temp: <strong id="nextTempDisplay" style="color: var(--text-main);">65.3°C</strong></div>
-              <div>Next Load: <strong id="nextLoadDisplay" style="color: var(--text-main);">85%</strong></div>
-              <div>RL Reward: <strong id="rewardDisplay" style="color: #10b981;">+29.6</strong></div>
-              <div>Flux: <strong id="heatFluxDisplay" style="color: #0284c7;">&Delta;T: +0.28°C</strong></div>
-            </div>
-          </div>
-
         </div>
 
       </div>
@@ -490,7 +374,7 @@
             <div class="card-title">🖼️ Cyber-Physical Asset Visualizer</div>
             <div class="card-subtitle">Empirical physical state &amp; catastrophic burnout comparison</div>
           </div>
-          <span id="breakerBadge" class="breaker-state-badge breaker-closed">Breaker: CLOSED</span>
+          <span id="breakerBadge" class="breaker-state-badge breaker-closed">BREAKER: CLOSED (ONLINE)</span>
         </div>
 
         <!-- View Switcher -->
@@ -506,7 +390,7 @@
           </button>
         </div>
 
-        <!-- Image Monitor Box -->
+        <!-- Image Monitor Box (Fixed 330px height, clean object fit) -->
         <div class="image-monitor-box">
           <div class="image-overlay-bar">
             <div class="overlay-chip">
@@ -531,7 +415,7 @@
           />
         </div>
 
-        <!-- Oscilloscope Acoustic Waveform Screen -->
+        <!-- Oscilloscope Acoustic Waveform Screen (Fixed 80px height dark laser display) -->
         <div class="oscilloscope-container">
           <div class="oscilloscope-header">
             <div class="oscilloscope-label">
@@ -540,7 +424,7 @@
             <span id="spectrumStatusText" class="osc-status-text">100 Hz Nominal Magnetostriction</span>
           </div>
           <div class="oscilloscope-screen">
-            <canvas id="acousticCanvas" width="600" height="80" style="width: 100%; height: 80px;"></canvas>
+            <canvas id="acousticCanvas" width="600" height="80" style="display: block; width: 100%; height: 80px;"></canvas>
           </div>
           <div class="oscilloscope-footer">
             <span>Bandwidth: 10 kHz &ndash; 150 kHz</span>
@@ -551,6 +435,44 @@
       </div>
 
     </div>
+
+    <!-- DEDICATED FULL-WIDTH AUTONOMOUS MISSION TRAJECTORY PANEL -->
+    <div id="missionTrajectoryPanel" class="card mission-trajectory-panel" style="margin-top: 24px;">
+      <div class="card-header" style="margin-bottom: 12px; padding-bottom: 10px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 18px;">📈</span>
+          <div>
+            <div class="card-title" style="font-size: 15px;">Autonomous Mission Trajectory &amp; Safety Benchmark</div>
+            <div class="card-subtitle" style="font-size: 12px;">50-step cyber-physical simulation tracking core temperature, grid throughput, and trip response</div>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span id="missionStatusBadge" class="mission-badge mission-ready">STATUS: READY</span>
+          <span id="missionStepCounter" style="font-size: 12px; font-weight: 800; color: #0284c7;">Step: 0 / 50</span>
+        </div>
+      </div>
+
+      <!-- Strictly Sized Chart Wrapper (165px fixed height to prevent infinite stretch) -->
+      <div class="mission-chart-wrapper">
+        <canvas id="missionLiveChart"></canvas>
+      </div>
+
+      <!-- Executive Academic Verdict Banner -->
+      <div id="missionVerdictCard" class="mission-verdict-box" style="display: none;">
+        <div class="verdict-header">
+          <span id="verdictIcon">🛡️</span>
+          <strong id="verdictTitle">Mission Completed</strong>
+        </div>
+        <p id="verdictDescription">Verdict details will appear here.</p>
+        <div class="verdict-metrics-row">
+          <div>Peak Temp: <strong id="verdictPeakTemp">65.0°C</strong></div>
+          <div>Delivered Throughput: <strong id="verdictThroughput">85%</strong></div>
+          <div>Cumulative RL Reward: <strong id="verdictReward">+0.0</strong></div>
+          <div>Explosion / Burnout: <strong id="verdictBurnout" style="color: #10b981;">0.0%</strong></div>
+        </div>
+      </div>
+    </div>
+
   </section>
 
 
