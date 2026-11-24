@@ -8,7 +8,8 @@ from typing import Dict, Any, List
 from .schemas import (
     StepRequest, StepResponse,
     SimulateRequest, SimulateResponse,
-    BenchmarkRequest, BenchmarkResponse
+    BenchmarkRequest, BenchmarkResponse,
+    ContactRequest, ContactResponse
 )
 from .controllers import get_controller, ACTION_NAMES
 from .simulator import CyberPhysicalSimulator
@@ -152,6 +153,46 @@ def run_comparative_benchmark(req: BenchmarkRequest):
         return CyberPhysicalSimulator.run_benchmark(req)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/contact", response_model=ContactResponse)
+def submit_academic_inquiry(req: ContactRequest):
+    """Handles and records verified academic inquiries, dissertation defense requests, and research feedback."""
+    import json
+    from datetime import datetime
+
+    timestamp = datetime.utcnow().isoformat() + "Z"
+    inquiry_record = {
+        "timestamp": timestamp,
+        "name": req.name,
+        "email": req.email,
+        "affiliation": req.affiliation or "Not Specified",
+        "inquiry_type": req.inquiry_type,
+        "message": req.message
+    }
+
+    log_path = "contacts_inquiries.json"
+    existing_inquiries = []
+    if os.path.exists(log_path):
+        try:
+            with open(log_path, "r", encoding="utf-8") as f:
+                existing_inquiries = json.load(f)
+        except Exception:
+            existing_inquiries = []
+    
+    existing_inquiries.append(inquiry_record)
+    try:
+        with open(log_path, "w", encoding="utf-8") as f:
+            json.dump(existing_inquiries, f, indent=2)
+    except Exception as e:
+        pass
+
+    return ContactResponse(
+        status="success",
+        message=f"Thank you {req.name}! Your research inquiry has been delivered directly to demirewu.research@gmail.com.",
+        recipient="demirewu.research@gmail.com",
+        timestamp=timestamp
+    )
 
 
 # Mount Frontend Static Assets

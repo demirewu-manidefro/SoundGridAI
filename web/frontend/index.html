@@ -244,120 +244,241 @@
 
 
   <!-- ========================================================================= -->
-  <!-- SECTION 2: LIVE PPO CONTROLLER STUDIO (ACTUAL MODEL INFERENCE)            -->
+  <!-- SECTION 2: LIVE CYBER-PHYSICAL PPO DEFENSE STUDIO                         -->
   <!-- ========================================================================= -->
   <section id="live-controller" class="section-wrapper">
     <div class="section-header">
-      <h2 class="section-title">Hardware-in-the-Loop PPO Policy Execution</h2>
+      <h2 class="section-title">Cyber-Physical AI Control &amp; Autonomous Defense Studio</h2>
       <p class="section-subtitle">
-        Interact directly with the trained PyTorch PPO checkpoint (<code>soundgrid_integrated_ppo.zip</code>). Evaluate deterministic actions and true Softmax probability distributions.
+        Evaluate the trained 8D PPO Reinforcement Learning policy in autonomous mission execution, or perform interactive hardware-in-the-loop stress testing against standard utility relays.
       </p>
+    </div>
+
+    <!-- Studio Mode Switcher Bar -->
+    <div class="studio-mode-bar">
+      <button id="modeBtnAutonomous" class="studio-mode-tab active-mode" data-mode="autonomous">
+        <span class="mode-icon">🤖</span>
+        <span class="mode-text">Autonomous AI Mission (Defense Demo)</span>
+      </button>
+      <button id="modeBtnInteractive" class="studio-mode-tab" data-mode="interactive">
+        <span class="mode-icon">🎛️</span>
+        <span class="mode-text">Interactive Stress-Testing (Manual Telemetry)</span>
+      </button>
     </div>
 
     <div class="grid-layout-2col">
       
-      <!-- LEFT: CONTROLS & TELEMETRY INPUTS -->
+      <!-- LEFT: MISSION & CONTROLS -->
       <div class="card">
-        <div class="card-header">
-          <div>
-            <div class="card-title">⚙️ Cyber-Physical State Controls</div>
-            <div class="card-subtitle">Real-time physical telemetry &amp; 8D PPO policy inference</div>
+        
+        <!-- =================== VIEW 1: AUTONOMOUS MISSION MODE =================== -->
+        <div id="autonomousView">
+          <div class="card-header">
+            <div>
+              <div class="card-title">🚀 Autonomous Episode Execution</div>
+              <div class="card-subtitle">Perceives acoustic transients &amp; governs physical load dynamically</div>
+            </div>
+            <span id="missionStatusBadge" class="mission-badge mission-ready">STATUS: READY</span>
           </div>
-          <select id="activeControllerSelect" class="form-select" style="max-width: 210px;">
-            <option value="soundgrid_ppo">VoltEcho (8D PPO Agent)</option>
-            <option value="conventional_relay">Conventional Relay (IEC 60255)</option>
-            <option value="pid_controller">Classical PID Controller</option>
-            <option value="static_4d_rl">Static 4D RL (Ablation)</option>
-          </select>
+
+          <!-- Scenario Selection -->
+          <div style="margin-bottom: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted);">
+            Operational Mission Scenario:
+          </div>
+          <div class="mission-scenario-grid">
+            <button class="scenario-card active-scenario" data-scenario="critical">
+              <div class="scenario-head">
+                <span class="scenario-icon">💥</span>
+                <strong>Severe Arcing Hazard</strong>
+              </div>
+              <p>Violent acoustic discharges in oil. Rapid trip needed.</p>
+            </button>
+            <button class="scenario-card" data-scenario="warning">
+              <div class="scenario-head">
+                <span class="scenario-icon">⚠️</span>
+                <strong>Incipient Partial Discharge</strong>
+              </div>
+              <p>Developing dielectric sparks (10–150 kHz). Controlled derate.</p>
+            </button>
+            <button class="scenario-card" data-scenario="thermal">
+              <div class="scenario-head">
+                <span class="scenario-icon">☀️</span>
+                <strong>Heatwave Overload</strong>
+              </div>
+              <p>42°C heatwave coupled with 95% peak grid power.</p>
+            </button>
+            <button class="scenario-card" data-scenario="normal">
+              <div class="scenario-head">
+                <span class="scenario-icon">🟢</span>
+                <strong>Nominal Operation</strong>
+              </div>
+              <p>Baseline 100 Hz hum, cool transformer core, 85% load.</p>
+            </button>
+          </div>
+
+          <!-- Controller Selection Row -->
+          <div style="display: flex; gap: 12px; margin-top: 14px; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 220px;">
+              <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px;">
+                Active Controller:
+              </div>
+              <select id="missionControllerSelect" class="form-select">
+                <option value="soundgrid_ppo">VoltEcho AI (8D PPO Agent - Proposed)</option>
+                <option value="conventional_relay">Conventional Relay (IEC 60255 - Standard)</option>
+                <option value="pid_controller">Classical PID Controller</option>
+                <option value="static_4d_rl">Static 4D RL (Ablation Baseline)</option>
+              </select>
+            </div>
+            <div style="width: 130px;">
+              <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px;">
+                Playback Speed:
+              </div>
+              <select id="missionSpeedSelect" class="form-select">
+                <option value="normal">Normal (1x)</option>
+                <option value="fast">Fast (2x)</option>
+                <option value="instant">Instant</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Mission Action Controls -->
+          <div style="display: flex; gap: 10px; margin-top: 16px;">
+            <button id="runMissionBtn" class="btn-primary" style="flex: 2;">
+              <span>▶ Launch Autonomous Mission</span>
+            </button>
+            <button id="duelBtn" class="btn-secondary" style="flex: 1.4;" title="Compare VoltEcho PPO directly against Conventional Relay">
+              <span>⚔️ PPO vs Relay Duel</span>
+            </button>
+          </div>
+
+          <!-- Live Telemetry Trajectory Chart -->
+          <div class="mission-chart-box">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <span style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Real-Time Trajectory (Temperature &amp; Active Load)</span>
+              <span id="missionStepCounter" style="font-size: 11.5px; font-weight: 800; color: #0284c7;">Step: 0 / 50</span>
+            </div>
+            <canvas id="missionLiveChart" height="150" style="width: 100%; height: 150px;"></canvas>
+          </div>
+
+          <!-- Executive Academic Verdict Banner -->
+          <div id="missionVerdictCard" class="mission-verdict-box" style="display: none;">
+            <div class="verdict-header">
+              <span id="verdictIcon">🛡️</span>
+              <strong id="verdictTitle">Mission Completed</strong>
+            </div>
+            <p id="verdictDescription">Verdict details will appear here.</p>
+            <div class="verdict-metrics-row">
+              <div>Peak Temp: <strong id="verdictPeakTemp">65.0°C</strong></div>
+              <div>Throughput: <strong id="verdictThroughput">85%</strong></div>
+              <div>Reward: <strong id="verdictReward">+0.0</strong></div>
+              <div>Burnout: <strong id="verdictBurnout" style="color: #10b981;">0.0%</strong></div>
+            </div>
+          </div>
+
         </div>
 
-        <!-- Presets -->
-        <div style="margin-bottom: 8px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted);">
-          Operational Regime Presets:
-        </div>
-        <div class="presets-grid">
-          <button class="preset-chip active-preset" data-preset="normal">Normal Dispatch</button>
-          <button class="preset-chip" data-preset="warning">Incipient PD</button>
-          <button class="preset-chip" data-preset="critical">Severe Arcing</button>
-          <button class="preset-chip" data-preset="thermal">Heatwave Overload</button>
-        </div>
-
-        <!-- Sliders -->
-        <div class="form-group">
-          <div class="form-label">
-            <span>Transformer Load (Dispatch Ratio)</span>
-            <span id="loadValDisplay" class="val-display">85% (0.85)</span>
-          </div>
-          <input type="range" id="loadInput" min="0" max="100" value="85" />
-        </div>
-
-        <div class="form-group">
-          <div class="form-label">
-            <span>Core / Oil Temperature</span>
-            <span id="tempValDisplay" class="val-display">65.0°C</span>
-          </div>
-          <input type="range" id="tempInput" min="20" max="130" value="65" />
-        </div>
-
-        <div class="form-group">
-          <div class="form-label">
-            <span>Acoustic Anomaly Probability (P<sub>anom</sub>)</span>
-            <span id="anomValDisplay" class="val-display">0.04</span>
-          </div>
-          <input type="range" id="anomInput" min="0" max="100" value="4" />
-        </div>
-
-        <div class="form-group">
-          <div class="form-label">
-            <span>Physical Acoustic RMS Energy (E<sub>acous</sub>)</span>
-            <span id="energyValDisplay" class="val-display">0.15</span>
-          </div>
-          <input type="range" id="energyInput" min="0" max="100" value="15" />
-        </div>
-
-        <div class="form-group">
-          <div class="form-label">
-            <span>Ambient Heatwave Temperature</span>
-            <span id="ambientValDisplay" class="val-display">30.0°C</span>
-          </div>
-          <input type="range" id="ambientInput" min="10" max="50" value="30" />
-        </div>
-
-        <!-- Action Buttons -->
-        <div style="display: flex; gap: 10px; margin-top: 18px;">
-          <button id="stepBtn" class="btn-primary" style="flex: 2;">
-            <span>⚡ Query Policy Action</span>
-          </button>
-          <button id="autoLoopBtn" class="btn-secondary" style="flex: 1.2;">
-            <span>🔄 Auto-Loop: OFF</span>
-          </button>
-          <button id="resetNominalBtn" class="btn-secondary" style="flex: 0.8;" title="Reset to nominal 85% load, 65°C baseline">
-            <span>↺ Reset</span>
-          </button>
-        </div>
-
-        <!-- Real Softmax Policy Output Card -->
-        <div class="decision-card">
-          <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-muted); margin-bottom: 8px;">
-            True Policy Head Distribution (Softmax z_a):
-          </div>
-          <div id="actionBanner" class="decision-action-banner banner-maintain">
-            <span id="actionNameText">0: Maintain Load</span>
-            <span id="actionConfidenceText">Confidence: 64.8%</span>
+        <!-- =================== VIEW 2: INTERACTIVE STRESS TESTING MODE =================== -->
+        <div id="interactiveView" style="display: none;">
+          <div class="card-header">
+            <div>
+              <div class="card-title">🎛️ Interactive State Controls</div>
+              <div class="card-subtitle">Stress-test individual thermal &amp; acoustic variables</div>
+            </div>
+            <select id="activeControllerSelect" class="form-select" style="max-width: 210px;">
+              <option value="soundgrid_ppo">VoltEcho (8D PPO Agent)</option>
+              <option value="conventional_relay">Conventional Relay (IEC 60255)</option>
+              <option value="pid_controller">Classical PID Controller</option>
+              <option value="static_4d_rl">Static 4D RL (Ablation)</option>
+            </select>
           </div>
 
-          <!-- Real Softmax Probability Bars -->
-          <div class="prob-list" id="probListContainer">
-            <!-- Rendered from real PPO model via JS -->
+          <!-- Presets -->
+          <div style="margin-bottom: 8px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted);">
+            Quick Operational Presets:
+          </div>
+          <div class="presets-grid">
+            <button class="preset-chip active-preset" data-preset="normal">Normal Dispatch</button>
+            <button class="preset-chip" data-preset="warning">Incipient PD</button>
+            <button class="preset-chip" data-preset="critical">Severe Arcing</button>
+            <button class="preset-chip" data-preset="thermal">Heatwave Overload</button>
           </div>
 
-          <!-- Next State Transition -->
-          <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid #f1f5f9; display: flex; justify-content: space-between; font-size: 11.5px; color: var(--text-muted); flex-wrap: wrap; gap: 8px;">
-            <div>Next Temp: <strong id="nextTempDisplay" style="color: var(--text-main);">65.3°C</strong></div>
-            <div>Next Load: <strong id="nextLoadDisplay" style="color: var(--text-main);">85%</strong></div>
-            <div>RL Reward: <strong id="rewardDisplay" style="color: #10b981;">+29.6</strong></div>
-            <div>Flux: <strong id="heatFluxDisplay" style="color: #0284c7;">&Delta;T: +0.28°C</strong></div>
+          <!-- Sliders -->
+          <div class="form-group">
+            <div class="form-label">
+              <span>Transformer Load (Dispatch Ratio)</span>
+              <span id="loadValDisplay" class="val-display">85% (0.85)</span>
+            </div>
+            <input type="range" id="loadInput" min="0" max="100" value="85" />
           </div>
+
+          <div class="form-group">
+            <div class="form-label">
+              <span>Core / Oil Temperature</span>
+              <span id="tempValDisplay" class="val-display">65.0°C</span>
+            </div>
+            <input type="range" id="tempInput" min="20" max="130" value="65" />
+          </div>
+
+          <div class="form-group">
+            <div class="form-label">
+              <span>Acoustic Anomaly Probability (P<sub>anom</sub>)</span>
+              <span id="anomValDisplay" class="val-display">0.04</span>
+            </div>
+            <input type="range" id="anomInput" min="0" max="100" value="4" />
+          </div>
+
+          <div class="form-group">
+            <div class="form-label">
+              <span>Physical Acoustic RMS Energy (E<sub>acous</sub>)</span>
+              <span id="energyValDisplay" class="val-display">0.15</span>
+            </div>
+            <input type="range" id="energyInput" min="0" max="100" value="15" />
+          </div>
+
+          <div class="form-group">
+            <div class="form-label">
+              <span>Ambient Heatwave Temperature</span>
+              <span id="ambientValDisplay" class="val-display">30.0°C</span>
+            </div>
+            <input type="range" id="ambientInput" min="10" max="50" value="30" />
+          </div>
+
+          <!-- Action Buttons -->
+          <div style="display: flex; gap: 10px; margin-top: 18px;">
+            <button id="stepBtn" class="btn-primary" style="flex: 2;">
+              <span>⚡ Query Policy Action</span>
+            </button>
+            <button id="autoLoopBtn" class="btn-secondary" style="flex: 1.2;">
+              <span>🔄 Auto-Loop: OFF</span>
+            </button>
+            <button id="resetNominalBtn" class="btn-secondary" style="flex: 0.8;" title="Reset to nominal 85% load, 65°C baseline">
+              <span>↺ Reset</span>
+            </button>
+          </div>
+
+          <!-- Real Softmax Policy Output Card -->
+          <div class="decision-card">
+            <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-muted); margin-bottom: 8px;">
+              True Policy Head Distribution (Softmax z_a):
+            </div>
+            <div id="actionBanner" class="decision-action-banner banner-maintain">
+              <span id="actionNameText">0: Maintain Load</span>
+              <span id="actionConfidenceText">Confidence: 64.8%</span>
+            </div>
+
+            <!-- Real Softmax Probability Bars -->
+            <div class="prob-list" id="probListContainer"></div>
+
+            <!-- Next State Transition -->
+            <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid #f1f5f9; display: flex; justify-content: space-between; font-size: 11.5px; color: var(--text-muted); flex-wrap: wrap; gap: 8px;">
+              <div>Next Temp: <strong id="nextTempDisplay" style="color: var(--text-main);">65.3°C</strong></div>
+              <div>Next Load: <strong id="nextLoadDisplay" style="color: var(--text-main);">85%</strong></div>
+              <div>RL Reward: <strong id="rewardDisplay" style="color: #10b981;">+29.6</strong></div>
+              <div>Flux: <strong id="heatFluxDisplay" style="color: #0284c7;">&Delta;T: +0.28°C</strong></div>
+            </div>
+          </div>
+
         </div>
 
       </div>
@@ -367,7 +488,7 @@
         <div class="card-header">
           <div>
             <div class="card-title">🖼️ Cyber-Physical Asset Visualizer</div>
-            <div class="card-subtitle">Empirical physical state and catastrophic burnout comparison</div>
+            <div class="card-subtitle">Empirical physical state &amp; catastrophic burnout comparison</div>
           </div>
           <span id="breakerBadge" class="breaker-state-badge breaker-closed">Breaker: CLOSED</span>
         </div>
@@ -375,13 +496,13 @@
         <!-- View Switcher -->
         <div class="image-view-switch-bar">
           <button id="viewBtnSubstation" class="image-view-btn active-view" data-src="/images/substation_ai.png">
-            ⚡ Substation AI View
+            ⚡ Substation Digital Twin
           </button>
           <button id="viewBtnBurnout" class="image-view-btn" data-src="/images/transformer_burnout.png">
             💥 Burnout Explosion Incident
           </button>
           <button id="viewBtnSchematic" class="image-view-btn" data-src="/images/default_transformer.svg">
-            📐 Instrumentation Schematic
+            📐 Sensor Architecture
           </button>
         </div>
 
@@ -410,13 +531,21 @@
           />
         </div>
 
-        <!-- Acoustic Sensor Waveform Canvas -->
-        <div style="margin-top: 18px; background: #ffffff; border: 1px solid var(--card-border); border-radius: var(--radius-md); padding: 14px;">
-          <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; margin-bottom: 8px;">
-            <span style="color: var(--text-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">Hydrophone Acoustic Emission Spectrum</span>
-            <span id="spectrumStatusText" style="color: #10b981;">Nominal Magnetostriction (100 Hz)</span>
+        <!-- Oscilloscope Acoustic Waveform Screen -->
+        <div class="oscilloscope-container">
+          <div class="oscilloscope-header">
+            <div class="oscilloscope-label">
+              <span class="osc-dot"></span> HYDROPHONE ACOUSTIC OSCILLOGRAM
+            </div>
+            <span id="spectrumStatusText" class="osc-status-text">100 Hz Nominal Magnetostriction</span>
           </div>
-          <canvas id="acousticCanvas" width="500" height="65" style="width: 100%; height: 65px; background: #fafbfc; border-radius: 6px;"></canvas>
+          <div class="oscilloscope-screen">
+            <canvas id="acousticCanvas" width="600" height="80" style="width: 100%; height: 80px;"></canvas>
+          </div>
+          <div class="oscilloscope-footer">
+            <span>Bandwidth: 10 kHz &ndash; 150 kHz</span>
+            <span id="acousticRmsDisplay">RMS Energy: 0.15</span>
+          </div>
         </div>
 
       </div>
@@ -430,8 +559,7 @@
   <!-- ========================================================================= -->
   <section id="challenges" class="section-wrapper" style="background-color: #ffffff; border-top: 1px solid var(--card-border); border-bottom: 1px solid var(--card-border);">
     <div class="section-header">
-      <span class="section-tag">Engineering Retrospective</span>
-      <h2 class="section-title">Encountered Challenges & Technical Solutions</h2>
+      <h2 class="section-title">Encountered Challenges &amp; Technical Solutions</h2>
       <p class="section-subtitle">
         A rigorous scientific breakdown of real-world stumbling blocks encountered during research and our algorithmic, thermodynamic, and sensor-level solutions.
       </p>
@@ -533,14 +661,13 @@
 
 
   <!-- ========================================================================= -->
-  <!-- SECTION 4: ABOUT THE RESEARCHER & DIRECT CONTACT                          -->
+  <!-- SECTION 4: ABOUT THE RESEARCHER & ACADEMIC INQUIRY                        -->
   <!-- ========================================================================= -->
   <section id="contact" class="section-wrapper" style="background-color: var(--bg-secondary);">
     <div class="section-header">
-      <span class="section-tag">Researcher & Defense</span>
-      <h2 class="section-title">About the Research Team & Contact Inquiry</h2>
+      <h2 class="section-title">Academic Defense, Verification &amp; Direct Inquiries</h2>
       <p class="section-subtitle">
-        Connecting with academic evaluators, reviewing professors, and grid utility partners for live defense and deployment trials.
+        Connecting with reviewing professors, dissertation evaluators, and smart grid utility partners for live defense sessions, model inspection, and collaboration.
       </p>
     </div>
 
@@ -551,49 +678,75 @@
         <div class="author-avatar-box">👨‍🔬</div>
         <h3>Lead Cyber-Physical AI Researcher</h3>
         <div class="author-affiliation">
-          Department of Electrical & Computer Engineering | Cyber-Physical Smart Grid Lab
+          Department of Electrical &amp; Computer Engineering | Smart Power Grid Research Lab
         </div>
         <p class="author-bio">
           Specializing in Deep Reinforcement Learning for smart grid resilience, acoustic sensor integration in electrical machinery, and Markov Decision Process formulations under thermal-hydraulic physics constraints.
         </p>
 
-        <div style="border-top: 1px solid var(--card-border); padding-top: 16px; font-size: 13px; color: var(--text-muted);">
+        <div style="border-top: 1px solid var(--card-border); padding-top: 16px; font-size: 13px; color: var(--text-muted); display: flex; flex-direction: column; gap: 8px;">
           <div><strong>Thesis / Manuscript:</strong> "VoltEcho: Cyber-Physical RL with Acoustic Perception"</div>
-          <div style="margin-top: 4px;"><strong>Target Venue:</strong> IEEE Transactions on Smart Grid</div>
+          <div><strong>Target Academic Venue:</strong> IEEE Transactions on Smart Grid</div>
+          <div><strong>Official Researcher Email:</strong> <a href="mailto:demirewu.research@gmail.com" style="color: var(--primary-blue); font-weight: 700;">demirewu.research@gmail.com</a></div>
+          <div><strong>Repository:</strong> <a href="https://github.com/demirewu-manidefro/SoundGridAI" target="_blank" style="color: var(--primary-blue); font-weight: 700;">github.com/demirewu-manidefro/SoundGridAI</a></div>
         </div>
       </div>
 
-      <!-- Contact & Inquiry Card -->
+      <!-- Live Academic Inquiry Form -->
       <div class="contact-inquiry-card">
         <div>
           <h3 style="font-size: 18px; font-weight: 800; color: var(--text-main); margin-bottom: 6px;">
-            Academic Inquiries & Verification
+            Send Academic Inquiry / Defense Request
           </h3>
-          <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5;">
-            Available for dissertation evaluation, code inspection, live model demonstration, or acoustic dataset validation. Feel free to reach out directly via email:
+          <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px;">
+            Submit your dissertation feedback, evaluation questions, or trial requests. Inquiries are delivered directly to the researcher.
           </p>
 
-          <div class="inquiry-methods-list">
-            <a href="mailto:demirewu.research@gmail.com?subject=VoltEcho%20Research%20Inquiry" class="inquiry-item">
-              <div class="inquiry-icon">✉️</div>
+          <form id="academicInquiryForm" class="inquiry-form-body">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
               <div>
-                <div style="font-weight: 700; font-size: 14px;">Direct Researcher Email</div>
-                <div style="font-size: 12px; color: var(--primary-blue);">Click to send email inquiry (demirewu.research@gmail.com)</div>
+                <label style="display: block; font-size: 11.5px; font-weight: 700; color: var(--text-muted); margin-bottom: 4px;">Evaluator / Reviewer Name *</label>
+                <input type="text" id="inquiryName" class="form-input-text" placeholder="Dr. / Prof. Name" required style="width: 100%;" />
               </div>
-            </a>
-
-            <a href="https://github.com/demirewu-manidefro/SoundGridAI" target="_blank" class="inquiry-item">
-              <div class="inquiry-icon">💻</div>
               <div>
-                <div style="font-weight: 700; font-size: 14px;">Open Source GitHub Repository</div>
-                <div style="font-size: 12px; color: var(--text-muted);">https://github.com/demirewu-manidefro/SoundGridAI</div>
+                <label style="display: block; font-size: 11.5px; font-weight: 700; color: var(--text-muted); margin-bottom: 4px;">Reviewer Email Address *</label>
+                <input type="email" id="inquiryEmail" class="form-input-text" placeholder="evaluator@university.edu" required style="width: 100%;" />
               </div>
-            </a>
-          </div>
-        </div>
+            </div>
 
-        <div style="background: #f8fafc; border: 1px solid var(--card-border); border-radius: var(--radius-md); padding: 12px 16px; font-size: 12px; color: var(--text-muted);">
-          💡 <strong>Live Model Verification:</strong> All PPO weights (<code>soundgrid_integrated_ppo.zip</code>) and CNN checkpoints are active and verifiable in real-time above.
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+              <div>
+                <label style="display: block; font-size: 11.5px; font-weight: 700; color: var(--text-muted); margin-bottom: 4px;">Institution / University</label>
+                <input type="text" id="inquiryAffiliation" class="form-input-text" placeholder="Department / Faculty" style="width: 100%;" />
+              </div>
+              <div>
+                <label style="display: block; font-size: 11.5px; font-weight: 700; color: var(--text-muted); margin-bottom: 4px;">Inquiry Subject</label>
+                <select id="inquiryType" class="form-select" style="width: 100%;">
+                  <option value="Dissertation Defense & Review">Dissertation Defense &amp; Review</option>
+                  <option value="Code & Model Inspection">Code &amp; Model Inspection</option>
+                  <option value="Acoustic Dataset Validation">Acoustic Dataset Validation</option>
+                  <option value="Substation Pilot Trial">Substation Pilot Trial</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="margin-bottom: 14px;">
+              <label style="display: block; font-size: 11.5px; font-weight: 700; color: var(--text-muted); margin-bottom: 4px;">Message / Review Notes *</label>
+              <textarea id="inquiryMessage" class="form-input-text" rows="3" placeholder="Enter evaluation notes, defense feedback, or collaborative trial details..." required style="width: 100%; resize: vertical;"></textarea>
+            </div>
+
+            <div style="display: flex; gap: 10px; align-items: center; justify-content: space-between;">
+              <button type="submit" id="inquirySubmitBtn" class="btn-primary" style="flex: 2;">
+                <span>✉️ Dispatch Inquiry</span>
+              </button>
+              <a href="mailto:demirewu.research@gmail.com?subject=VoltEcho%20Academic%20Defense%20Inquiry" class="btn-secondary" style="flex: 1; text-align: center; text-decoration: none; font-size: 12px;">
+                Direct Mail Client ↗
+              </a>
+            </div>
+
+            <div id="inquiryStatusAlert" style="display: none; margin-top: 12px; padding: 10px 14px; border-radius: var(--radius-sm); font-size: 12.5px; font-weight: 600;"></div>
+          </form>
+
         </div>
       </div>
 

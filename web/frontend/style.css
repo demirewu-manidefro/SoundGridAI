@@ -1125,6 +1125,228 @@ select.form-select:focus {
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
+/* Studio Mode Switcher Bar */
+.studio-mode-bar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 12px;
+}
+
+.studio-mode-tab {
+  background: transparent;
+  border: none;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #64748b;
+  cursor: pointer;
+  padding: 9px 20px;
+  border-radius: var(--radius-md);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.studio-mode-tab:hover {
+  color: #0f172a;
+  background: #f1f5f9;
+}
+
+.studio-mode-tab.active-mode {
+  color: #0284c7;
+  background: #e0f2fe;
+}
+
+/* Mission Badge */
+.mission-badge {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+}
+
+.mission-ready {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+}
+
+.mission-running {
+  background: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #93c5fd;
+  animation: pulse 1.5s infinite;
+}
+
+.mission-complete {
+  background: #ecfdf5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
+}
+
+/* Mission Scenarios Grid */
+.mission-scenario-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.scenario-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.scenario-card:hover {
+  border-color: #93c5fd;
+  background: #f8fafc;
+}
+
+.scenario-card.active-scenario {
+  border-color: #0284c7;
+  background: #f0f9ff;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.1);
+}
+
+.scenario-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-main);
+  margin-bottom: 4px;
+}
+
+.scenario-card p {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* Mission Live Chart */
+.mission-chart-box {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-md);
+  padding: 14px;
+  margin-top: 16px;
+}
+
+/* Mission Verdict Box */
+.mission-verdict-box {
+  background: linear-gradient(135deg, #f8fafc 0%, #f0fdf4 100%);
+  border: 1px solid #86efac;
+  border-left: 4px solid #16a34a;
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  margin-top: 14px;
+}
+
+.verdict-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14.5px;
+  color: #14532d;
+  margin-bottom: 4px;
+}
+
+.verdict-metrics-row {
+  display: flex;
+  gap: 16px;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(22, 163, 74, 0.2);
+  font-size: 12px;
+  color: #374151;
+  flex-wrap: wrap;
+}
+
+/* Oscilloscope Container */
+.oscilloscope-container {
+  margin-top: 18px;
+  background: #090e1a;
+  border: 1px solid #1e293b;
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.oscilloscope-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.oscilloscope-label {
+  font-size: 10.5px;
+  font-weight: 800;
+  color: #38bdf8;
+  letter-spacing: 0.8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.osc-dot {
+  width: 7px;
+  height: 7px;
+  background: #38bdf8;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #38bdf8;
+}
+
+.osc-status-text {
+  font-size: 11px;
+  font-weight: 700;
+  color: #34d399;
+}
+
+.oscilloscope-screen {
+  background: #050811;
+  border: 1px solid #1e293b;
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+
+.oscilloscope-footer {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10.5px;
+  color: #64748b;
+  margin-top: 6px;
+  font-family: monospace;
+}
+
+/* Contact Form Input Styles */
+.form-input-text {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  font-size: 13px;
+  color: var(--text-main);
+  outline: none;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.form-input-text:focus {
+  border-color: #0284c7;
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12);
+}
+
 /* Presets Bar */
 .presets-grid {
   display: grid;

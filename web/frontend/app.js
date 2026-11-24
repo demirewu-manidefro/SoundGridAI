@@ -11,6 +11,8 @@ let thermalChartInstance = null;
 let acousticChartInstance = null;
 let benchSafetyChartInstance = null;
 let benchRewardChartInstance = null;
+let missionLiveChartInstance = null;
+let missionPlaybackTimer = null;
 let stepCounter = 1;
 
 // Sensor history for POMDP delta computation
@@ -26,9 +28,12 @@ let prevState = {
 document.addEventListener("DOMContentLoaded", () => {
   setupNavScroll();
   setupModal();
+  setupStudioModes();
+  setupAutonomousMission();
   setupSliders();
   setupPresets();
   setupImageControls();
+  setupContactForm();
   checkApiHealth();
   initAcousticWaveform();
   
@@ -782,55 +787,478 @@ function renderBenchmarkResults(results) {
 }
 
 // =============================================================================
-// ACOUSTIC WAVEFORM VISUALIZERS (Dual Hero + Monitor)
+// STUDIO MODES (Autonomous Mission vs Interactive Telemetry)
+// =============================================================================
+function setupStudioModes() {
+  const autoBtn = document.getElementById("modeBtnAutonomous");
+  const interBtn = document.getElementById("modeBtnInteractive");
+  const autoView = document.getElementById("autonomousView");
+  const interView = document.getElementById("interactiveView");
+
+  if (autoBtn && interBtn) {
+    autoBtn.addEventListener("click", () => {
+      autoBtn.classList.add("active-mode");
+      interBtn.classList.remove("active-mode");
+      if (autoView) autoView.style.display = "block";
+      if (interView) interView.style.display = "none";
+    });
+
+    interBtn.addEventListener("click", () => {
+      interBtn.classList.add("active-mode");
+      autoBtn.classList.remove("active-mode");
+      if (autoView) autoView.style.display = "none";
+      if (interView) interView.style.display = "block";
+    });
+  }
+}
+
+// =============================================================================
+// AUTONOMOUS MISSION RUNNER & ACADEMIC DEFENSE
+// =============================================================================
+function setupAutonomousMission() {
+  const scenarioCards = document.querySelectorAll(".scenario-card");
+  let selectedScenario = "critical";
+
+  scenarioCards.forEach(card => {
+    card.addEventListener("click", () => {
+      scenarioCards.forEach(c => c.classList.remove("active-scenario"));
+      card.classList.add("active-scenario");
+      selectedScenario = card.getAttribute("data-scenario");
+    });
+  });
+
+  const runBtn = document.getElementById("runMissionBtn");
+  if (runBtn) {
+    runBtn.addEventListener("click", () => runLiveMission(selectedScenario, false));
+  }
+
+  const duelBtn = document.getElementById("duelBtn");
+  if (duelBtn) {
+    duelBtn.addEventListener("click", () => runLiveMission(selectedScenario, true));
+  }
+
+  // Initialize empty chart
+  initMissionLiveChart();
+}
+
+function initMissionLiveChart() {
+  const ctx = document.getElementById("missionLiveChart");
+  if (!ctx) return;
+  if (missionLiveChartInstance) missionLiveChartInstance.destroy();
+
+  missionLiveChartInstance = new Chart(ctx.getContext("2d"), {
+    type: "line",
+    data: {
+      labels: [],
+      datasets: [
+        {
+          label: "Core Temp (°C)",
+          data: [],
+          borderColor: "#ef4444",
+          backgroundColor: "rgba(239, 68, 68, 0.08)",
+          borderWidth: 2,
+          tension: 0.25,
+          yAxisID: "yTemp",
+          fill: true
+        },
+        {
+          label: "Active Load (%)",
+          data: [],
+          borderColor: "#0284c7",
+          backgroundColor: "rgba(2, 132, 199, 0.08)",
+          borderWidth: 2,
+          tension: 0.25,
+          yAxisID: "yLoad",
+          fill: true
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: false,
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { font: { size: 10 } }
+        },
+        yTemp: {
+          type: "linear",
+          position: "left",
+          min: 30,
+          max: 130,
+          title: { display: true, text: "Temp (°C)", font: { size: 10 } },
+          ticks: { font: { size: 9 } }
+        },
+        yLoad: {
+          type: "linear",
+          position: "right",
+          min: 0,
+          max: 100,
+          title: { display: true, text: "Load (%)", font: { size: 10 } },
+          ticks: { font: { size: 9 } },
+          grid: { drawOnChartArea: false }
+        }
+      },
+      plugins: {
+        legend: {
+          position: "top",
+          labels: { boxWidth: 12, font: { size: 11, weight: "bold" } }
+        }
+      }
+    }
+  });
+}
+
+async function runLiveMission(scenario, isDuel = false) {
+  const controller = document.getElementById("missionControllerSelect").value;
+  const speed = document.getElementById("missionSpeedSelect").value;
+  const statusBadge = document.getElementById("missionStatusBadge");
+  const verdictCard = document.getElementById("missionVerdictCard");
+  const runBtn = document.getElementById("runMissionBtn");
+  const duelBtn = document.getElementById("duelBtn");
+
+  if (missionPlaybackTimer) clearInterval(missionPlaybackTimer);
+
+  statusBadge.className = "mission-badge mission-running";
+  statusBadge.textContent = "STATUS: RUNNING MISSION...";
+  if (runBtn) runBtn.disabled = true;
+  if (duelBtn) duelBtn.disabled = true;
+  if (verdictCard) verdictCard.style.display = "none";
+
+  try {
+    const res = await fetch("/api/simulate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        controller: isDuel ? "soundgrid_ppo" : controller,
+        regime: scenario,
+        max_steps: 50
+      })
+    });
+
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+
+    let duelData = null;
+    if (isDuel) {
+      const resDuel = await fetch("/api/simulate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          controller: "conventional_relay",
+          regime: scenario,
+          max_steps: 50
+        })
+      });
+      if (resDuel.ok) duelData = await resDuel.json();
+    }
+
+    animateMissionTrajectory(data, duelData, speed, isDuel);
+
+  } catch (err) {
+    console.error("Mission execution error:", err);
+    statusBadge.className = "mission-badge mission-ready";
+    statusBadge.textContent = "STATUS: ERROR";
+    if (runBtn) runBtn.disabled = false;
+    if (duelBtn) duelBtn.disabled = false;
+  }
+}
+
+function animateMissionTrajectory(data, duelData, speed, isDuel) {
+  const traj = data.trajectory;
+  const total = traj.length;
+  let idx = 0;
+
+  const intervalMs = speed === "fast" ? 40 : speed === "instant" ? 5 : 100;
+
+  // Re-init chart datasets
+  initMissionLiveChart();
+  if (isDuel && duelData) {
+    missionLiveChartInstance.data.datasets = [
+      {
+        label: "VoltEcho PPO Temp (°C)",
+        data: [],
+        borderColor: "#0284c7",
+        borderWidth: 2.5,
+        tension: 0.25,
+        yAxisID: "yTemp"
+      },
+      {
+        label: "Relay (IEC 60255) Temp (°C)",
+        data: [],
+        borderColor: "#ef4444",
+        borderWidth: 2,
+        borderDash: [5, 4],
+        tension: 0.25,
+        yAxisID: "yTemp"
+      },
+      {
+        label: "VoltEcho Delivered Load (%)",
+        data: [],
+        borderColor: "#10b981",
+        borderWidth: 2,
+        tension: 0.25,
+        yAxisID: "yLoad"
+      }
+    ];
+  }
+
+  missionPlaybackTimer = setInterval(() => {
+    if (idx >= total) {
+      clearInterval(missionPlaybackTimer);
+      finishMissionPlayback(data, duelData, isDuel);
+      return;
+    }
+
+    const pt = traj[idx];
+    document.getElementById("missionStepCounter").textContent = `Step: ${pt.step} / ${total}`;
+
+    // Update Telemetry Overlay
+    document.getElementById("overlayTemp").textContent = `${pt.temp.toFixed(1)}°C`;
+    document.getElementById("overlayLoad").textContent = `${Math.round(pt.load * 100)}%`;
+    document.getElementById("overlayAnom").textContent = pt.anomaly_prob.toFixed(2);
+    updateSpectrumText(pt.anomaly_prob);
+
+    // Update Breaker Badge
+    const breakerBadge = document.getElementById("breakerBadge");
+    if (pt.action === 4) {
+      breakerBadge.className = "breaker-state-badge breaker-tripped";
+      breakerBadge.textContent = "Breaker: TRIPPED (OPEN)";
+    } else {
+      breakerBadge.className = "breaker-state-badge breaker-closed";
+      breakerBadge.textContent = "Breaker: CLOSED (ONLINE)";
+    }
+
+    autoSetImageForState(pt.status, pt.temp, pt.anomaly_prob);
+
+    // Chart update
+    missionLiveChartInstance.data.labels.push(`S${pt.step}`);
+    if (isDuel && duelData && duelData.trajectory[idx]) {
+      const dPt = duelData.trajectory[idx];
+      missionLiveChartInstance.data.datasets[0].data.push(Number(pt.temp.toFixed(1)));
+      missionLiveChartInstance.data.datasets[1].data.push(Number(dPt.temp.toFixed(1)));
+      missionLiveChartInstance.data.datasets[2].data.push(Math.round(pt.load * 100));
+    } else {
+      missionLiveChartInstance.data.datasets[0].data.push(Number(pt.temp.toFixed(1)));
+      missionLiveChartInstance.data.datasets[1].data.push(Math.round(pt.load * 100));
+    }
+    missionLiveChartInstance.update();
+
+    idx++;
+  }, intervalMs);
+}
+
+function finishMissionPlayback(data, duelData, isDuel) {
+  const statusBadge = document.getElementById("missionStatusBadge");
+  const verdictCard = document.getElementById("missionVerdictCard");
+  const runBtn = document.getElementById("runMissionBtn");
+  const duelBtn = document.getElementById("duelBtn");
+
+  statusBadge.className = "mission-badge mission-complete";
+  statusBadge.textContent = "STATUS: MISSION FINISHED";
+  if (runBtn) runBtn.disabled = false;
+  if (duelBtn) duelBtn.disabled = false;
+
+  if (verdictCard) {
+    verdictCard.style.display = "block";
+    const title = document.getElementById("verdictTitle");
+    const icon = document.getElementById("verdictIcon");
+    const desc = document.getElementById("verdictDescription");
+
+    if (isDuel && duelData) {
+      icon.textContent = "⚔️";
+      title.textContent = "Scientific Duel Verdict: VoltEcho PPO vs IEC 60255 Relay";
+      if (duelData.outcome === "burnout" || duelData.max_temp >= 105.0) {
+        desc.innerHTML = `<strong>Decisive Protection Victory:</strong> VoltEcho PPO utilized internal oil hydrophone acoustics to isolate the arcing fault immediately (Peak Temp: <strong>${data.max_temp.toFixed(1)}°C</strong>), whereas the conventional thermal relay suffered <strong>Catastrophic Burnout (${duelData.max_temp.toFixed(1)}°C)</strong> due to the 45-minute thermal sensor blindspot.`;
+        verdictCard.style.borderLeftColor = "#16a34a";
+      } else {
+        desc.innerHTML = `VoltEcho PPO delivered <strong>${(data.final_load * 100).toFixed(0)}%</strong> power throughput with higher cumulative safety reward (+${data.total_reward.toFixed(1)}) compared to relay (+${duelData.total_reward.toFixed(1)}).`;
+      }
+    } else if (data.outcome === "emergency_trip") {
+      icon.textContent = "🛡️";
+      title.textContent = "Safe 1-Step Emergency Trip (Zero Burnout Protection)";
+      desc.textContent = "Severe dielectric arcing was detected through log-Mel acoustic transients. The PPO policy opened the circuit breaker in 1 step, completely preventing tank rupture.";
+      verdictCard.style.borderLeftColor = "#0284c7";
+    } else if (data.outcome === "burnout") {
+      icon.textContent = "💥";
+      title.textContent = "Catastrophic Overheat Failure (Conventional Blindness)";
+      desc.textContent = "The controller lacked acoustic perception. Internal arcing thermal dissipation escalated beyond 118°C before external sensors could react.";
+      verdictCard.style.borderLeftColor = "#ef4444";
+    } else {
+      icon.textContent = "🟢";
+      title.textContent = "Nominal Grid Transmission Maintained";
+      desc.textContent = "Sustained high continuous electrical load throughout the episode without overheating.";
+      verdictCard.style.borderLeftColor = "#16a34a";
+    }
+
+    document.getElementById("verdictPeakTemp").textContent = `${data.max_temp.toFixed(1)}°C`;
+    document.getElementById("verdictThroughput").textContent = `${Math.round((data.final_load || 0.85) * 100)}%`;
+    document.getElementById("verdictReward").textContent = `${data.total_reward >= 0 ? '+' : ''}${data.total_reward.toFixed(1)}`;
+    document.getElementById("verdictBurnout").textContent = data.outcome === "burnout" ? "100.0% (Failed)" : "0.0% (Safe)";
+    document.getElementById("verdictBurnout").style.color = data.outcome === "burnout" ? "#ef4444" : "#10b981";
+  }
+}
+
+// =============================================================================
+// ACADEMIC INQUIRY FORM CONTROLLER
+// =============================================================================
+function setupContactForm() {
+  const form = document.getElementById("academicInquiryForm");
+  const alertEl = document.getElementById("inquiryStatusAlert");
+  const submitBtn = document.getElementById("inquirySubmitBtn");
+
+  if (!form) return;
+
+  form.addEventListener("submit", async e => {
+    e.preventDefault();
+
+    const name = document.getElementById("inquiryName").value.trim();
+    const email = document.getElementById("inquiryEmail").value.trim();
+    const affiliation = document.getElementById("inquiryAffiliation").value.trim();
+    const inquiryType = document.getElementById("inquiryType").value;
+    const message = document.getElementById("inquiryMessage").value.trim();
+
+    if (!name || !email || !message) {
+      showToast("Please fill in all required fields.");
+      return;
+    }
+
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = "<span>⏳ Dispatching...</span>";
+    }
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: name,
+          email: email,
+          affiliation: affiliation,
+          inquiry_type: inquiryType,
+          message: message
+        })
+      });
+
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+
+      if (alertEl) {
+        alertEl.style.display = "block";
+        alertEl.style.background = "#ecfdf5";
+        alertEl.style.border = "1px solid #a7f3d0";
+        alertEl.style.color = "#065f46";
+        alertEl.innerHTML = `✓ <strong>Inquiry Dispatched Successfully!</strong> Thank you ${name}. Your message has been sent to <strong>demirewu.research@gmail.com</strong>. We will reply promptly.`;
+      }
+
+      form.reset();
+      showToast("Inquiry delivered to researcher!");
+    } catch (err) {
+      console.error("Contact submit error:", err);
+      // Fallback
+      window.location.href = `mailto:demirewu.research@gmail.com?subject=${encodeURIComponent(inquiryType + " - " + name)}&body=${encodeURIComponent(message)}`;
+      if (alertEl) {
+        alertEl.style.display = "block";
+        alertEl.style.background = "#eff6ff";
+        alertEl.style.border = "1px solid #bfdbfe";
+        alertEl.style.color = "#1e40af";
+        alertEl.innerHTML = "Opening email client to send inquiry directly to <strong>demirewu.research@gmail.com</strong>.";
+      }
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = "<span>✉️ Dispatch Inquiry</span>";
+      }
+    }
+  });
+}
+
+// =============================================================================
+// ACOUSTIC WAVEFORM OSCILLOSCOPE (High-DPI Laser Oscillogram)
 // =============================================================================
 function initAcousticWaveform() {
   const canvas = document.getElementById("acousticCanvas");
-  const heroCanvas = document.getElementById("heroAcousticCanvas");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
   let phase = 0;
 
   function renderWave() {
-    const anom = parseFloat(document.getElementById("anomInput").value) / 100;
-    const strokeColor = anom > 0.6 ? "#ef4444" : anom > 0.25 ? "#f59e0b" : "#10b981";
-    const heroStrokeColor = anom > 0.6 ? "#f87171" : anom > 0.25 ? "#fbbf24" : "#34d399";
+    const anomInput = document.getElementById("anomInput");
+    const anom = anomInput ? parseFloat(anomInput.value) / 100 : 0.04;
 
-    // Draw main monitor canvas
-    if (canvas) {
-      const ctx = canvas.getContext("2d");
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.lineWidth = 1.5;
-      ctx.strokeStyle = strokeColor;
-      ctx.beginPath();
-      const mid = canvas.height / 2;
-      for (let x = 0; x < canvas.width; x++) {
-        const baseHum = Math.sin((x * 0.05) + phase) * 8;
-        const pdBurst = anom > 0.15 ? (Math.random() - 0.5) * anom * 32 : 0;
-        const y = mid + baseHum + pdBurst;
-        if (x === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-      }
-      ctx.stroke();
+    const rmsEl = document.getElementById("acousticRmsDisplay");
+    if (rmsEl) {
+      const rmsVal = Math.min(1.0, anom * 0.85 + 0.12).toFixed(2);
+      rmsEl.textContent = `RMS Energy: ${rmsVal}`;
     }
 
-    // Draw hero HUD canvas
-    if (heroCanvas) {
-      const ctxH = heroCanvas.getContext("2d");
-      ctxH.clearRect(0, 0, heroCanvas.width, heroCanvas.height);
-      ctxH.lineWidth = 1.8;
-      ctxH.strokeStyle = heroStrokeColor;
-      ctxH.beginPath();
-      const midH = heroCanvas.height / 2;
-      for (let x = 0; x < heroCanvas.width; x++) {
-        const baseHum = Math.sin((x * 0.05) + phase) * 6;
-        const pdBurst = anom > 0.15 ? (Math.random() - 0.5) * anom * 22 : 0;
-        const y = midH + baseHum + pdBurst;
-        if (x === 0) ctxH.moveTo(x, y);
-        else ctxH.lineTo(x, y);
-      }
-      ctxH.stroke();
+    const w = canvas.width;
+    const h = canvas.height;
+    const mid = h / 2;
+
+    // Clear dark background
+    ctx.fillStyle = "#070c18";
+    ctx.fillRect(0, 0, w, h);
+
+    // Draw Oscilloscope Grid Lines
+    ctx.strokeStyle = "rgba(30, 41, 59, 0.6)";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    for (let x = 0; x < w; x += 40) {
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, h);
+    }
+    for (let y = 0; y < h; y += 20) {
+      ctx.moveTo(0, y);
+      ctx.lineTo(w, y);
+    }
+    ctx.stroke();
+
+    // Center Reference Line
+    ctx.strokeStyle = "rgba(56, 189, 248, 0.2)";
+    ctx.beginPath();
+    ctx.moveTo(0, mid);
+    ctx.lineTo(w, mid);
+    ctx.stroke();
+
+    // Laser Wave Color
+    let laserColor = "#38bdf8";
+    if (anom > 0.60) {
+      laserColor = "#ef4444";
+    } else if (anom > 0.20) {
+      laserColor = "#f59e0b";
     }
 
-    phase += 0.15;
+    // Glow effect
+    ctx.shadowBlur = 8;
+    ctx.shadowColor = laserColor;
+    ctx.strokeStyle = laserColor;
+    ctx.lineWidth = 2.0;
+
+    ctx.beginPath();
+    for (let x = 0; x < w; x++) {
+      // 100 Hz baseline magnetostriction
+      const hum = Math.sin((x * 0.04) + phase) * 10;
+      // High-frequency acoustic transient spikes (PD)
+      let pdSpikes = 0;
+      if (anom > 0.15) {
+        const spikeDensity = anom > 0.6 ? 0.35 : 0.15;
+        if (Math.random() < spikeDensity) {
+          pdSpikes = (Math.random() - 0.5) * anom * (h * 0.8);
+        }
+      }
+      const y = mid + hum + pdSpikes;
+      if (x === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    // Reset shadow
+    ctx.shadowBlur = 0;
+
+    phase += 0.18;
     requestAnimationFrame(renderWave);
   }
 

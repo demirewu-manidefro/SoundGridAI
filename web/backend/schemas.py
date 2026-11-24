@@ -87,3 +87,16 @@ class ControllerBenchmarkMetrics(BaseModel):
 class BenchmarkResponse(BaseModel):
     episodes_tested: int
     results: List[ControllerBenchmarkMetrics]
+
+class ContactRequest(BaseModel):
+    name: str = Field(..., min_length=1)
+    email: str = Field(..., min_length=3)
+    affiliation: Optional[str] = None
+    inquiry_type: str = Field(default="Dissertation Defense & Review")
+    message: str = Field(..., min_length=2)
+
+class ContactResponse(BaseModel):
+    status: str
+    message: str
+    recipient: str
+    timestamp: str
