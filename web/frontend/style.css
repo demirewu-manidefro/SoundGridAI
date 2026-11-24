@@ -600,6 +600,132 @@ body {
   margin-top: 3px;
 }
 
+/* General Objective Box */
+.general-objective-card {
+  background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 45%, #eff6ff 100%);
+  border: 1px solid #bfdbfe;
+  border-left: 5px solid #0284c7;
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  margin: 32px 0 36px 0;
+  box-shadow: 0 4px 18px rgba(2, 132, 199, 0.06);
+}
+
+.general-obj-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.general-obj-badge {
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #0284c7;
+  background: #e0f2fe;
+  padding: 5px 14px;
+  border-radius: var(--radius-full);
+  border: 1px solid #bae6fd;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.general-obj-tag {
+  font-size: 11px;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.general-obj-statement {
+  font-size: 16.5px;
+  font-weight: 600;
+  color: #0f172a;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.general-obj-statement strong {
+  color: #0284c7;
+  font-weight: 800;
+}
+
+.specific-objectives-header {
+  margin-top: 10px;
+  margin-bottom: 24px;
+}
+
+.specific-obj-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.specific-obj-subtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* 5-Column Specific Objectives Grid */
+.objectives-grid-5 {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+}
+
+.objectives-grid-5 .objective-box {
+  background: #ffffff;
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-lg);
+  padding: 22px 18px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.25s ease;
+}
+
+.objectives-grid-5 .objective-box:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+  border-color: #93c5fd;
+}
+
+.objectives-grid-5 .objective-box h3 {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 8px;
+  line-height: 1.35;
+}
+
+.objectives-grid-5 .objective-box p {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  line-height: 1.55;
+  margin-bottom: 12px;
+}
+
+.objectives-grid-5 .objective-bullet-list {
+  margin-top: auto;
+}
+
+.objectives-grid-5 .objective-bullet-list li {
+  font-size: 12px;
+  line-height: 1.45;
+}
+
 /* 4-Column Objectives Grid */
 .objectives-grid {
   display: grid;
@@ -676,6 +802,12 @@ body {
   background: #faf5ff;
   color: #7c3aed;
   border: 1px solid #e9d5ff;
+}
+
+.cat-amber {
+  background: #fffbeb;
+  color: #b45309;
+  border: 1px solid #fde68a;
 }
 
 .objective-box h3 {
@@ -1653,6 +1785,10 @@ footer.app-footer {
     grid-template-columns: 1fr 1fr;
   }
 
+  .objectives-grid-5 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
   .challenges-grid {
     grid-template-columns: 1fr;
   }
@@ -1710,6 +1846,10 @@ footer.app-footer {
   }
 
   .objectives-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .objectives-grid-5 {
     grid-template-columns: 1fr;
   }
 }

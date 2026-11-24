@@ -86,7 +86,6 @@
     
     <!-- Section Header -->
     <div class="section-header">
-      <span class="section-tag">Project Overview &amp; Mission Scope</span>
       <h2 class="section-title">About VoltEcho: Cyber-Physical Transformer Protection</h2>
       <p class="section-subtitle">
         Bridging high-frequency acoustic hydrophone sensing with 8D reinforcement learning to eliminate catastrophic transformer explosions before thermal runaway occurs.
@@ -128,136 +127,115 @@
 
     </div>
 
-    <!-- Handcrafted 6-Card Executive Spec Matrix -->
-    <div class="tech-specs-matrix">
-      <div class="spec-card">
-        <div class="spec-icon">📡</div>
-        <div class="spec-info">
-          <div class="spec-label">Acoustic Sensors</div>
-          <div class="spec-val">Piezoelectric Hydrophones</div>
-          <div class="spec-meta">10 kHz – 150 kHz Bandwidth</div>
-        </div>
+    <!-- General Objective Card -->
+    <div class="general-objective-card">
+      <div class="general-obj-header">
+        <span class="general-obj-badge">🎯 General Objective</span>
+        <span class="general-obj-tag">Academic Research &amp; Engineering Scope</span>
       </div>
-      <div class="spec-card">
-        <div class="spec-icon">🧠</div>
-        <div class="spec-info">
-          <div class="spec-label">Perception Model</div>
-          <div class="spec-val">VoltEchoCNN (Conv2D)</div>
-          <div class="spec-meta">85.08% Accuracy (0.9258 AUC)</div>
-        </div>
-      </div>
-      <div class="spec-card">
-        <div class="spec-icon">📐</div>
-        <div class="spec-info">
-          <div class="spec-label">State Space</div>
-          <div class="spec-val">8D Markovian Vector</div>
-          <div class="spec-meta">&Delta;P, &Delta;T, &Delta;L Augmented</div>
-        </div>
-      </div>
-      <div class="spec-card">
-        <div class="spec-icon">⚡</div>
-        <div class="spec-info">
-          <div class="spec-label">Policy Architecture</div>
-          <div class="spec-val">8D PPO Actor-Critic</div>
-          <div class="spec-meta">9,862 Tuned Weights</div>
-        </div>
-      </div>
-      <div class="spec-card">
-        <div class="spec-icon">🚀</div>
-        <div class="spec-info">
-          <div class="spec-label">Edge Substation Runtime</div>
-          <div class="spec-val">TorchScript C++ (1.6 MB)</div>
-          <div class="spec-meta">&lt; 20 ms Inference Latency</div>
-        </div>
-      </div>
-      <div class="spec-card">
-        <div class="spec-icon">🛡️</div>
-        <div class="spec-info">
-          <div class="spec-label">Safety Benchmark</div>
-          <div class="spec-val">0.0% Burnout Rate</div>
-          <div class="spec-meta">1-Step Emergency Arcing Trip</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- The 4 Core Objectives Heading -->
-    <div style="margin-top: 50px; margin-bottom: 24px;">
-      <h3 style="font-size: 22px; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 10px;">
-        <span>🎯</span> Core Scientific &amp; Engineering Objectives
-      </h3>
-      <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-top: 4px;">
-        Detailed breakdown of the 4 operational pillars delivering robust transformer life-extension, grid resilience, and instant fault mitigation:
+      <p class="general-obj-statement">
+        To develop <strong>Sound Grid AI (VoltEcho)</strong> using Convolutional Neural Networks (CNN) and Proximal Policy Optimization (PPO) reinforcement learning to detect transformer faults early and control electrical loads safely under dynamic grid conditions.
       </p>
     </div>
 
-    <!-- Detailed 4 Objectives Grid -->
-    <div class="objectives-grid">
+    <!-- Specific Objectives Heading -->
+    <div class="specific-objectives-header">
+      <h3 class="specific-obj-title">
+        <span>⚡</span> Specific Objectives
+      </h3>
+      <p class="specific-obj-subtitle">
+        Systematic five-pillar implementation framework connecting deep acoustic perception with cyber-physical thermal simulation and multi-objective PPO control:
+      </p>
+    </div>
+
+    <!-- 5 Specific Objectives Grid -->
+    <div class="objectives-grid-5">
       
-      <!-- Objective 01 -->
+      <!-- Specific Objective 01 -->
       <div class="objective-box">
         <div class="objective-header-row">
           <div class="objective-num">01</div>
-          <span class="objective-category cat-cyan">Acoustic Perception</span>
+          <span class="objective-category cat-cyan">Feature Extraction</span>
         </div>
-        <h3>High-Frequency Acoustic Log-Mel Spectrogram Pipeline</h3>
+        <h3>Prepare Audio Data &amp; Extract Useful Sound Features</h3>
         <p>
-          Capture ultrasonic hydrophone signals inside transformer oil over continuous 3.0s sliding windows. Generate 128-band log-Mel filterbanks (<code>n_mels=128</code>, window=2048, hop=512) to isolate high-energy cavitation and dielectric spark transients from nominal 100 Hz magnetostriction hum.
+          Capture ultrasonic hydrophone signals (10 kHz–150 kHz) immersed in dielectric transformer oil over continuous sliding windows. Convert raw waveforms into 128-band log-Mel filterbank spectrograms (<code>n_mels=128</code>, window=2048, hop=512) and extract physical acoustic Root Mean Square (RMS) energy.
         </p>
         <ul class="objective-bullet-list">
-          <li><span class="bullet-icon">✓</span> Detects incipient partial discharge within milliseconds</li>
-          <li><span class="bullet-icon">✓</span> Integrates physical Root Mean Square (RMS) energy as an orthogonal channel</li>
-          <li><span class="bullet-icon">✓</span> Validated 85.08% classification accuracy on real-world transformer PD datasets</li>
+          <li><span class="bullet-icon">✓</span> 128-band log-Mel spectrogram &amp; RMS energy pipeline</li>
+          <li><span class="bullet-icon">✓</span> Separates partial discharge micro-sparks from 100 Hz hum</li>
+          <li><span class="bullet-icon">✓</span> Millisecond temporal resolution for incipient fault capture</li>
         </ul>
       </div>
 
-      <!-- Objective 02 -->
+      <!-- Specific Objective 02 -->
       <div class="objective-box">
         <div class="objective-header-row">
           <div class="objective-num">02</div>
-          <span class="objective-category cat-blue">State Augmentation</span>
+          <span class="objective-category cat-blue">CNN Anomaly Detection</span>
         </div>
-        <h3>Resolving POMDP via First-Order Thermodynamic Derivatives</h3>
+        <h3>Develop a CNN Model to Detect Abnormal Industrial Sounds</h3>
         <p>
-          Overcome thermal sensor latency by extending the state representation from static 4D measurements to an augmented 8D state vector:
-          <span class="formula-pill">S = [P, &Delta;P, E, L, &Delta;L, T/100, &Delta;T/10, t/t<sub>max</sub>] &isin; &real;⁸</span>
+          Construct and train a 4-stage 2D Convolutional Neural Network (<strong>VoltEchoCNN</strong>) with Batch Normalization, ReLU non-linearities, and Dropout (0.3) to classify acoustic spectrograms into normal operation vs. incipient arcing and cavitation states.
         </p>
         <ul class="objective-bullet-list">
-          <li><span class="bullet-icon">✓</span> Restores Markovian state observability without deploying compute-heavy RNN/LSTM models</li>
-          <li><span class="bullet-icon">✓</span> Enables the RL agent to discern whether temperature is rapidly climbing (dT/dt &gt; 0) or cooling (dT/dt &lt; 0)</li>
-          <li><span class="bullet-icon">✓</span> Completely eliminates policy dithering and spurious blackout trips</li>
+          <li><span class="bullet-icon">✓</span> 85.08% validation accuracy &amp; 0.9258 ROC-AUC score</li>
+          <li><span class="bullet-icon">✓</span> Sub-20 ms edge inference latency for real-time sensing</li>
+          <li><span class="bullet-icon">✓</span> High noise robustness against ambient substation hum</li>
         </ul>
       </div>
 
-      <!-- Objective 03 -->
+      <!-- Specific Objective 03 -->
       <div class="objective-box">
         <div class="objective-header-row">
           <div class="objective-num">03</div>
-          <span class="objective-category cat-green">Zero-Burnout Safety</span>
+          <span class="objective-category cat-amber">Thermal Simulation</span>
         </div>
-        <h3>Multi-Objective Safe Dispatch &amp; Zero-Burnout Guarantee</h3>
+        <h3>Build a Thermal Simulation Environment for Transformer Operation</h3>
         <p>
-          Formulate a quadratic thermodynamic reward balancing maximum electrical load dispatch against Joule heating degradation:
+          Develop a custom Gymnasium cyber-physical simulation environment modeling dynamic heat balance:
           <span class="formula-pill">dT/dt = (4.2 L&sup2; + 10 P) &minus; 0.09 (T &minus; T<sub>amb</sub>)</span>
+          Formulates an 8D derivative-augmented Markovian state space to overcome 10–45 min sensor lag:
+          <span class="formula-pill">S = [P, &Delta;P, E, L, &Delta;L, T/100, &Delta;T/10, t/t<sub>max</sub>] &isin; &real;⁸</span>
         </p>
         <ul class="objective-bullet-list">
-          <li><span class="bullet-icon">✓</span> Penalizes erratic load churning via a stringent &Delta;L delta-load rate penalty</li>
-          <li><span class="bullet-icon">✓</span> Sustains 85% continuous electrical power throughput under nominal operational regimes</li>
-          <li><span class="bullet-icon">✓</span> Guarantees immediate 1-step emergency circuit breaker trip on severe arcing (0.0% failure rate)</li>
+          <li><span class="bullet-icon">✓</span> Simulates Joule heating degradation &amp; Newton cooling</li>
+          <li><span class="bullet-icon">✓</span> Resolves POMDP observability without heavy RNN/LSTMs</li>
+          <li><span class="bullet-icon">✓</span> Fast simulation throughput for scalable RL training</li>
         </ul>
       </div>
 
-      <!-- Objective 04 -->
+      <!-- Specific Objective 04 -->
       <div class="objective-box">
-        <div class="objective-num">04</div>
-        <span class="objective-category cat-purple">Embedded Runtime</span>
-        <h3>Substation Edge Deployment on Embedded Hardware</h3>
+        <div class="objective-header-row">
+          <div class="objective-num">04</div>
+          <span class="objective-category cat-purple">PPO Load Control</span>
+        </div>
+        <h3>Train a PPO Agent to Make Intelligent Load-Control Decisions</h3>
         <p>
-          Package the trained PyTorch PPO policy and convolutional feature extractor into an optimized, standalone TorchScript C++ model (1.6 MB binary footprint).
+          Train an Actor-Critic Proximal Policy Optimization (PPO) reinforcement learning agent (9,862 trainable parameters) to execute discrete load decisions (Maintain, &minus;10%, &minus;15%, &minus;30%, Emergency Trip) balancing grid continuity with asset preservation.
         </p>
         <ul class="objective-bullet-list">
-          <li><span class="bullet-icon">✓</span> Sub-20 millisecond end-to-end inference latency on ARM Cortex and NVIDIA Jetson hardware</li>
-          <li><span class="bullet-icon">✓</span> Hardware-in-the-loop (HIL) compatibility with IEC 61850 substation automation protocols</li>
-          <li><span class="bullet-icon">✓</span> Zero external cloud dependency, ensuring military-grade cyber-physical air-gapped security</li>
+          <li><span class="bullet-icon">✓</span> 5 discrete dynamic actions + 1-step emergency trip</li>
+          <li><span class="bullet-icon">✓</span> Sustains 85% continuous electrical power throughput</li>
+          <li><span class="bullet-icon">✓</span> Standalone TorchScript C++ export (1.6 MB) for edge nodes</li>
+        </ul>
+      </div>
+
+      <!-- Specific Objective 05 -->
+      <div class="objective-box">
+        <div class="objective-header-row">
+          <div class="objective-num">05</div>
+          <span class="objective-category cat-green">Safe Reward Design</span>
+        </div>
+        <h3>Design Reward and Penalty Functions for Safe Operation</h3>
+        <p>
+          Formulate a multi-objective reward function incorporating quadratic temperature penalties, delta-load rate stability constraints, and asymmetric arcing penalties to eliminate transformer burnout while discouraging policy chattering.
+        </p>
+        <ul class="objective-bullet-list">
+          <li><span class="bullet-icon">✓</span> 0.0% burnout rate across 100-episode Monte Carlo stress tests</li>
+          <li><span class="bullet-icon">✓</span> &Delta;L load rate penalty curbs switchgear mechanical wear</li>
+          <li><span class="bullet-icon">✓</span> Guaranteed instant breaker trip on severe arcing (P &gt; 0.70)</li>
         </ul>
       </div>
 
