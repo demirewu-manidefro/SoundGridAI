@@ -25,3 +25,6 @@ __pycache__/
 
 # Evaluation artifacts
 evaluation_report_data.json
+
+# Dynamic user inquiries
+contacts_inquiries.json
