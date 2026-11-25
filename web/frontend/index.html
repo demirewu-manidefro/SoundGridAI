@@ -44,26 +44,33 @@
     </div>
   </nav>
 
+  <!-- Mobile Backdrop Overlay for Half-Width Side Drawer -->
+  <div class="mobile-nav-backdrop" id="mobileNavBackdrop" onclick="closeMobileNav()"></div>
+
   <!-- Instant Inline Script for Mobile Navigation Drawer -->
   <script>
     function toggleMobileNav(e) {
       if (e) e.stopPropagation();
       var menu = document.getElementById("primaryNavLinks");
       var btn = document.getElementById("mobileNavToggle");
+      var backdrop = document.getElementById("mobileNavBackdrop");
       if (menu && btn) {
         var isOpen = menu.classList.toggle("mobile-open");
         btn.classList.toggle("is-active", isOpen);
         btn.setAttribute("aria-expanded", isOpen ? "true" : "false");
+        if (backdrop) backdrop.classList.toggle("active", isOpen);
       }
     }
     function closeMobileNav() {
       var menu = document.getElementById("primaryNavLinks");
       var btn = document.getElementById("mobileNavToggle");
+      var backdrop = document.getElementById("mobileNavBackdrop");
       if (menu) menu.classList.remove("mobile-open");
       if (btn) {
         btn.classList.remove("is-active");
         btn.setAttribute("aria-expanded", "false");
       }
+      if (backdrop) backdrop.classList.remove("active");
     }
     document.addEventListener("click", function(e) {
       var menu = document.getElementById("primaryNavLinks");
