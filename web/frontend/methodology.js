@@ -50,6 +50,9 @@ let benchSafetyChart = null;
 let benchRewardChart = null;
 
 document.addEventListener("DOMContentLoaded", () => {
+  // 0. Setup mobile navigation toggle
+  setupMobileNav();
+
   // 1. Immediately render precomputed benchmark results
   renderBenchmark(DEFAULT_BENCHMARK_DATA);
 
@@ -73,6 +76,35 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
+
+function setupMobileNav() {
+  const toggleBtn = document.getElementById("mobileNavToggle");
+  const navLinks = document.querySelector(".nav-links");
+  if (!toggleBtn || !navLinks) return;
+
+  toggleBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const isOpen = navLinks.classList.toggle("mobile-open");
+    toggleBtn.classList.toggle("is-active", isOpen);
+    toggleBtn.setAttribute("aria-expanded", isOpen ? "true" : "false");
+  });
+
+  navLinks.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", () => {
+      navLinks.classList.remove("mobile-open");
+      toggleBtn.classList.remove("is-active");
+      toggleBtn.setAttribute("aria-expanded", "false");
+    });
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!toggleBtn.contains(e.target) && !navLinks.contains(e.target)) {
+      navLinks.classList.remove("mobile-open");
+      toggleBtn.classList.remove("is-active");
+      toggleBtn.setAttribute("aria-expanded", "false");
+    }
+  });
+}
 
 async function executeLiveBenchmark() {
   const btn = document.getElementById("runBenchmarkBtn");

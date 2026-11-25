@@ -201,15 +201,64 @@
     @media (max-width: 900px) {
       .meth-stats-strip {
         grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
       }
       .meth-section {
-        padding: 24px 20px;
+        padding: 24px 18px;
+        border-radius: var(--radius-lg);
       }
       .meth-hero {
-        padding: 32px 24px;
+        padding: 32px 20px;
+        border-radius: var(--radius-lg);
       }
       .meth-hero h1 {
-        font-size: 28px;
+        font-size: 26px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .sticky-subnav {
+        top: 56px;
+        padding: 8px 0;
+      }
+      .sticky-subnav-container {
+        padding: 0 14px;
+        gap: 6px;
+      }
+      .subnav-link {
+        padding: 6px 12px;
+        font-size: 11.5px;
+      }
+      .subnav-cta-btn {
+        display: none; /* Keep sticky bar clean and uncluttered on small screens */
+      }
+      .meth-stats-strip {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+      .meth-stat-item strong {
+        font-size: 20px;
+      }
+      .meth-stat-item span {
+        font-size: 10.5px;
+      }
+      .meth-page-wrapper {
+        padding: 18px 12px 60px 12px;
+      }
+      .meth-section {
+        padding: 18px 14px;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .meth-hero h1 {
+        font-size: 21px;
+      }
+      .meth-hero p {
+        font-size: 13.5px;
+      }
+      .meth-stats-strip {
+        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -237,6 +286,13 @@
         <li><a href="/methodology.html" class="nav-link nav-link-btn-highlight" style="color: #0284c7; font-weight: 800;">Methodology &amp; Algorithm</a></li>
         <li><a href="/#contact" class="nav-link">Contact</a></li>
       </ul>
+
+      <!-- Mobile Hamburger Navigation Toggle -->
+      <button class="mobile-nav-toggle" id="mobileNavToggle" aria-label="Toggle navigation menu" aria-expanded="false">
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+      </button>
     </div>
   </nav>
 
@@ -664,8 +720,8 @@
       </div>
 
       <!-- Benchmark Table -->
-      <div style="overflow-x: auto; margin-bottom: 24px;">
-        <table class="benchmark-table" style="width: 100%;">
+      <div class="benchmark-table-responsive" style="overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 24px;">
+        <table class="benchmark-table" style="width: 100%; min-width: 680px;">
           <thead>
             <tr>
               <th>Controller Formulation</th>
