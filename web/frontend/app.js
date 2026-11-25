@@ -128,10 +128,14 @@ function setupNavScroll() {
       }
     });
 
-    navLinks.forEach(link => {
+    navLinks.forEach((link) => {
       link.classList.remove("active");
       if (link.getAttribute("href") === `#${currentId}`) {
         link.classList.add("active");
+        // Auto-center active pill in mobile scrollable track
+        if (window.innerWidth <= 900 && link.parentElement) {
+          link.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+        }
       }
     });
   });
