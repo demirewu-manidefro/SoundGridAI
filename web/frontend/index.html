@@ -25,17 +25,54 @@
         </div>
       </a>
 
-      <!-- Clean Navigation Links Aligned to Right -->
-      <ul class="nav-links">
-        <li><a href="#overview" class="nav-link">Home</a></li>
-        <li><a href="#about-project" class="nav-link">About Project</a></li>
-        <li><a href="#live-controller" class="nav-link">Live Studio</a></li>
-        <li><a href="#challenges" class="nav-link">Challenges &amp; Solutions</a></li>
-        <li><a href="methodology.html" class="nav-link nav-link-btn-highlight" style="color: #0284c7; font-weight: 800;">Methodology &amp; Algorithm ↗</a></li>
-        <li><a href="#contact" class="nav-link">Contact</a></li>
+      <!-- Clean Navigation Links Aligned to Right (Desktop: horizontal row, Mobile: left-aligned slide-down drawer) -->
+      <ul class="nav-links" id="primaryNavLinks">
+        <li><a href="#overview" class="nav-link"><span class="nav-icon">🏠</span> Home</a></li>
+        <li><a href="#about-project" class="nav-link"><span class="nav-icon">📘</span> About Project</a></li>
+        <li><a href="#live-controller" class="nav-link"><span class="nav-icon">⚡</span> Live Studio</a></li>
+        <li><a href="#challenges" class="nav-link"><span class="nav-icon">🛡️</span> Challenges &amp; Solutions</a></li>
+        <li><a href="methodology.html" class="nav-link nav-link-btn-highlight" style="color: #0284c7; font-weight: 800;"><span class="nav-icon">📐</span> Methodology &amp; Algorithm ↗</a></li>
+        <li><a href="#contact" class="nav-link"><span class="nav-icon">✉️</span> Contact</a></li>
       </ul>
+
+      <!-- 3-Line Hamburger Menu Button for Mobile -->
+      <button class="mobile-nav-toggle" id="mobileNavToggle" aria-label="Toggle navigation menu" aria-expanded="false" title="Menu">
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+      </button>
     </div>
   </nav>
+
+  <!-- Instant Inline Script for Mobile Navigation Drawer -->
+  <script>
+    (function() {
+      var btn = document.getElementById("mobileNavToggle");
+      var menu = document.getElementById("primaryNavLinks");
+      if (btn && menu) {
+        btn.addEventListener("click", function(e) {
+          e.stopPropagation();
+          var isOpen = menu.classList.toggle("mobile-open");
+          btn.classList.toggle("is-active", isOpen);
+          btn.setAttribute("aria-expanded", isOpen ? "true" : "false");
+        });
+        menu.querySelectorAll("a").forEach(function(a) {
+          a.addEventListener("click", function() {
+            menu.classList.remove("mobile-open");
+            btn.classList.remove("is-active");
+            btn.setAttribute("aria-expanded", "false");
+          });
+        });
+        document.addEventListener("click", function(e) {
+          if (!btn.contains(e.target) && !menu.contains(e.target)) {
+            menu.classList.remove("mobile-open");
+            btn.classList.remove("is-active");
+            btn.setAttribute("aria-expanded", "false");
+          }
+        });
+      }
+    })();
+  </script>
 
 
   <!-- ========================================================================= -->
